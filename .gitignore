@@ -1,9 +1,15 @@
+# Environment variables - NEVER commit these
+.env
+.env.local
+.env.*
+
 # Python
 venv/
 __pycache__/
 *.pyc
 .env
 *.sqlite3
+
 
 # Node
 node_modules/
