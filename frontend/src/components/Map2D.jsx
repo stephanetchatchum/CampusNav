@@ -1,4 +1,5 @@
-function Map2d({ rooms = [], highlightedRoom = null, onRoomClick }) {
+import scFloor2 from '../assets/SC-F2-1-CP.jpg'
+function Map2D({ rooms = [], highlightedRoom = null, onRoomClick }) {
 
     const roomData = [
         // ── SOCIAL COMMONS ── Floor 0
@@ -12,13 +13,14 @@ function Map2d({ rooms = [], highlightedRoom = null, onRoomClick }) {
         { code: 'SC-F1-ET', x: 25,  y: 120, w: 160, h: 60, label: 'Ethiopia',          building: 'Social Commons',      floor: 1 },
         { code: 'SC-F1-WR', x: 195, y: 120, w:  50, h: 60, label: 'Washrooms',         building: 'Social Commons',      floor: 1 },
         // ── SOCIAL COMMONS ── Floor 2
-        { code: 'SC-F2-DJ', x: 30,  y: 30,  w: 150, h: 80, label: 'Djibouti',        building: 'Social Commons', floor: 2 },
-        { code: 'SC-F2-SS', x: 190, y: 30,  w: 150, h: 80, label: 'South Sudan',     building: 'Social Commons', floor: 2 },
-        { code: 'SC-F2-BT', x: 350, y: 30,  w: 100, h: 80, label: 'Bibi Titi',       building: 'Social Commons', floor: 2 },
-        { code: 'SC-F2-VD', x: 30,  y: 150, w:  80, h: 50, label: 'Vendors',         building: 'Social Commons', floor: 2 },
-        { code: 'SC-F2-FC', x: 120, y: 150, w: 100, h: 50, label: 'Food Court',      building: 'Social Commons', floor: 2 },
-        { code: 'SC-F2-LS', x: 230, y: 150, w:  80, h: 50, label: 'Loading/Storage', building: 'Social Commons', floor: 2 },
-        { code: 'SC-F2-WR', x: 320, y: 150, w:  60, h: 50, label: 'Washrooms',       building: 'Social Commons', floor: 2 },
+        { code: 'SC-F2-DJ', x: 90,  y: 150,  w: 150, h: 155, label: 'Djibouti',        building: 'Social Commons', floor: 2 },
+        { code: 'SC-F2-SS', x: 240, y: 120,  w: 185, h: 185, label: 'South Sudan',     building: 'Social Commons', floor: 2 },
+        { code: 'SC-F2-BT', x: 370, y: 280,  w: 55, h: 50, label: 'Bibi Titi',       building: 'Social Commons', floor: 2 },
+        { code: 'SC-F2-PD-1', x: 220, y: 280,  w: 45, h: 45, label: 'POD',       building: 'Social Commons', floor: 2 },
+        { code: 'SC-F2-VD', x: 270,  y: 683, w:  285, h: 100, label: 'Vendors',         building: 'Social Commons', floor: 2 },
+        { code: 'SC-F2-FC', x: 320, y: 463, w: 210, h: 170, label: 'Food Court',      building: 'Social Commons', floor: 2 },        
+        { code: 'SC-F2-EL', x: 370, y: 440,  w: 50, h: 50, label: 'Elevator',       building: 'Social Commons', floor: 2 },
+        { code: 'SC-F2-WR', x: 240, y: 463, w:  79, h: 170, label: 'Washrooms',       building: 'Social Commons', floor: 2 },
 
         // ── ENTERPRISE COMMONS ── Floor 0
         { code: 'EC-F0-LE', x: 25,  y: 50,  w: 120, h: 60, label: 'Lesotho',           building: 'Enterprise Commons',  floor: 0 },
@@ -76,7 +78,7 @@ function Map2d({ rooms = [], highlightedRoom = null, onRoomClick }) {
         grouped[room.building][room.floor].push(room)
     })
 
-    const FLOOR_HEIGHT = 210
+    const FLOOR_HEIGHT = 1000
     const FLOOR_LABEL_HEIGHT = 24
     const BUILDING_LABEL_HEIGHT = 32
     const SECTION_PADDING = 16
@@ -107,15 +109,15 @@ function Map2d({ rooms = [], highlightedRoom = null, onRoomClick }) {
 
                 {/* SVG for this building */}
                 <svg
-                viewBox={`0 0 820 ${svgHeight}`}
-                style={{
-                    width: '100%',
-                    height: 'auto',
-                    background: '#f8fafc',
-                    borderRadius: '0 0 8px 8px',
-                    border: `1px solid ${colour}`,
-                    borderTop: 'none'
-                }}
+                    viewBox={`0 0 820 ${svgHeight}`}
+                    style={{
+                        width: '100%',
+                        height: 'auto',
+                        background: '#f8fafc',
+                        borderRadius: '0 0 8px 8px',
+                        border: `1px solid ${colour}`,
+                        borderTop: 'none'
+                    }}
                 >
                 {Object.entries(floors)
                     .sort((a, b) => Number(b[0]) - Number(a[0])) // floor 2 at top, 0 at bottom
@@ -143,6 +145,18 @@ function Map2d({ rooms = [], highlightedRoom = null, onRoomClick }) {
                         >
                             {floor === '0' ? 'Ground Floor' : `Floor ${floor}`}
                         </text>
+                        
+                        {building === 'Social Commons' && floor === '2' && (
+                            <image
+                                href={scFloor2}
+                                x={0}
+                                y={yOffset + FLOOR_LABEL_HEIGHT}
+                                width={820}
+                                height={1000}
+                                opacity={0.35}
+                                preserveAspectRatio="xMidYMid meet"
+                            />
+                        )}
 
                         {/* Rooms on this floor */}
                         {floorRooms.map(room => {
@@ -223,4 +237,4 @@ function Map2d({ rooms = [], highlightedRoom = null, onRoomClick }) {
     )
 }
 
-export default Map2d
+export default Map2D
