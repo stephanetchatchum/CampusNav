@@ -1,4 +1,5 @@
 import scFloor2 from '../assets/SC-F2-1-CP.jpg'
+import scFloor1 from '../assets/SC-F1-CP.jpg'
 function Map2D({ rooms = [], highlightedRoom = null, onRoomClick }) {
 
     const roomData = [
@@ -7,11 +8,15 @@ function Map2D({ rooms = [], highlightedRoom = null, onRoomClick }) {
         { code: 'SC-F0-FC', x: 155, y: 50,  w: 100, h: 60, label: 'Food Court',        building: 'Social Commons',      floor: 0 },
         { code: 'SC-F0-WR', x: 265, y: 50,  w:  50, h: 60, label: 'Washrooms',         building: 'Social Commons',      floor: 0 },
         // ── SOCIAL COMMONS ── Floor 1
-        { code: 'SC-F1-MO', x: 25,  y: 50,  w: 100, h: 60, label: 'Morocco',           building: 'Social Commons',      floor: 1 },
-        { code: 'SC-F1-AL', x: 135, y: 50,  w: 100, h: 60, label: 'Algeria',           building: 'Social Commons',      floor: 1 },
+        { code: 'SC-F1-MO', x: 270,  y: 790,  w: 140, h: 150, label: 'Morocco',           building: 'Social Commons',      floor: 1 },
+        { code: 'SC-F1-AL', x: 410, y: 790,  w: 150, h: 170, label: 'Algeria',           building: 'Social Commons',      floor: 1 },
         { code: 'SC-F1-FC', x: 245, y: 50,  w:  80, h: 60, label: 'Food Court',        building: 'Social Commons',      floor: 1 },
-        { code: 'SC-F1-ET', x: 25,  y: 120, w: 160, h: 60, label: 'Ethiopia',          building: 'Social Commons',      floor: 1 },
-        { code: 'SC-F1-WR', x: 195, y: 120, w:  50, h: 60, label: 'Washrooms',         building: 'Social Commons',      floor: 1 },
+        { code: 'SC-F1-ET', x: 90,  y: 40, w: 170, h: 150, label: 'Ethiopia',          building: 'Social Commons',      floor: 1 },
+        { code: 'SC-F1-WR', x: 120, y: 340, w:  95, h: 200, label: 'Washrooms',         building: 'Social Commons',      floor: 1 },
+        { code: 'SC-F1-PD-1', x: 240, y: 170,  w: 50, h: 50, label: 'POD',       building: 'Social Commons', floor: 1 },
+        { code: 'SC-F1-PD-2', x: 390, y: 610,  w: 50, h: 50, label: 'POD',       building: 'Social Commons', floor: 1 },
+        { code: 'SC-F1-PD-3', x: 540, y: 765,  w: 50, h: 50, label: 'POD',       building: 'Social Commons', floor: 1 },
+        { code: 'SC-F1-EL', x: 240, y: 320,  w: 50, h: 50, label: 'Elevator',       building: 'Social Commons', floor: 1 },
         // ── SOCIAL COMMONS ── Floor 2
         { code: 'SC-F2-DJ', x: 90,  y: 150,  w: 150, h: 155, label: 'Djibouti',        building: 'Social Commons', floor: 2 },
         { code: 'SC-F2-SS', x: 240, y: 120,  w: 185, h: 185, label: 'South Sudan',     building: 'Social Commons', floor: 2 },
@@ -154,6 +159,18 @@ function Map2D({ rooms = [], highlightedRoom = null, onRoomClick }) {
                                 width={820}
                                 height={1000}
                                 opacity={0.35}
+                                preserveAspectRatio="xMidYMid meet"
+                            />
+                        )}
+
+                        {building === 'Social Commons' && floor === '1' && (
+                            <image
+                                href={scFloor1}
+                                x={0}
+                                y={yOffset + FLOOR_LABEL_HEIGHT}
+                                width={820}
+                                height={975}
+                                opacity={0.4}
                                 preserveAspectRatio="xMidYMid meet"
                             />
                         )}
