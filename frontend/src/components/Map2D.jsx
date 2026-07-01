@@ -133,7 +133,7 @@ function Map2D({ rooms = [], highlightedRoom = null, navigationPath = [], onRoom
 
     const getAvailability = (code) => {
         const room = rooms.find(r => r.code === code)
-        if (!room) return null  // not in DB yet → show gray
+        if (!room) return true
         return room.is_available
     }
 
