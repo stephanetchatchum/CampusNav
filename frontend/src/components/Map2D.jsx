@@ -8,21 +8,28 @@
 import { useState } from 'react'
 import scFloor2 from '../assets/SC-F2-1-CP.jpg'
 import scFloor1 from '../assets/SC-F1-CP.jpg'
+import scFloor0 from '../assets/SC-F0-CP.jpg'
 
 const roomData = [
     // ── SOCIAL COMMONS ── Floor 0
-    { code: 'SC-F0-EG', x: 25,  y: 50,  w: 120, h: 60, label: 'Egypt',            building: 'Social Commons',      floor: 0 },
-    { code: 'SC-F0-FC', x: 155, y: 50,  w: 100, h: 60, label: 'Food Court',        building: 'Social Commons',      floor: 0 },
-    { code: 'SC-F0-WR', x: 265, y: 50,  w:  50, h: 60, label: 'Washrooms',         building: 'Social Commons',      floor: 0 },
+    { code: 'SC-F0-EG', x: 315,  y: 700,  w: 185, h: 190, label: 'Egypt',            building: 'Social Commons',      floor: 0 },
+    { code: 'SC-F0-FC', x: 315, y: 140,  w: 180, h: 360, label: 'Food Court',        building: 'Social Commons',      floor: 0 },
+    { code: 'SC-F0-WR', x: 150, y: 190,  w:  165, h: 130, label: 'Washrooms',         building: 'Social Commons',      floor: 0 },
+    { code: 'SC-F0-PR', x: 90, y: 220,  w:  60, h: 100, label: 'Prayer Room',         building: 'Social Commons',      floor: 0 },
+    { code: 'SC-F0-PD-1', x: 480, y: 670,  w: 65, h: 65, label: 'POD',       building: 'Social Commons', floor: 0 },
+    { code: 'SC-F0-PD-2', x: 465, y: 480,  w: 65, h: 65, label: 'POD',       building: 'Social Commons', floor: 0 },
+    { code: 'SC-F0-PD-3', x: 465, y: 290,  w: 65, h: 65, label: 'POD',       building: 'Social Commons', floor: 0 },
+    { code: 'SC-F0-PD-4', x: 465, y: 100,  w: 65, h: 65, label: 'POD',       building: 'Social Commons', floor: 0 },
+    { code: 'SC-F0-EL', x: 100, y: 100,  w: 60, h: 60, label: 'Elevator',       building: 'Social Commons', floor: 0 },
     // ── SOCIAL COMMONS ── Floor 1
-    { code: 'SC-F1-MO', x: 270,  y: 790,  w: 140, h: 150, label: 'Morocco',           building: 'Social Commons',      floor: 1 },
-    { code: 'SC-F1-AL', x: 410, y: 790,  w: 150, h: 170, label: 'Algeria',           building: 'Social Commons',      floor: 1 },
+    { code: 'SC-F1-MO', x: 260,  y: 810,  w: 140, h: 150, label: 'Morocco',           building: 'Social Commons',      floor: 1 },
+    { code: 'SC-F1-AL', x: 400, y: 810,  w: 170, h: 170, label: 'Algeria',           building: 'Social Commons',      floor: 1 },
     { code: 'SC-F1-FC', x: 245, y: 50,  w:  80, h: 60, label: 'Food Court',        building: 'Social Commons',      floor: 1 },
-    { code: 'SC-F1-ET', x: 90,  y: 40, w: 170, h: 150, label: 'Ethiopia',          building: 'Social Commons',      floor: 1 },
-    { code: 'SC-F1-WR', x: 120, y: 340, w:  95, h: 200, label: 'Washrooms',         building: 'Social Commons',      floor: 1 },
+    { code: 'SC-F1-ET', x: 85,  y: 40, w: 170, h: 150, label: 'Ethiopia',          building: 'Social Commons',      floor: 1 },
+    { code: 'SC-F1-WR', x: 110, y: 350, w:  95, h: 200, label: 'Washrooms',         building: 'Social Commons',      floor: 1 },
     { code: 'SC-F1-PD-1', x: 240, y: 170,  w: 50, h: 50, label: 'POD',       building: 'Social Commons', floor: 1 },
-    { code: 'SC-F1-PD-2', x: 390, y: 610,  w: 50, h: 50, label: 'POD',       building: 'Social Commons', floor: 1 },
-    { code: 'SC-F1-PD-3', x: 540, y: 765,  w: 50, h: 50, label: 'POD',       building: 'Social Commons', floor: 1 },
+    { code: 'SC-F1-PD-2', x: 390, y: 630,  w: 50, h: 50, label: 'POD',       building: 'Social Commons', floor: 1 },
+    { code: 'SC-F1-PD-3', x: 540, y: 785,  w: 50, h: 50, label: 'POD',       building: 'Social Commons', floor: 1 },
     { code: 'SC-F1-EL', x: 240, y: 320,  w: 50, h: 50, label: 'Elevator',       building: 'Social Commons', floor: 1 },
     // ── SOCIAL COMMONS ── Floor 2
     { code: 'SC-F2-DJ', x: 90,  y: 150,  w: 150, h: 155, label: 'Djibouti',        building: 'Social Commons', floor: 2 },
@@ -94,6 +101,7 @@ const buildingColour = {
 const floorBackgrounds = {
   'Social Commons-2': scFloor2,
   'Social Commons-1': scFloor1,
+  'Social Commons-0': scFloor0,
 }
 
 // non-bookable room codes (gray, not clickable, no availability badge)
@@ -125,7 +133,7 @@ function Map2D({ rooms = [], highlightedRoom = null, navigationPath = [], onRoom
 
     const getAvailability = (code) => {
         const room = rooms.find(r => r.code === code)
-        if (!room) return true
+        if (!room) return null  // not in DB yet → show gray
         return room.is_available
     }
 
