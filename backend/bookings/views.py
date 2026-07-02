@@ -36,6 +36,14 @@ def booking_list_create(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Returns only the bookings that belong to the currently logged-in user
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def my_bookings(request):
+    bookings = Booking.objects.filter(user=request.user).order_by('-created_at')
+    serializer = BookingSerializer(bookings, many=True)
+    return Response(serializer.data)
+
 
 # Admin only — approve or cancel a booking by its ID
 @api_view(['PATCH'])   # tells Django this function handles API requests
