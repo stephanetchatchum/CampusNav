@@ -12,7 +12,8 @@
       "SC-F2-DOOR-5",
       "SC-F2-J-19",
       "SC-F2-J-20"
-    ]
+    ],
+    "room_code": "SC-F2-DJ"
   },
   {
     "id": "SC-F2-DOOR-2",
@@ -26,7 +27,8 @@
       "SC-F2-DOOR-1",
       "SC-F2-J-19",
       "SC-F2-J-20"
-    ]
+    ],
+    "room_code": "SC-F2-DJ"
   },
   {
     "id": "SC-F2-DOOR-3",
@@ -41,7 +43,8 @@
       "SC-F2-DOOR-6",
       "SC-F2-J-18",
       "SC-F2-J-21"
-    ]
+    ],
+    "room_code": "SC-F2-SS"
   },
   {
     "id": "SC-F2-DOOR-4",
@@ -55,7 +58,8 @@
       "SC-F2-DOOR-3",
       "SC-F2-J-18",
       "SC-F2-J-21"
-    ]
+    ],
+    "room_code": "SC-F2-SS"
   },
   {
     "id": "SC-F2-DOOR-5",
@@ -70,7 +74,8 @@
       "SC-F2-J-19",
       "SC-F2-J-20",
       "SC-F2-J-21"
-    ]
+    ],
+    "room_code": "SC-F2-DJ"
   },
   {
     "id": "SC-F2-DOOR-6",
@@ -84,7 +89,8 @@
       "SC-F2-DOOR-3",
       "SC-F2-J-18",
       "SC-F2-J-21"
-    ]
+    ],
+    "room_code": "SC-F2-BT"
   },
   {
     "id": "SC-F2-DOOR-7",
@@ -110,7 +116,8 @@
     "connects_to": [
       "SC-F2-J-16",
       "SC-F2-J-18"
-    ]
+    ],
+    "room_code": "SC-F2-FC"
   },
   {
     "id": "SC-F2-DOOR-9",
@@ -202,6 +209,7 @@
     "x": 521,
     "y": 836,
     "type": "junction",
+    "room_code": "SC-F2-VD",
     "connects_to": [
       "SC-F2-DOOR-7",
       "SC-F2-DOOR-9",
@@ -327,7 +335,8 @@
       "SC-F2-EL-11",
       "SC-F2-J-16",
       "SC-F2-J-17"
-    ]
+    ],
+    "room_code": "SC-F2-PD-2"
   },
   {
     "id": "SC-F1-DOOR-1",
@@ -343,7 +352,8 @@
       "SC-F1-ENTRY-11",
       "SC-F1-ENTRY-12",
       "SC-F1-J-30"
-    ]
+    ],
+    "room_code": "SC-F1-ET"
   },
   {
     "id": "SC-F1-DOOR-2",
@@ -359,7 +369,8 @@
       "SC-F1-DOOR-5",
       "SC-F1-ENTRY-12",
       "SC-F1-J-30"
-    ]
+    ],
+    "room_code": "SC-F1-ET"
   },
   {
     "id": "SC-F1-DOOR-3",
@@ -376,7 +387,8 @@
       "SC-F1-ENTRY-11",
       "SC-F1-ENTRY-12",
       "SC-F1-J-30"
-    ]
+    ],
+    "room_code": "SC-F1-ET"
   },
   {
     "id": "SC-F1-DOOR-4",
@@ -390,7 +402,8 @@
       "SC-F1-J-24",
       "SC-F1-J-25",
       "SC-F1-J-32"
-    ]
+    ],
+    "room_code": "SC-F1-MO"
   },
   {
     "id": "SC-F1-DOOR-5",
@@ -407,7 +420,8 @@
       "SC-F1-ENTRY-12",
       "SC-F1-J-30",
       "SC-F1-J-32"
-    ]
+    ],
+    "room_code": "SC-F1-MO"
   },
   {
     "id": "SC-F1-DOOR-6",
@@ -421,7 +435,8 @@
       "SC-F1-J-20",
       "SC-F1-J-21",
       "SC-F1-STAIRS-15"
-    ]
+    ],
+    "room_code": "SC-F1-AL"
   },
   {
     "id": "SC-F1-DOOR-7",
@@ -434,7 +449,8 @@
     "connects_to": [
       "SC-F1-DOOR-18",
       "SC-F1-J-23"
-    ]
+    ],
+    "room_code": "SC-F1-AL"
   },
   {
     "id": "SC-F1-STAIRS-8",
@@ -551,7 +567,8 @@
       "SC-F1-J-20",
       "SC-F1-J-21",
       "SC-F1-J-22"
-    ]
+    ],
+    "room_code": "SC-F1-MO"
   },
   {
     "id": "SC-F1-DOOR-17",
@@ -564,7 +581,8 @@
     "connects_to": [
       "SC-F1-DOOR-16",
       "SC-F1-J-22"
-    ]
+    ],
+    "room_code": "SC-F1-MO"
   },
   {
     "id": "SC-F1-DOOR-18",
@@ -578,7 +596,8 @@
       "SC-F1-DOOR-19",
       "SC-F1-DOOR-7",
       "SC-F1-J-23"
-    ]
+    ],
+    "room_code": "SC-F1-AL"
   },
   {
     "id": "SC-F1-DOOR-19",
@@ -594,7 +613,8 @@
       "SC-F1-J-22",
       "SC-F1-J-23",
       "SC-F1-STAIRS-15"
-    ]
+    ],
+    "room_code": "SC-F1-AL"
   },
   {
     "id": "SC-F1-J-20",
@@ -853,7 +873,8 @@
       "SC-F0-DOOR-6",
       "SC-F0-EL-1",
       "SC-F0-J-25"
-    ]
+    ],
+    "room_code": "SC-F0-EG"
   },
   {
     "id": "SC-F0-DOOR-6",
@@ -868,7 +889,8 @@
       "SC-F0-DOOR-7",
       "SC-F0-EL-1",
       "SC-F0-J-25"
-    ]
+    ],
+    "room_code": "SC-F0-EG"
   },
   {
     "id": "SC-F0-DOOR-7",
@@ -882,7 +904,8 @@
       "SC-F0-DOOR-6",
       "SC-F0-J-25",
       "SC-F0-J-26"
-    ]
+    ],
+    "room_code": "SC-F0-EG"
   },
   {
     "id": "SC-F0-DOOR-8",
@@ -897,7 +920,8 @@
       "SC-F0-DOOR-9",
       "SC-F0-J-31",
       "SC-F0-J-32"
-    ]
+    ],
+    "room_code": "SC-F0-FC"
   },
   {
     "id": "SC-F0-DOOR-9",
@@ -912,7 +936,8 @@
       "SC-F0-DOOR-8",
       "SC-F0-J-32",
       "SC-F0-STAIRS-3"
-    ]
+    ],
+    "room_code": "SC-F0-FC"
   },
   {
     "id": "SC-F0-DOOR-10",
@@ -927,7 +952,8 @@
       "SC-F0-ENTRY-16",
       "SC-F0-J-32",
       "SC-F0-STAIRS-3"
-    ]
+    ],
+    "room_code": "SC-F0-FC"
   },
   {
     "id": "SC-F0-DOOR-12",
@@ -948,7 +974,8 @@
       "SC-F0-J-29",
       "SC-F0-J-31",
       "SC-F0-STAIRS-3"
-    ]
+    ],
+    "room_code": "SC-F0-FC"
   },
   {
     "id": "SC-F0-DOOR-13",
@@ -966,7 +993,8 @@
       "SC-F0-J-27",
       "SC-F0-J-28",
       "SC-F0-J-29"
-    ]
+    ],
+    "room_code": "SC-F0-FC"
   },
   {
     "id": "SC-F0-DOOR-14",
@@ -985,7 +1013,8 @@
       "SC-F0-J-26",
       "SC-F0-J-27",
       "SC-F0-J-29"
-    ]
+    ],
+    "room_code": "SC-F0-FC"
   },
   {
     "id": "SC-F0-DOOR-15",
@@ -1004,7 +1033,8 @@
       "SC-F0-J-31",
       "SC-F0-J-32",
       "SC-F0-STAIRS-4"
-    ]
+    ],
+    "room_code": "SC-F0-FC"
   },
   {
     "id": "SC-F0-ENTRY-16",
@@ -1265,7 +1295,8 @@
       "SC-F0-ENTRY-17",
       "SC-F0-J-31",
       "SC-F0-STAIRS-3"
-    ]
+    ],
+    "room_code": "SC-F0-FC"
   },
   {
     "id": "SC-F0-J-31",

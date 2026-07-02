@@ -35,35 +35,73 @@ def heuristic(node_a, node_b):
         (node_a['x'] - node_b['x'])**2 + (node_a['y'] - node_b['y'])**2
     ) * 0.1
 
-def find_entrance_node(nodes, room_code):
-    """Find the entrance node for a given room code.
-    Entrance nodes are named like SC-F2-DOOR-1 and have room_code stored,
-    OR we match by the room_code prefix in the node id."""
-    # First try: node has explicitly room_code field
-    for node in nodes.values():
-        if node.get('room_code') == room_code:
-            return node
-        
-    floor = None
-    building = None
-    if room_code.startswith('SC-F'):
-        parts = room_code.split('-')
-        floor = int(parts[1][1])
-        building = 'Social Commons'
-    elif room_code.startswith('EC-F'):
-        parts = room_code.split('-')
-        floor = int(parts[1][1])
-        building = 'Enterprise Commons'
-    elif room_code.startswith('LC-F'):
-        parts = room_code.split('-')
-        floor = int(parts[1][1])
-        building = 'Learning Commons'
-
-    # FInd all entrance node on the same floor
+def find_room_entrance(nodes, room_code):
+    """Find the best node to navigate to for a given room code."""
+    
+    # First try: exact room_code match on entrance nodes
     candidates = [
-        n for n in nodes.values() if n['type'] == 'entrance' and n.get('floor') == floor and n.get('building') == building
+        n for n in nodes.values()
+        if n.get('room_code') == room_code
     ]
+    print(f"DEBUG: looking for room_code={room_code}, found {len(candidates)} candidates")
+    for n in candidates:
+        print(f"  - {n['id']} type={n['type']}")
+    if candidates:
+        return candidates[0]
 
+    # Second try: match by floor and building, pick closest entrance
+    parts = room_code.split('-')
+    if len(parts) < 3:
+        return None
+
+    floor_num = int(parts[1][1])
+    building_map = {
+        'SC': 'Social Commons',
+        'EC': 'Enterprise Commons',
+        'LC': 'Learning Commons'
+    }
+    building = building_map.get(parts[0])
+
+    # Get room position from a hardcoded lookup
+    # These are the SVG x/y positions of each room centre from Map2D.jsx
+    ROOM_CENTRES = {
+        'SC-F2-DJ': (165, 227),
+        'SC-F2-SS': (332, 212),
+        'SC-F2-BT': (397, 305),
+        'SC-F2-FC': (425, 548),
+        'SC-F2-WR': (279, 548),
+        'SC-F2-VD': (412, 733),
+        'SC-F1-ET': (170, 115),
+        'SC-F1-MO': (330, 885),
+        'SC-F1-AL': (485, 895),
+        'SC-F1-FC': (285, 80),
+        'SC-F0-EG': (407, 795),
+        'SC-F0-FC': (405, 320),
+    }
+
+    centre = ROOM_CENTRES.get(room_code)
+    if centre:
+        # Find the closest node on the same floor regardless of type
+        candidates = [
+            n for n in nodes.values()
+            if n.get('floor') == floor_num
+            and n.get('building') == building
+            and n['type'] in ('entrance', 'junction', 'staircase')
+        ]
+        
+        if candidates:
+            return min(
+                candidates,
+                key=lambda n: (n['x'] - centre[0])**2 + (n['y'] - centre[1])**2
+            )
+
+    # Final fallback: first entrance on the floor
+    candidates = [
+        n for n in nodes.values()
+        if n['type'] == 'entrance'
+        and n.get('floor') == floor_num
+        and n.get('building') == building
+    ]
     return candidates[0] if candidates else None
 
 def astar(start_node_id, end_node_id, nodes, adjacency):
@@ -119,7 +157,7 @@ def navigate(start_node_id, destination_room_code):
     nodes, adjacency = load_graph()
 
     # Find the destination entrance node for the room
-    dest_node = find_entrance_node(nodes, destination_room_code)
+    dest_node = find_room_entrance(nodes, destination_room_code)
     if not dest_node:
         return {'error': f'No entrance node found for room {destination_room_code}'}
 
