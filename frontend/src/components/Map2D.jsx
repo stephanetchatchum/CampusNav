@@ -1,14 +1,10 @@
 // Map2D.jsx — owned by Stephane
-//
-// ARCHITECTURE NOTE:
-// Each building shows ONE floor at a time, with a floor switcher (like
-// elevator buttons) to change floors. Room positions below are EXACTLY
-// what was positioned against the real floor plan photos — untouched.
 
 import { useState } from 'react'
 import scFloor2 from '../assets/SC-F2-1-CP.jpg'
 import scFloor1 from '../assets/SC-F1-CP.jpg'
 import scFloor0 from '../assets/SC-F0-CP.jpg'
+import nodesData from '../../../campus-data/nodes.json'
 
 const roomData = [
     // ── SOCIAL COMMONS ── Floor 0
@@ -37,10 +33,9 @@ const roomData = [
     { code: 'SC-F2-BT', x: 370, y: 280,  w: 55, h: 50, label: 'Bibi Titi',       building: 'Social Commons', floor: 2 },
     { code: 'SC-F2-PD-1', x: 220, y: 280,  w: 45, h: 45, label: 'POD',       building: 'Social Commons', floor: 2 },
     { code: 'SC-F2-VD', x: 270,  y: 683, w:  285, h: 100, label: 'Vendors',         building: 'Social Commons', floor: 2 },
-    { code: 'SC-F2-FC', x: 320, y: 463, w: 210, h: 170, label: 'Food Court',      building: 'Social Commons', floor: 2 },        
+    { code: 'SC-F2-FC', x: 320, y: 463, w: 210, h: 170, label: 'Food Court',      building: 'Social Commons', floor: 2 },
     { code: 'SC-F2-EL', x: 370, y: 440,  w: 50, h: 50, label: 'Elevator',       building: 'Social Commons', floor: 2 },
     { code: 'SC-F2-WR', x: 240, y: 463, w:  79, h: 170, label: 'Washrooms',       building: 'Social Commons', floor: 2 },
-
     // ── ENTERPRISE COMMONS ── Floor 0
     { code: 'EC-F0-LE', x: 25,  y: 50,  w: 120, h: 60, label: 'Lesotho',           building: 'Enterprise Commons',  floor: 0 },
     { code: 'EC-F0-FL', x: 155, y: 50,  w: 100, h: 60, label: 'Fab Lab',           building: 'Enterprise Commons',  floor: 0 },
@@ -55,7 +50,6 @@ const roomData = [
     { code: 'EC-F2-BU', x: 155, y: 50,  w: 100, h: 60, label: 'Burundi',           building: 'Enterprise Commons',  floor: 2 },
     { code: 'EC-F2-KE', x: 265, y: 50,  w: 100, h: 60, label: 'Kenya',             building: 'Enterprise Commons',  floor: 2 },
     { code: 'EC-F2-WR', x: 375, y: 50,  w:  50, h: 60, label: 'Washrooms',         building: 'Enterprise Commons',  floor: 2 },
-
     // ── LEARNING COMMONS ── Floor 0
     { code: 'LC-F0-LC', x: 25,  y: 50,  w: 130, h: 60, label: 'Leadership Center', building: 'Learning Commons',    floor: 0 },
     { code: 'LC-F0-WC', x: 165, y: 50,  w: 100, h: 60, label: 'Wellness Center',   building: 'Learning Commons',    floor: 0 },
@@ -78,8 +72,6 @@ const roomData = [
     { code: 'LC-F2-WR', x: 245, y: 120, w:  50, h: 60, label: 'Washrooms',         building: 'Learning Commons',    floor: 2 },
 ]
 
-// walls and doors — empty for now, you'll add these per floor as you
-// study the photos more closely. Keyed by "BuildingName-floorNumber"
 const wallsData = {
   'Social Commons-2': [],
   'Social Commons-1': [],
@@ -97,24 +89,30 @@ const buildingColour = {
     'Learning Commons':   '#003087',
 }
 
-// background reference images, keyed by "BuildingName-floorNumber"
 const floorBackgrounds = {
   'Social Commons-2': scFloor2,
   'Social Commons-1': scFloor1,
   'Social Commons-0': scFloor0,
 }
 
-// non-bookable room codes (gray, not clickable, no availability badge)
 const NON_BOOKABLE = new Set([
-  'SC-F0-WR', 'SC-F1-WR', 'SC-F1-EL', 'SC-F1-PD-1', 'SC-F1-PD-2', 'SC-F1-PD-3',
+  'SC-F0-WR', 'SC-F0-PR', 'SC-F0-EL',
+  'SC-F0-PD-1', 'SC-F0-PD-2', 'SC-F0-PD-3', 'SC-F0-PD-4',
+  'SC-F1-WR', 'SC-F1-EL', 'SC-F1-PD-1', 'SC-F1-PD-2', 'SC-F1-PD-3',
   'SC-F2-PD-1', 'SC-F2-EL', 'SC-F2-WR',
   'EC-F0-WR', 'EC-F1-WR', 'EC-F2-WR',
   'LC-F0-WR', 'LC-F1-WR', 'LC-F2-WR',
 ])
 
-function Map2D({ rooms = [], highlightedRoom = null, navigationPath = [], onRoomClick }) {
-
-    // group rooms by building then floor — same grouping as before
+function Map2D({
+    rooms = [],
+    highlightedRoom = null,
+    navigationPath = [],
+    currentNodeId = null,
+    settingPosition = false,
+    onRoomClick,
+    onNodeClick,
+}) {
     const grouped = {}
     roomData.forEach(room => {
         if (!grouped[room.building]) grouped[room.building] = {}
@@ -122,7 +120,6 @@ function Map2D({ rooms = [], highlightedRoom = null, navigationPath = [], onRoom
         grouped[room.building][room.floor].push(room)
     })
 
-    // active floor per building — defaults to the highest floor available
     const defaultFloors = Object.fromEntries(
         Object.entries(grouped).map(([building, floors]) => {
             const highest = Math.max(...Object.keys(floors).map(Number))
@@ -137,11 +134,27 @@ function Map2D({ rooms = [], highlightedRoom = null, navigationPath = [], onRoom
         return room.is_available
     }
 
-    // VIEWBOX matches the largest floor used so far (Floor 2 / Floor 1 of
-    // Social Commons use up to ~y:980). Smaller floors just have empty
-    // space below their rooms, which is fine.
     const VIEWBOX_WIDTH = 820
     const VIEWBOX_HEIGHT = 1000
+
+    // Photo dimensions used in the node editor — needed to scale
+    // node coordinates from photo pixels to SVG viewbox pixels
+    const PHOTO_DIMS = {
+      'Social Commons-2': { w: 1873, h: 1873 },
+      'Social Commons-1': { w: 1300, h: 1740 },
+      'Social Commons-0': { w: 1274, h: 1783 },
+    }
+
+    function scaleNode(node, bldg, floor) {
+      const key = bldg + '-' + floor
+      const dims = PHOTO_DIMS[key]
+      if (!dims) return node
+      return {
+        ...node,
+        x: Math.round((node.x / dims.w) * VIEWBOX_WIDTH),
+        y: Math.round((node.y / dims.h) * VIEWBOX_HEIGHT),
+      }
+    }
 
     return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -156,6 +169,26 @@ function Map2D({ rooms = [], highlightedRoom = null, navigationPath = [], onRoom
         const bgImage = floorBackgrounds[bgKey]
         const walls = wallsData[bgKey] || []
         const doors = doorsData[bgKey] || []
+
+        // Tune these until nodes line up perfectly
+        const NODE_TRANSFORM = {
+        'Social Commons-2': { scaleX: 0.7, scaleY: 0.68, offsetX: -4, offsetY: 95 },
+        'Social Commons-1': { scaleX: 0.63, scaleY: 0.57, offsetX: 0, offsetY: 0 },
+        'Social Commons-0': { scaleX: 0.64, scaleY: 0.56, offsetX: 0, offsetY: 0 },
+        }
+
+        const floorNodes = nodesData
+        .filter(n => n.building === building && n.floor === activeFloor)
+        .map(n => {
+            const key = `${building}-${activeFloor}`
+            const t = NODE_TRANSFORM[key] || { scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 }
+            return {
+            ...n,
+            x: Math.round(n.x * t.scaleX + t.offsetX),
+            y: Math.round(n.y * t.scaleY + t.offsetY),
+            }
+        })
+
 
         return (
             <div key={building}>
@@ -173,7 +206,6 @@ function Map2D({ rooms = [], highlightedRoom = null, navigationPath = [], onRoom
                     alignItems: 'center'
                 }}>
                     <span>{building}</span>
-
                     <div style={{ display: 'flex', gap: '6px' }}>
                         {floorNumbers.map(num => (
                             <button
@@ -214,12 +246,11 @@ function Map2D({ rooms = [], highlightedRoom = null, navigationPath = [], onRoom
                         {activeFloor === 0 ? 'Ground Floor' : `Floor ${activeFloor}`}
                     </text>
 
-                    {/* Background reference image — remove once positions are final */}
+                    {/* Background reference image */}
                     {bgImage && (
                         <image
                             href={bgImage}
-                            x={0}
-                            y={0}
+                            x={0} y={0}
                             width={VIEWBOX_WIDTH}
                             height={VIEWBOX_HEIGHT}
                             opacity={0.35}
@@ -250,18 +281,29 @@ function Map2D({ rooms = [], highlightedRoom = null, navigationPath = [], onRoom
                         />
                     ))}
 
-                    {/* Navigation path */}
-                    {navigationPath.length > 1 && (
-                        <polyline
-                            points={navigationPath.map(p => `${p.x},${p.y}`).join(' ')}
+                    {/* Navigation path — scaled same as nodes */}
+                    {navigationPath.length > 1 && (() => {
+                        const key = `${building}-${activeFloor}`
+                        const t = NODE_TRANSFORM[key] || { scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 }
+                        const scaledPath = navigationPath
+                            .filter(p => p.floor === activeFloor)
+                            .map(p => ({
+                            x: Math.round(p.x * t.scaleX + t.offsetX),
+                            y: Math.round(p.y * t.scaleY + t.offsetY),
+                            }))
+                        if (scaledPath.length < 2) return null
+                        return (
+                            <polyline
+                            points={scaledPath.map(p => `${p.x},${p.y}`).join(' ')}
                             fill="none"
                             stroke="#1d4ed8"
                             strokeWidth={3}
                             strokeDasharray="8 6"
-                        />
-                    )}
+                            />
+                        )
+                    })()}
 
-                    {/* Rooms — exact original positions, untouched */}
+                    {/* Rooms */}
                     {floorRooms.map(room => {
                         const isNonBookable = NON_BOOKABLE.has(room.code)
                         const isAvailable = isNonBookable ? null : getAvailability(room.code)
@@ -281,10 +323,8 @@ function Map2D({ rooms = [], highlightedRoom = null, navigationPath = [], onRoom
                                 style={{ cursor: isNonBookable ? 'default' : 'pointer' }}
                             >
                                 <rect
-                                    x={room.x}
-                                    y={room.y}
-                                    width={room.w}
-                                    height={room.h}
+                                    x={room.x} y={room.y}
+                                    width={room.w} height={room.h}
                                     fill={fillColour}
                                     stroke={strokeColour}
                                     strokeWidth={isHighlighted ? 3 : 1.5}
@@ -325,6 +365,72 @@ function Map2D({ rooms = [], highlightedRoom = null, navigationPath = [], onRoom
                             </g>
                         )
                     })}
+
+                    {/* Navigation path — rendered AFTER rooms so it appears on top */}
+                    {navigationPath.length > 1 && (() => {
+                        const key = `${building}-${activeFloor}`
+                        const t = NODE_TRANSFORM[key] || { scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 }
+                        const scaledPath = navigationPath
+                            .filter(p => p.floor === activeFloor)
+                            .map(p => ({
+                            x: Math.round(p.x * t.scaleX + t.offsetX),
+                            y: Math.round(p.y * t.scaleY + t.offsetY),
+                            }))
+                        if (scaledPath.length < 2) return null
+                        return (
+                            <polyline
+                            points={scaledPath.map(p => `${p.x},${p.y}`).join(' ')}
+                            fill="none"
+                            stroke="#1d4ed8"
+                            strokeWidth={3}
+                            strokeDasharray="8 6"
+                            />
+                        )
+                    })()}
+
+                    {/* Tappable junction nodes when setting position — rendered AFTER rooms so they appear on top */}
+                    {settingPosition && floorNodes
+                        .filter(n => ['junction','staircase','building_entry', 'entrance'].includes(n.type))
+                        .map(n => (
+                            <g
+                                key={`pos-${n.id}`}
+                                onClick={() => onNodeClick && onNodeClick(n.id)}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                <circle cx={n.x} cy={n.y} r={16} fill="#7c3aed" opacity={0.15}/>
+                                <circle cx={n.x} cy={n.y} r={8} fill="#7c3aed" opacity={0.85}/>
+                                <text
+                                    x={n.x} y={n.y - 14}
+                                    textAnchor="middle"
+                                    fontSize={8}
+                                    fill="#7c3aed"
+                                >
+                                    {n.id.split('-').slice(2).join('-')}
+                                </text>
+                            </g>
+                        ))
+                    }
+
+                    {/* Current position dot — always on top of everything */}
+                    {currentNodeId && floorNodes
+                        .filter(n => n.id === currentNodeId)
+                        .map(n => (
+                            <g key="current-pos">
+                                <circle cx={n.x} cy={n.y} r={16} fill="#1d4ed8" opacity={0.15}/>
+                                <circle cx={n.x} cy={n.y} r={9} fill="#1d4ed8"/>
+                                <circle cx={n.x} cy={n.y} r={4} fill="white"/>
+                                <text
+                                    x={n.x} y={n.y - 18}
+                                    textAnchor="middle"
+                                    fontSize={9}
+                                    fontWeight="600"
+                                    fill="#1d4ed8"
+                                >
+                                    You
+                                </text>
+                            </g>
+                        ))
+                    }
 
                 </svg>
             </div>
