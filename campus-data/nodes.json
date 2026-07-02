@@ -1,0 +1,1306 @@
+[
+  {
+    "id": "SC-F2-DOOR-1",
+    "label": "Djibouti Door 1",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 298,
+    "y": 320,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F2-DOOR-2",
+      "SC-F2-DOOR-5",
+      "SC-F2-J-19",
+      "SC-F2-J-20"
+    ]
+  },
+  {
+    "id": "SC-F2-DOOR-2",
+    "label": "Djibouti Door 2",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 183,
+    "y": 320,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F2-DOOR-1",
+      "SC-F2-J-19",
+      "SC-F2-J-20"
+    ]
+  },
+  {
+    "id": "SC-F2-DOOR-3",
+    "label": "South Sudan Door 2",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 528,
+    "y": 317,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F2-DOOR-4",
+      "SC-F2-DOOR-6",
+      "SC-F2-J-18",
+      "SC-F2-J-21"
+    ]
+  },
+  {
+    "id": "SC-F2-DOOR-4",
+    "label": "South Sudan Door 1",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 408,
+    "y": 316,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F2-DOOR-3",
+      "SC-F2-J-18",
+      "SC-F2-J-21"
+    ]
+  },
+  {
+    "id": "SC-F2-DOOR-5",
+    "label": "SC-F2-DOOR-5",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 329,
+    "y": 345,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F2-DOOR-1",
+      "SC-F2-J-19",
+      "SC-F2-J-20",
+      "SC-F2-J-21"
+    ]
+  },
+  {
+    "id": "SC-F2-DOOR-6",
+    "label": "SC-F2-DOOR-6",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 562,
+    "y": 344,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F2-DOOR-3",
+      "SC-F2-J-18",
+      "SC-F2-J-21"
+    ]
+  },
+  {
+    "id": "SC-F2-DOOR-7",
+    "label": "SC-F2-DOOR-7",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 465,
+    "y": 690,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F2-J-15",
+      "SC-F2-J-16"
+    ]
+  },
+  {
+    "id": "SC-F2-DOOR-8",
+    "label": "SC-F2-DOOR-8",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 466,
+    "y": 662,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F2-J-16",
+      "SC-F2-J-18"
+    ]
+  },
+  {
+    "id": "SC-F2-DOOR-9",
+    "label": "SC-F2-DOOR-9",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 353,
+    "y": 843,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F2-J-14",
+      "SC-F2-J-15"
+    ]
+  },
+  {
+    "id": "SC-F2-ENTRY-10",
+    "label": "SC-F2-ENTRY-10",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 254,
+    "y": 1051,
+    "type": "building_entry",
+    "connects_to": [
+      "SC-F2-J-14"
+    ]
+  },
+  {
+    "id": "SC-F2-EL-11",
+    "label": "SC-F2-EL-11",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 606,
+    "y": 568,
+    "type": "elevator",
+    "connects_to": [
+      "SC-F2-DOOR-22",
+      "SC-F2-J-16",
+      "SC-F2-J-17"
+    ]
+  },
+  {
+    "id": "SC-F2-STAIRS-12",
+    "label": "SC-F2-STAIRS-12",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 798,
+    "y": 776,
+    "type": "staircase",
+    "connects_to": [
+      "SC-F2-J-13",
+      "SC-F2-J-15",
+      "SC-F2-J-16",
+      "SC-F2-J-17"
+    ]
+  },
+  {
+    "id": "SC-F2-J-13",
+    "label": "SC-F2-J-13",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 792,
+    "y": 834,
+    "type": "junction",
+    "connects_to": [
+      "SC-F2-J-15",
+      "SC-F2-J-16",
+      "SC-F2-J-17",
+      "SC-F2-STAIRS-12"
+    ]
+  },
+  {
+    "id": "SC-F2-J-14",
+    "label": "SC-F2-J-14",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 264,
+    "y": 838,
+    "type": "junction",
+    "connects_to": [
+      "SC-F2-DOOR-9",
+      "SC-F2-ENTRY-10"
+    ]
+  },
+  {
+    "id": "SC-F2-J-15",
+    "label": "SC-F2-J-15",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 521,
+    "y": 836,
+    "type": "junction",
+    "connects_to": [
+      "SC-F2-DOOR-7",
+      "SC-F2-DOOR-9",
+      "SC-F2-J-13",
+      "SC-F2-J-16",
+      "SC-F2-J-17",
+      "SC-F2-STAIRS-12"
+    ]
+  },
+  {
+    "id": "SC-F2-J-16",
+    "label": "SC-F2-J-16",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 516,
+    "y": 671,
+    "type": "junction",
+    "connects_to": [
+      "SC-F2-DOOR-22",
+      "SC-F2-DOOR-7",
+      "SC-F2-DOOR-8",
+      "SC-F2-EL-11",
+      "SC-F2-J-13",
+      "SC-F2-J-15",
+      "SC-F2-J-17",
+      "SC-F2-J-18",
+      "SC-F2-STAIRS-12"
+    ]
+  },
+  {
+    "id": "SC-F2-J-17",
+    "label": "SC-F2-J-17",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 686,
+    "y": 671,
+    "type": "junction",
+    "connects_to": [
+      "SC-F2-DOOR-22",
+      "SC-F2-EL-11",
+      "SC-F2-J-13",
+      "SC-F2-J-15",
+      "SC-F2-J-16",
+      "SC-F2-STAIRS-12"
+    ]
+  },
+  {
+    "id": "SC-F2-J-18",
+    "label": "SC-F2-J-18",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 514,
+    "y": 400,
+    "type": "junction",
+    "connects_to": [
+      "SC-F2-DOOR-3",
+      "SC-F2-DOOR-4",
+      "SC-F2-DOOR-6",
+      "SC-F2-DOOR-8",
+      "SC-F2-J-16",
+      "SC-F2-J-21"
+    ]
+  },
+  {
+    "id": "SC-F2-J-19",
+    "label": "SC-F2-J-19",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 259,
+    "y": 400,
+    "type": "junction",
+    "connects_to": [
+      "SC-F2-DOOR-1",
+      "SC-F2-DOOR-2",
+      "SC-F2-DOOR-5",
+      "SC-F2-J-20",
+      "SC-F2-J-21"
+    ]
+  },
+  {
+    "id": "SC-F2-J-20",
+    "label": "SC-F2-J-20",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 258,
+    "y": 472,
+    "type": "junction",
+    "connects_to": [
+      "SC-F2-DOOR-1",
+      "SC-F2-DOOR-2",
+      "SC-F2-DOOR-5",
+      "SC-F2-J-19",
+      "SC-F2-J-21"
+    ]
+  },
+  {
+    "id": "SC-F2-J-21",
+    "label": "SC-F2-J-21",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 376,
+    "y": 395,
+    "type": "junction",
+    "connects_to": [
+      "SC-F2-DOOR-3",
+      "SC-F2-DOOR-4",
+      "SC-F2-DOOR-5",
+      "SC-F2-DOOR-6",
+      "SC-F2-J-18",
+      "SC-F2-J-19",
+      "SC-F2-J-20"
+    ]
+  },
+  {
+    "id": "SC-F2-DOOR-22",
+    "label": "SC-F2-DOOR-22",
+    "building": "Social Commons",
+    "floor": 2,
+    "x": 787,
+    "y": 570,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F2-EL-11",
+      "SC-F2-J-16",
+      "SC-F2-J-17"
+    ]
+  },
+  {
+    "id": "SC-F1-DOOR-1",
+    "label": "Ethiopia Door 1",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 170,
+    "y": 319,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F1-DOOR-2",
+      "SC-F1-DOOR-3",
+      "SC-F1-ENTRY-11",
+      "SC-F1-ENTRY-12",
+      "SC-F1-J-30"
+    ]
+  },
+  {
+    "id": "SC-F1-DOOR-2",
+    "label": "Ethiopia Door 2",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 298,
+    "y": 319,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F1-DOOR-1",
+      "SC-F1-DOOR-3",
+      "SC-F1-DOOR-5",
+      "SC-F1-ENTRY-12",
+      "SC-F1-J-30"
+    ]
+  },
+  {
+    "id": "SC-F1-DOOR-3",
+    "label": "SC-F1-DOOR-3",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 334,
+    "y": 345,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F1-DOOR-1",
+      "SC-F1-DOOR-2",
+      "SC-F1-DOOR-5",
+      "SC-F1-ENTRY-11",
+      "SC-F1-ENTRY-12",
+      "SC-F1-J-30"
+    ]
+  },
+  {
+    "id": "SC-F1-DOOR-4",
+    "label": "SC-F1-DOOR-4",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 236,
+    "y": 749,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F1-J-24",
+      "SC-F1-J-25",
+      "SC-F1-J-32"
+    ]
+  },
+  {
+    "id": "SC-F1-DOOR-5",
+    "label": "SC-F1-DOOR-5",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 238,
+    "y": 717,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F1-DOOR-2",
+      "SC-F1-DOOR-3",
+      "SC-F1-ENTRY-11",
+      "SC-F1-ENTRY-12",
+      "SC-F1-J-30",
+      "SC-F1-J-32"
+    ]
+  },
+  {
+    "id": "SC-F1-DOOR-6",
+    "label": "SC-F1-DOOR-6",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 585,
+    "y": 1082,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F1-J-20",
+      "SC-F1-J-21",
+      "SC-F1-STAIRS-15"
+    ]
+  },
+  {
+    "id": "SC-F1-DOOR-7",
+    "label": "SC-F1-DOOR-7",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 822,
+    "y": 1270,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F1-DOOR-18",
+      "SC-F1-J-23"
+    ]
+  },
+  {
+    "id": "SC-F1-STAIRS-8",
+    "label": "SC-F1-STAIRS-8",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 583,
+    "y": 596,
+    "type": "staircase",
+    "connects_to": [
+      "SC-F1-J-28",
+      "SC-F1-J-29",
+      "SC-F1-STAIRS-9"
+    ]
+  },
+  {
+    "id": "SC-F1-STAIRS-9",
+    "label": "SC-F1-STAIRS-9",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 630,
+    "y": 600,
+    "type": "staircase",
+    "connects_to": [
+      "SC-F1-J-29",
+      "SC-F1-STAIRS-8"
+    ]
+  },
+  {
+    "id": "SC-F1-EL-10",
+    "label": "SC-F1-EL-10",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 388,
+    "y": 594,
+    "type": "elevator",
+    "connects_to": [
+      "SC-F1-ENTRY-13",
+      "SC-F1-J-32"
+    ]
+  },
+  {
+    "id": "SC-F1-ENTRY-11",
+    "label": "SC-F1-ENTRY-11",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 363,
+    "y": 384,
+    "type": "building_entry",
+    "connects_to": [
+      "SC-F1-DOOR-1",
+      "SC-F1-DOOR-3",
+      "SC-F1-DOOR-5",
+      "SC-F1-ENTRY-12",
+      "SC-F1-J-30"
+    ]
+  },
+  {
+    "id": "SC-F1-ENTRY-12",
+    "label": "SC-F1-ENTRY-12",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 365,
+    "y": 499,
+    "type": "building_entry",
+    "connects_to": [
+      "SC-F1-DOOR-1",
+      "SC-F1-DOOR-2",
+      "SC-F1-DOOR-3",
+      "SC-F1-DOOR-5",
+      "SC-F1-ENTRY-11",
+      "SC-F1-J-30"
+    ]
+  },
+  {
+    "id": "SC-F1-ENTRY-13",
+    "label": "SC-F1-ENTRY-13",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 482,
+    "y": 560,
+    "type": "building_entry",
+    "connects_to": [
+      "SC-F1-EL-10",
+      "SC-F1-J-28"
+    ]
+  },
+  {
+    "id": "SC-F1-STAIRS-15",
+    "label": "SC-F1-STAIRS-15",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 607,
+    "y": 1162,
+    "type": "staircase",
+    "connects_to": [
+      "SC-F1-DOOR-19",
+      "SC-F1-DOOR-6",
+      "SC-F1-J-20",
+      "SC-F1-J-22",
+      "SC-F1-J-23"
+    ]
+  },
+  {
+    "id": "SC-F1-DOOR-16",
+    "label": "Morocco Door 1",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 417,
+    "y": 1293,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F1-DOOR-17",
+      "SC-F1-J-20",
+      "SC-F1-J-21",
+      "SC-F1-J-22"
+    ]
+  },
+  {
+    "id": "SC-F1-DOOR-17",
+    "label": "Morocco Door 2",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 549,
+    "y": 1295,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F1-DOOR-16",
+      "SC-F1-J-22"
+    ]
+  },
+  {
+    "id": "SC-F1-DOOR-18",
+    "label": "Algeria Door 2",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 792,
+    "y": 1297,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F1-DOOR-19",
+      "SC-F1-DOOR-7",
+      "SC-F1-J-23"
+    ]
+  },
+  {
+    "id": "SC-F1-DOOR-19",
+    "label": "Algeria Door 1",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 664,
+    "y": 1298,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F1-DOOR-18",
+      "SC-F1-J-20",
+      "SC-F1-J-22",
+      "SC-F1-J-23",
+      "SC-F1-STAIRS-15"
+    ]
+  },
+  {
+    "id": "SC-F1-J-20",
+    "label": "Algeria Door 1",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 542,
+    "y": 1160,
+    "type": "junction",
+    "connects_to": [
+      "SC-F1-DOOR-16",
+      "SC-F1-DOOR-19",
+      "SC-F1-DOOR-6",
+      "SC-F1-J-21",
+      "SC-F1-J-22",
+      "SC-F1-J-23",
+      "SC-F1-STAIRS-15"
+    ]
+  },
+  {
+    "id": "SC-F1-J-21",
+    "label": "Algeria Door 1",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 546,
+    "y": 1057,
+    "type": "junction",
+    "connects_to": [
+      "SC-F1-DOOR-16",
+      "SC-F1-DOOR-6",
+      "SC-F1-J-20",
+      "SC-F1-J-24"
+    ]
+  },
+  {
+    "id": "SC-F1-J-22",
+    "label": "Algeria Door 1",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 540,
+    "y": 1241,
+    "type": "junction",
+    "connects_to": [
+      "SC-F1-DOOR-16",
+      "SC-F1-DOOR-17",
+      "SC-F1-DOOR-19",
+      "SC-F1-J-20",
+      "SC-F1-J-23",
+      "SC-F1-STAIRS-15"
+    ]
+  },
+  {
+    "id": "SC-F1-J-23",
+    "label": "Algeria Door 1",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 726,
+    "y": 1241,
+    "type": "junction",
+    "connects_to": [
+      "SC-F1-DOOR-18",
+      "SC-F1-DOOR-19",
+      "SC-F1-DOOR-7",
+      "SC-F1-J-20",
+      "SC-F1-J-22",
+      "SC-F1-STAIRS-15"
+    ]
+  },
+  {
+    "id": "SC-F1-J-24",
+    "label": "Algeria Door 1",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 537,
+    "y": 921,
+    "type": "junction",
+    "connects_to": [
+      "SC-F1-DOOR-4",
+      "SC-F1-J-21",
+      "SC-F1-J-25",
+      "SC-F1-J-27",
+      "SC-F1-J-32"
+    ]
+  },
+  {
+    "id": "SC-F1-J-25",
+    "label": "Algeria Door 1",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 264,
+    "y": 934,
+    "type": "junction",
+    "connects_to": [
+      "SC-F1-DOOR-4",
+      "SC-F1-J-24",
+      "SC-F1-J-26",
+      "SC-F1-J-27",
+      "SC-F1-J-32"
+    ]
+  },
+  {
+    "id": "SC-F1-J-26",
+    "label": "Algeria Door 1",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 98,
+    "y": 947,
+    "type": "junction",
+    "connects_to": [
+      "SC-F1-J-25"
+    ]
+  },
+  {
+    "id": "SC-F1-J-27",
+    "label": "Algeria Door 1",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 519,
+    "y": 788,
+    "type": "junction",
+    "connects_to": [
+      "SC-F1-J-24",
+      "SC-F1-J-25",
+      "SC-F1-J-28",
+      "SC-F1-J-32"
+    ]
+  },
+  {
+    "id": "SC-F1-J-28",
+    "label": "Algeria Door 1",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 514,
+    "y": 609,
+    "type": "junction",
+    "connects_to": [
+      "SC-F1-ENTRY-13",
+      "SC-F1-J-27",
+      "SC-F1-J-29",
+      "SC-F1-J-32",
+      "SC-F1-STAIRS-8"
+    ]
+  },
+  {
+    "id": "SC-F1-J-29",
+    "label": "Algeria Door 1",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 608,
+    "y": 566,
+    "type": "junction",
+    "connects_to": [
+      "SC-F1-J-28",
+      "SC-F1-STAIRS-8",
+      "SC-F1-STAIRS-9"
+    ]
+  },
+  {
+    "id": "SC-F1-J-30",
+    "label": "Algeria Door 1",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 227,
+    "y": 430,
+    "type": "junction",
+    "connects_to": [
+      "SC-F1-DOOR-1",
+      "SC-F1-DOOR-2",
+      "SC-F1-DOOR-3",
+      "SC-F1-DOOR-5",
+      "SC-F1-ENTRY-11",
+      "SC-F1-ENTRY-12",
+      "SC-F1-J-32"
+    ]
+  },
+  {
+    "id": "SC-F1-J-32",
+    "label": "Algeria Door 1",
+    "building": "Social Commons",
+    "floor": 1,
+    "x": 300,
+    "y": 730,
+    "type": "junction",
+    "connects_to": [
+      "SC-F1-DOOR-4",
+      "SC-F1-DOOR-5",
+      "SC-F1-EL-10",
+      "SC-F1-J-24",
+      "SC-F1-J-25",
+      "SC-F1-J-27",
+      "SC-F1-J-28",
+      "SC-F1-J-30"
+    ]
+  },
+  {
+    "id": "SC-F0-EL-1",
+    "label": "Algeria Door 1",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 149,
+    "y": 256,
+    "type": "elevator",
+    "connects_to": [
+      "SC-F0-DOOR-5",
+      "SC-F0-DOOR-6",
+      "SC-F0-J-25"
+    ]
+  },
+  {
+    "id": "SC-F0-STAIRS-3",
+    "label": "Algeria Door 1",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 698,
+    "y": 990,
+    "type": "staircase",
+    "connects_to": [
+      "SC-F0-DOOR-10",
+      "SC-F0-DOOR-12",
+      "SC-F0-DOOR-30",
+      "SC-F0-DOOR-9",
+      "SC-F0-ENTRY-16",
+      "SC-F0-ENTRY-17",
+      "SC-F0-J-31",
+      "SC-F0-J-32"
+    ]
+  },
+  {
+    "id": "SC-F0-STAIRS-4",
+    "label": "Algeria Door 1",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 467,
+    "y": 544,
+    "type": "staircase",
+    "connects_to": [
+      "SC-F0-DOOR-15",
+      "SC-F0-ENTRY-18",
+      "SC-F0-ENTRY-19",
+      "SC-F0-ENTRY-24",
+      "SC-F0-J-26",
+      "SC-F0-J-27",
+      "SC-F0-J-28",
+      "SC-F0-J-29"
+    ]
+  },
+  {
+    "id": "SC-F0-DOOR-5",
+    "label": "Prayer Room Door",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 132,
+    "y": 385,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F0-DOOR-6",
+      "SC-F0-EL-1",
+      "SC-F0-J-25"
+    ]
+  },
+  {
+    "id": "SC-F0-DOOR-6",
+    "label": "SC-F0-DOOR-6",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 271,
+    "y": 364,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F0-DOOR-5",
+      "SC-F0-DOOR-7",
+      "SC-F0-EL-1",
+      "SC-F0-J-25"
+    ]
+  },
+  {
+    "id": "SC-F0-DOOR-7",
+    "label": "SC-F0-DOOR-7",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 318,
+    "y": 370,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F0-DOOR-6",
+      "SC-F0-J-25",
+      "SC-F0-J-26"
+    ]
+  },
+  {
+    "id": "SC-F0-DOOR-8",
+    "label": "Egypt Door 1",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 514,
+    "y": 1172,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F0-DOOR-15",
+      "SC-F0-DOOR-9",
+      "SC-F0-J-31",
+      "SC-F0-J-32"
+    ]
+  },
+  {
+    "id": "SC-F0-DOOR-9",
+    "label": "Egypt Door 2",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 675,
+    "y": 1174,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F0-DOOR-10",
+      "SC-F0-DOOR-8",
+      "SC-F0-J-32",
+      "SC-F0-STAIRS-3"
+    ]
+  },
+  {
+    "id": "SC-F0-DOOR-10",
+    "label": "SC-F0-DOOR-10",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 720,
+    "y": 1136,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F0-DOOR-9",
+      "SC-F0-ENTRY-16",
+      "SC-F0-J-32",
+      "SC-F0-STAIRS-3"
+    ]
+  },
+  {
+    "id": "SC-F0-DOOR-12",
+    "label": "SC-F0-DOOR-12",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 672,
+    "y": 848,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F0-DOOR-13",
+      "SC-F0-DOOR-15",
+      "SC-F0-DOOR-30",
+      "SC-F0-ENTRY-18",
+      "SC-F0-ENTRY-19",
+      "SC-F0-ENTRY-20",
+      "SC-F0-J-28",
+      "SC-F0-J-29",
+      "SC-F0-J-31",
+      "SC-F0-STAIRS-3"
+    ]
+  },
+  {
+    "id": "SC-F0-DOOR-13",
+    "label": "SC-F0-DOOR-13",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 722,
+    "y": 507,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F0-DOOR-12",
+      "SC-F0-DOOR-14",
+      "SC-F0-ENTRY-21",
+      "SC-F0-ENTRY-22",
+      "SC-F0-J-27",
+      "SC-F0-J-28",
+      "SC-F0-J-29"
+    ]
+  },
+  {
+    "id": "SC-F0-DOOR-14",
+    "label": "SC-F0-DOOR-14",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 712,
+    "y": 263,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F0-DOOR-13",
+      "SC-F0-ENTRY-21",
+      "SC-F0-ENTRY-22",
+      "SC-F0-ENTRY-23",
+      "SC-F0-ENTRY-24",
+      "SC-F0-J-26",
+      "SC-F0-J-27",
+      "SC-F0-J-29"
+    ]
+  },
+  {
+    "id": "SC-F0-DOOR-15",
+    "label": "SC-F0-DOOR-15",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 514,
+    "y": 852,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F0-DOOR-12",
+      "SC-F0-DOOR-30",
+      "SC-F0-DOOR-8",
+      "SC-F0-J-28",
+      "SC-F0-J-29",
+      "SC-F0-J-31",
+      "SC-F0-J-32",
+      "SC-F0-STAIRS-4"
+    ]
+  },
+  {
+    "id": "SC-F0-ENTRY-16",
+    "label": "SC-F0-ENTRY-16",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 755,
+    "y": 1091,
+    "type": "building_entry",
+    "connects_to": [
+      "SC-F0-DOOR-10",
+      "SC-F0-ENTRY-17",
+      "SC-F0-J-32",
+      "SC-F0-STAIRS-3"
+    ]
+  },
+  {
+    "id": "SC-F0-ENTRY-17",
+    "label": "SC-F0-ENTRY-17",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 755,
+    "y": 943,
+    "type": "building_entry",
+    "connects_to": [
+      "SC-F0-DOOR-30",
+      "SC-F0-ENTRY-16",
+      "SC-F0-J-31",
+      "SC-F0-STAIRS-3"
+    ]
+  },
+  {
+    "id": "SC-F0-ENTRY-18",
+    "label": "SC-F0-ENTRY-18",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 754,
+    "y": 697,
+    "type": "building_entry",
+    "connects_to": [
+      "SC-F0-DOOR-12",
+      "SC-F0-ENTRY-19",
+      "SC-F0-ENTRY-20",
+      "SC-F0-J-28",
+      "SC-F0-J-29",
+      "SC-F0-STAIRS-4"
+    ]
+  },
+  {
+    "id": "SC-F0-ENTRY-19",
+    "label": "SC-F0-ENTRY-19",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 753,
+    "y": 631,
+    "type": "building_entry",
+    "connects_to": [
+      "SC-F0-DOOR-12",
+      "SC-F0-ENTRY-18",
+      "SC-F0-J-28",
+      "SC-F0-J-29",
+      "SC-F0-STAIRS-4"
+    ]
+  },
+  {
+    "id": "SC-F0-ENTRY-20",
+    "label": "SC-F0-ENTRY-20",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 753,
+    "y": 771,
+    "type": "building_entry",
+    "connects_to": [
+      "SC-F0-DOOR-12",
+      "SC-F0-ENTRY-18",
+      "SC-F0-J-28",
+      "SC-F0-J-29"
+    ]
+  },
+  {
+    "id": "SC-F0-ENTRY-21",
+    "label": "SC-F0-ENTRY-21",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 755,
+    "y": 444,
+    "type": "building_entry",
+    "connects_to": [
+      "SC-F0-DOOR-13",
+      "SC-F0-DOOR-14",
+      "SC-F0-ENTRY-22",
+      "SC-F0-ENTRY-24",
+      "SC-F0-J-27"
+    ]
+  },
+  {
+    "id": "SC-F0-ENTRY-22",
+    "label": "SC-F0-ENTRY-22",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 752,
+    "y": 384,
+    "type": "building_entry",
+    "connects_to": [
+      "SC-F0-DOOR-13",
+      "SC-F0-DOOR-14",
+      "SC-F0-ENTRY-21",
+      "SC-F0-ENTRY-23",
+      "SC-F0-ENTRY-24",
+      "SC-F0-J-27"
+    ]
+  },
+  {
+    "id": "SC-F0-ENTRY-23",
+    "label": "SC-F0-ENTRY-23",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 751,
+    "y": 321,
+    "type": "building_entry",
+    "connects_to": [
+      "SC-F0-DOOR-14",
+      "SC-F0-ENTRY-22",
+      "SC-F0-ENTRY-24",
+      "SC-F0-J-26",
+      "SC-F0-J-27",
+      "SC-F0-J-29"
+    ]
+  },
+  {
+    "id": "SC-F0-ENTRY-24",
+    "label": "SC-F0-ENTRY-24",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 665,
+    "y": 220,
+    "type": "building_entry",
+    "connects_to": [
+      "SC-F0-DOOR-14",
+      "SC-F0-ENTRY-21",
+      "SC-F0-ENTRY-22",
+      "SC-F0-ENTRY-23",
+      "SC-F0-J-26",
+      "SC-F0-J-27",
+      "SC-F0-J-29",
+      "SC-F0-STAIRS-4"
+    ]
+  },
+  {
+    "id": "SC-F0-J-25",
+    "label": "SC-F0-J-25",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 296,
+    "y": 277,
+    "type": "junction",
+    "connects_to": [
+      "SC-F0-DOOR-5",
+      "SC-F0-DOOR-6",
+      "SC-F0-DOOR-7",
+      "SC-F0-EL-1",
+      "SC-F0-J-26"
+    ]
+  },
+  {
+    "id": "SC-F0-J-26",
+    "label": "SC-F0-J-26",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 440,
+    "y": 273,
+    "type": "junction",
+    "connects_to": [
+      "SC-F0-DOOR-14",
+      "SC-F0-DOOR-7",
+      "SC-F0-ENTRY-23",
+      "SC-F0-ENTRY-24",
+      "SC-F0-J-25",
+      "SC-F0-J-27",
+      "SC-F0-J-29",
+      "SC-F0-STAIRS-4"
+    ]
+  },
+  {
+    "id": "SC-F0-J-27",
+    "label": "SC-F0-J-27",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 598,
+    "y": 393,
+    "type": "junction",
+    "connects_to": [
+      "SC-F0-DOOR-13",
+      "SC-F0-DOOR-14",
+      "SC-F0-ENTRY-21",
+      "SC-F0-ENTRY-22",
+      "SC-F0-ENTRY-23",
+      "SC-F0-ENTRY-24",
+      "SC-F0-J-26",
+      "SC-F0-J-29",
+      "SC-F0-STAIRS-4"
+    ]
+  },
+  {
+    "id": "SC-F0-J-28",
+    "label": "SC-F0-J-28",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 600,
+    "y": 696,
+    "type": "junction",
+    "connects_to": [
+      "SC-F0-DOOR-12",
+      "SC-F0-DOOR-13",
+      "SC-F0-DOOR-15",
+      "SC-F0-ENTRY-18",
+      "SC-F0-ENTRY-19",
+      "SC-F0-ENTRY-20",
+      "SC-F0-J-29",
+      "SC-F0-STAIRS-4"
+    ]
+  },
+  {
+    "id": "SC-F0-J-29",
+    "label": "SC-F0-J-29",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 598,
+    "y": 537,
+    "type": "junction",
+    "connects_to": [
+      "SC-F0-DOOR-12",
+      "SC-F0-DOOR-13",
+      "SC-F0-DOOR-14",
+      "SC-F0-DOOR-15",
+      "SC-F0-ENTRY-18",
+      "SC-F0-ENTRY-19",
+      "SC-F0-ENTRY-20",
+      "SC-F0-ENTRY-23",
+      "SC-F0-ENTRY-24",
+      "SC-F0-J-26",
+      "SC-F0-J-27",
+      "SC-F0-J-28",
+      "SC-F0-STAIRS-4"
+    ]
+  },
+  {
+    "id": "SC-F0-DOOR-30",
+    "label": "SC-F0-DOOR-30",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 717,
+    "y": 895,
+    "type": "entrance",
+    "connects_to": [
+      "SC-F0-DOOR-12",
+      "SC-F0-DOOR-15",
+      "SC-F0-ENTRY-17",
+      "SC-F0-J-31",
+      "SC-F0-STAIRS-3"
+    ]
+  },
+  {
+    "id": "SC-F0-J-31",
+    "label": "SC-F0-J-31",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 607,
+    "y": 936,
+    "type": "junction",
+    "connects_to": [
+      "SC-F0-DOOR-12",
+      "SC-F0-DOOR-15",
+      "SC-F0-DOOR-30",
+      "SC-F0-DOOR-8",
+      "SC-F0-ENTRY-17",
+      "SC-F0-J-32",
+      "SC-F0-STAIRS-3"
+    ]
+  },
+  {
+    "id": "SC-F0-J-32",
+    "label": "SC-F0-J-32",
+    "building": "Social Commons",
+    "floor": 0,
+    "x": 604,
+    "y": 1092,
+    "type": "junction",
+    "connects_to": [
+      "SC-F0-DOOR-10",
+      "SC-F0-DOOR-15",
+      "SC-F0-DOOR-8",
+      "SC-F0-DOOR-9",
+      "SC-F0-ENTRY-16",
+      "SC-F0-J-31",
+      "SC-F0-STAIRS-3"
+    ]
+  }
+]
