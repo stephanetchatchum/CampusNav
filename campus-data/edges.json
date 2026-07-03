@@ -1,0 +1,1208 @@
+[
+  {
+    "id": "e1",
+    "from": "SC-F2-ENTRY-10",
+    "to": "SC-F2-J-14",
+    "distance": 21
+  },
+  {
+    "id": "e2",
+    "from": "SC-F2-J-14",
+    "to": "SC-F2-DOOR-9",
+    "distance": 9
+  },
+  {
+    "id": "e3",
+    "from": "SC-F2-DOOR-9",
+    "to": "SC-F2-J-15",
+    "distance": 17
+  },
+  {
+    "id": "e4",
+    "from": "SC-F2-J-15",
+    "to": "SC-F2-J-13",
+    "distance": 27
+  },
+  {
+    "id": "e5",
+    "from": "SC-F2-J-13",
+    "to": "SC-F2-STAIRS-12",
+    "distance": 6
+  },
+  {
+    "id": "e6",
+    "from": "SC-F2-J-15",
+    "to": "SC-F2-J-16",
+    "distance": 17
+  },
+  {
+    "id": "e7",
+    "from": "SC-F2-J-16",
+    "to": "SC-F2-DOOR-7",
+    "distance": 5
+  },
+  {
+    "id": "e8",
+    "from": "SC-F2-J-16",
+    "to": "SC-F2-DOOR-8",
+    "distance": 5
+  },
+  {
+    "id": "e9",
+    "from": "SC-F2-J-16",
+    "to": "SC-F2-EL-11",
+    "distance": 14
+  },
+  {
+    "id": "e10",
+    "from": "SC-F2-J-16",
+    "to": "SC-F2-J-17",
+    "distance": 17
+  },
+  {
+    "id": "e11",
+    "from": "SC-F2-J-17",
+    "to": "SC-F2-DOOR-22",
+    "distance": 14
+  },
+  {
+    "id": "e12",
+    "from": "SC-F2-EL-11",
+    "to": "SC-F2-J-17",
+    "distance": 13
+  },
+  {
+    "id": "e13",
+    "from": "SC-F2-EL-11",
+    "to": "SC-F2-DOOR-22",
+    "distance": 18
+  },
+  {
+    "id": "e14",
+    "from": "SC-F2-J-17",
+    "to": "SC-F2-J-13",
+    "distance": 19
+  },
+  {
+    "id": "e15",
+    "from": "SC-F2-J-17",
+    "to": "SC-F2-J-15",
+    "distance": 23
+  },
+  {
+    "id": "e16",
+    "from": "SC-F2-DOOR-7",
+    "to": "SC-F2-J-15",
+    "distance": 16
+  },
+  {
+    "id": "e17",
+    "from": "SC-F2-J-15",
+    "to": "SC-F2-STAIRS-12",
+    "distance": 28
+  },
+  {
+    "id": "e18",
+    "from": "SC-F2-J-16",
+    "to": "SC-F2-J-18",
+    "distance": 27
+  },
+  {
+    "id": "e19",
+    "from": "SC-F2-J-18",
+    "to": "SC-F2-DOOR-6",
+    "distance": 7
+  },
+  {
+    "id": "e20",
+    "from": "SC-F2-J-18",
+    "to": "SC-F2-DOOR-3",
+    "distance": 8
+  },
+  {
+    "id": "e21",
+    "from": "SC-F2-DOOR-3",
+    "to": "SC-F2-DOOR-6",
+    "distance": 4
+  },
+  {
+    "id": "e22",
+    "from": "SC-F2-J-18",
+    "to": "SC-F2-DOOR-4",
+    "distance": 14
+  },
+  {
+    "id": "e23",
+    "from": "SC-F2-DOOR-4",
+    "to": "SC-F2-DOOR-3",
+    "distance": 12
+  },
+  {
+    "id": "e24",
+    "from": "SC-F2-J-21",
+    "to": "SC-F2-J-18",
+    "distance": 14
+  },
+  {
+    "id": "e25",
+    "from": "SC-F2-J-21",
+    "to": "SC-F2-DOOR-5",
+    "distance": 7
+  },
+  {
+    "id": "e26",
+    "from": "SC-F2-DOOR-5",
+    "to": "SC-F2-J-19",
+    "distance": 9
+  },
+  {
+    "id": "e27",
+    "from": "SC-F2-J-19",
+    "to": "SC-F2-J-21",
+    "distance": 12
+  },
+  {
+    "id": "e28",
+    "from": "SC-F2-J-19",
+    "to": "SC-F2-DOOR-1",
+    "distance": 9
+  },
+  {
+    "id": "e29",
+    "from": "SC-F2-DOOR-1",
+    "to": "SC-F2-DOOR-5",
+    "distance": 4
+  },
+  {
+    "id": "e30",
+    "from": "SC-F2-J-19",
+    "to": "SC-F2-DOOR-2",
+    "distance": 11
+  },
+  {
+    "id": "e31",
+    "from": "SC-F2-DOOR-2",
+    "to": "SC-F2-DOOR-1",
+    "distance": 12
+  },
+  {
+    "id": "e32",
+    "from": "SC-F2-J-19",
+    "to": "SC-F2-J-20",
+    "distance": 7
+  },
+  {
+    "id": "e33",
+    "from": "SC-F2-J-20",
+    "to": "SC-F2-J-21",
+    "distance": 14
+  },
+  {
+    "id": "e34",
+    "from": "SC-F2-J-20",
+    "to": "SC-F2-DOOR-2",
+    "distance": 17
+  },
+  {
+    "id": "e35",
+    "from": "SC-F2-DOOR-1",
+    "to": "SC-F2-J-20",
+    "distance": 16
+  },
+  {
+    "id": "e36",
+    "from": "SC-F2-DOOR-5",
+    "to": "SC-F2-J-20",
+    "distance": 15
+  },
+  {
+    "id": "e37",
+    "from": "SC-F2-J-21",
+    "to": "SC-F2-DOOR-4",
+    "distance": 9
+  },
+  {
+    "id": "e38",
+    "from": "SC-F2-J-21",
+    "to": "SC-F2-DOOR-3",
+    "distance": 17
+  },
+  {
+    "id": "e39",
+    "from": "SC-F2-J-21",
+    "to": "SC-F2-DOOR-6",
+    "distance": 19
+  },
+  {
+    "id": "e40",
+    "from": "SC-F2-DOOR-22",
+    "to": "SC-F2-J-16",
+    "distance": 29
+  },
+  {
+    "id": "e41",
+    "from": "SC-F2-J-16",
+    "to": "SC-F2-J-13",
+    "distance": 32
+  },
+  {
+    "id": "e42",
+    "from": "SC-F2-J-16",
+    "to": "SC-F2-STAIRS-12",
+    "distance": 30
+  },
+  {
+    "id": "e43",
+    "from": "SC-F2-DOOR-8",
+    "to": "SC-F2-J-18",
+    "distance": 27
+  },
+  {
+    "id": "e44",
+    "from": "SC-F2-STAIRS-12",
+    "to": "SC-F2-J-17",
+    "distance": 15
+  },
+  {
+    "id": "e45",
+    "from": "SC-F1-J-26",
+    "to": "SC-F1-J-25",
+    "distance": 17
+  },
+  {
+    "id": "e46",
+    "from": "SC-F1-J-25",
+    "to": "SC-F1-J-24",
+    "distance": 27
+  },
+  {
+    "id": "e47",
+    "from": "SC-F1-J-24",
+    "to": "SC-F1-J-21",
+    "distance": 14
+  },
+  {
+    "id": "e48",
+    "from": "SC-F1-J-21",
+    "to": "SC-F1-DOOR-6",
+    "distance": 5
+  },
+  {
+    "id": "e49",
+    "from": "SC-F1-DOOR-16",
+    "to": "SC-F1-J-22",
+    "distance": 13
+  },
+  {
+    "id": "e50",
+    "from": "SC-F1-J-22",
+    "to": "SC-F1-DOOR-17",
+    "distance": 5
+  },
+  {
+    "id": "e51",
+    "from": "SC-F1-J-22",
+    "to": "SC-F1-DOOR-19",
+    "distance": 14
+  },
+  {
+    "id": "e52",
+    "from": "SC-F1-J-22",
+    "to": "SC-F1-J-23",
+    "distance": 19
+  },
+  {
+    "id": "e53",
+    "from": "SC-F1-J-23",
+    "to": "SC-F1-DOOR-18",
+    "distance": 9
+  },
+  {
+    "id": "e54",
+    "from": "SC-F1-J-23",
+    "to": "SC-F1-DOOR-7",
+    "distance": 10
+  },
+  {
+    "id": "e55",
+    "from": "SC-F1-DOOR-7",
+    "to": "SC-F1-DOOR-18",
+    "distance": 4
+  },
+  {
+    "id": "e56",
+    "from": "SC-F1-J-23",
+    "to": "SC-F1-DOOR-19",
+    "distance": 8
+  },
+  {
+    "id": "e57",
+    "from": "SC-F1-DOOR-19",
+    "to": "SC-F1-DOOR-18",
+    "distance": 13
+  },
+  {
+    "id": "e58",
+    "from": "SC-F1-DOOR-17",
+    "to": "SC-F1-DOOR-16",
+    "distance": 13
+  },
+  {
+    "id": "e59",
+    "from": "SC-F1-J-22",
+    "to": "SC-F1-J-20",
+    "distance": 8
+  },
+  {
+    "id": "e60",
+    "from": "SC-F1-J-20",
+    "to": "SC-F1-STAIRS-15",
+    "distance": 7
+  },
+  {
+    "id": "e61",
+    "from": "SC-F1-J-20",
+    "to": "SC-F1-DOOR-6",
+    "distance": 9
+  },
+  {
+    "id": "e62",
+    "from": "SC-F1-J-21",
+    "to": "SC-F1-J-20",
+    "distance": 10
+  },
+  {
+    "id": "e63",
+    "from": "SC-F1-J-24",
+    "to": "SC-F1-J-27",
+    "distance": 13
+  },
+  {
+    "id": "e64",
+    "from": "SC-F1-J-25",
+    "to": "SC-F1-J-32",
+    "distance": 21
+  },
+  {
+    "id": "e65",
+    "from": "SC-F1-J-32",
+    "to": "SC-F1-DOOR-4",
+    "distance": 7
+  },
+  {
+    "id": "e66",
+    "from": "SC-F1-J-32",
+    "to": "SC-F1-DOOR-5",
+    "distance": 6
+  },
+  {
+    "id": "e67",
+    "from": "SC-F1-DOOR-4",
+    "to": "SC-F1-J-25",
+    "distance": 19
+  },
+  {
+    "id": "e68",
+    "from": "SC-F1-J-32",
+    "to": "SC-F1-EL-10",
+    "distance": 16
+  },
+  {
+    "id": "e69",
+    "from": "SC-F1-J-32",
+    "to": "SC-F1-J-27",
+    "distance": 23
+  },
+  {
+    "id": "e70",
+    "from": "SC-F1-J-32",
+    "to": "SC-F1-J-28",
+    "distance": 25
+  },
+  {
+    "id": "e71",
+    "from": "SC-F1-J-28",
+    "to": "SC-F1-ENTRY-13",
+    "distance": 6
+  },
+  {
+    "id": "e72",
+    "from": "SC-F1-EL-10",
+    "to": "SC-F1-ENTRY-13",
+    "distance": 10
+  },
+  {
+    "id": "e73",
+    "from": "SC-F1-J-28",
+    "to": "SC-F1-J-29",
+    "distance": 10
+  },
+  {
+    "id": "e74",
+    "from": "SC-F1-J-28",
+    "to": "SC-F1-STAIRS-8",
+    "distance": 7
+  },
+  {
+    "id": "e75",
+    "from": "SC-F1-J-29",
+    "to": "SC-F1-STAIRS-9",
+    "distance": 4
+  },
+  {
+    "id": "e76",
+    "from": "SC-F1-J-29",
+    "to": "SC-F1-STAIRS-8",
+    "distance": 4
+  },
+  {
+    "id": "e77",
+    "from": "SC-F1-STAIRS-8",
+    "to": "SC-F1-STAIRS-9",
+    "distance": 5
+  },
+  {
+    "id": "e78",
+    "from": "SC-F1-J-30",
+    "to": "SC-F1-ENTRY-12",
+    "distance": 15
+  },
+  {
+    "id": "e79",
+    "from": "SC-F1-J-30",
+    "to": "SC-F1-ENTRY-11",
+    "distance": 14
+  },
+  {
+    "id": "e80",
+    "from": "SC-F1-ENTRY-11",
+    "to": "SC-F1-DOOR-3",
+    "distance": 5
+  },
+  {
+    "id": "e81",
+    "from": "SC-F1-DOOR-2",
+    "to": "SC-F1-J-30",
+    "distance": 13
+  },
+  {
+    "id": "e82",
+    "from": "SC-F1-J-30",
+    "to": "SC-F1-DOOR-3",
+    "distance": 14
+  },
+  {
+    "id": "e83",
+    "from": "SC-F1-DOOR-2",
+    "to": "SC-F1-DOOR-3",
+    "distance": 4
+  },
+  {
+    "id": "e84",
+    "from": "SC-F1-J-30",
+    "to": "SC-F1-DOOR-1",
+    "distance": 12
+  },
+  {
+    "id": "e85",
+    "from": "SC-F1-DOOR-1",
+    "to": "SC-F1-DOOR-2",
+    "distance": 13
+  },
+  {
+    "id": "e86",
+    "from": "SC-F1-J-30",
+    "to": "SC-F1-J-32",
+    "distance": 31
+  },
+  {
+    "id": "e87",
+    "from": "SC-F1-DOOR-5",
+    "to": "SC-F1-ENTRY-12",
+    "distance": 25
+  },
+  {
+    "id": "e88",
+    "from": "SC-F1-DOOR-5",
+    "to": "SC-F1-J-30",
+    "distance": 29
+  },
+  {
+    "id": "e89",
+    "from": "SC-F1-DOOR-5",
+    "to": "SC-F1-DOOR-3",
+    "distance": 38
+  },
+  {
+    "id": "e90",
+    "from": "SC-F1-DOOR-5",
+    "to": "SC-F1-DOOR-2",
+    "distance": 40
+  },
+  {
+    "id": "e91",
+    "from": "SC-F1-DOOR-1",
+    "to": "SC-F1-DOOR-3",
+    "distance": 17
+  },
+  {
+    "id": "e92",
+    "from": "SC-F1-DOOR-1",
+    "to": "SC-F1-ENTRY-11",
+    "distance": 20
+  },
+  {
+    "id": "e93",
+    "from": "SC-F1-DOOR-1",
+    "to": "SC-F1-ENTRY-12",
+    "distance": 27
+  },
+  {
+    "id": "e94",
+    "from": "SC-F1-DOOR-2",
+    "to": "SC-F1-ENTRY-12",
+    "distance": 19
+  },
+  {
+    "id": "e95",
+    "from": "SC-F1-DOOR-3",
+    "to": "SC-F1-ENTRY-12",
+    "distance": 16
+  },
+  {
+    "id": "e96",
+    "from": "SC-F1-J-28",
+    "to": "SC-F1-J-27",
+    "distance": 18
+  },
+  {
+    "id": "e97",
+    "from": "SC-F1-J-23",
+    "to": "SC-F1-STAIRS-15",
+    "distance": 14
+  },
+  {
+    "id": "e98",
+    "from": "SC-F1-DOOR-6",
+    "to": "SC-F1-STAIRS-15",
+    "distance": 8
+  },
+  {
+    "id": "e99",
+    "from": "SC-F1-J-22",
+    "to": "SC-F1-STAIRS-15",
+    "distance": 10
+  },
+  {
+    "id": "e100",
+    "from": "SC-F1-J-20",
+    "to": "SC-F1-J-23",
+    "distance": 20
+  },
+  {
+    "id": "e101",
+    "from": "SC-F1-J-20",
+    "to": "SC-F1-DOOR-19",
+    "distance": 18
+  },
+  {
+    "id": "e102",
+    "from": "SC-F1-STAIRS-15",
+    "to": "SC-F1-DOOR-19",
+    "distance": 15
+  },
+  {
+    "id": "e103",
+    "from": "SC-F1-J-20",
+    "to": "SC-F1-DOOR-16",
+    "distance": 18
+  },
+  {
+    "id": "e104",
+    "from": "SC-F1-DOOR-16",
+    "to": "SC-F1-J-21",
+    "distance": 27
+  },
+  {
+    "id": "e105",
+    "from": "SC-F1-J-32",
+    "to": "SC-F1-J-24",
+    "distance": 30
+  },
+  {
+    "id": "e106",
+    "from": "SC-F1-J-25",
+    "to": "SC-F1-J-27",
+    "distance": 29
+  },
+  {
+    "id": "e107",
+    "from": "SC-F1-DOOR-4",
+    "to": "SC-F1-J-24",
+    "distance": 35
+  },
+  {
+    "id": "e108",
+    "from": "SC-F1-ENTRY-11",
+    "to": "SC-F1-ENTRY-12",
+    "distance": 12
+  },
+  {
+    "id": "e109",
+    "from": "SC-F1-DOOR-5",
+    "to": "SC-F1-ENTRY-11",
+    "distance": 36
+  },
+  {
+    "id": "e110",
+    "from": "SC-F0-EL-1",
+    "to": "SC-F0-DOOR-5",
+    "distance": 13
+  },
+  {
+    "id": "e111",
+    "from": "SC-F0-DOOR-5",
+    "to": "SC-F0-J-25",
+    "distance": 20
+  },
+  {
+    "id": "e112",
+    "from": "SC-F0-J-25",
+    "to": "SC-F0-DOOR-6",
+    "distance": 9
+  },
+  {
+    "id": "e113",
+    "from": "SC-F0-J-25",
+    "to": "SC-F0-DOOR-7",
+    "distance": 10
+  },
+  {
+    "id": "e114",
+    "from": "SC-F0-DOOR-6",
+    "to": "SC-F0-EL-1",
+    "distance": 16
+  },
+  {
+    "id": "e115",
+    "from": "SC-F0-EL-1",
+    "to": "SC-F0-J-25",
+    "distance": 15
+  },
+  {
+    "id": "e116",
+    "from": "SC-F0-DOOR-6",
+    "to": "SC-F0-DOOR-5",
+    "distance": 14
+  },
+  {
+    "id": "e117",
+    "from": "SC-F0-DOOR-7",
+    "to": "SC-F0-J-26",
+    "distance": 16
+  },
+  {
+    "id": "e118",
+    "from": "SC-F0-J-25",
+    "to": "SC-F0-J-26",
+    "distance": 14
+  },
+  {
+    "id": "e119",
+    "from": "SC-F0-J-26",
+    "to": "SC-F0-STAIRS-4",
+    "distance": 27
+  },
+  {
+    "id": "e120",
+    "from": "SC-F0-J-26",
+    "to": "SC-F0-ENTRY-24",
+    "distance": 23
+  },
+  {
+    "id": "e121",
+    "from": "SC-F0-ENTRY-24",
+    "to": "SC-F0-J-27",
+    "distance": 19
+  },
+  {
+    "id": "e122",
+    "from": "SC-F0-J-27",
+    "to": "SC-F0-DOOR-14",
+    "distance": 17
+  },
+  {
+    "id": "e123",
+    "from": "SC-F0-DOOR-14",
+    "to": "SC-F0-ENTRY-24",
+    "distance": 6
+  },
+  {
+    "id": "e124",
+    "from": "SC-F0-DOOR-14",
+    "to": "SC-F0-ENTRY-23",
+    "distance": 7
+  },
+  {
+    "id": "e125",
+    "from": "SC-F0-DOOR-14",
+    "to": "SC-F0-ENTRY-22",
+    "distance": 13
+  },
+  {
+    "id": "e126",
+    "from": "SC-F0-ENTRY-22",
+    "to": "SC-F0-ENTRY-23",
+    "distance": 6
+  },
+  {
+    "id": "e127",
+    "from": "SC-F0-ENTRY-21",
+    "to": "SC-F0-ENTRY-22",
+    "distance": 6
+  },
+  {
+    "id": "e128",
+    "from": "SC-F0-DOOR-13",
+    "to": "SC-F0-ENTRY-21",
+    "distance": 7
+  },
+  {
+    "id": "e129",
+    "from": "SC-F0-ENTRY-21",
+    "to": "SC-F0-J-27",
+    "distance": 17
+  },
+  {
+    "id": "e130",
+    "from": "SC-F0-J-27",
+    "to": "SC-F0-J-29",
+    "distance": 14
+  },
+  {
+    "id": "e131",
+    "from": "SC-F0-J-27",
+    "to": "SC-F0-J-26",
+    "distance": 20
+  },
+  {
+    "id": "e132",
+    "from": "SC-F0-J-26",
+    "to": "SC-F0-J-29",
+    "distance": 31
+  },
+  {
+    "id": "e133",
+    "from": "SC-F0-J-29",
+    "to": "SC-F0-STAIRS-4",
+    "distance": 13
+  },
+  {
+    "id": "e134",
+    "from": "SC-F0-STAIRS-4",
+    "to": "SC-F0-J-27",
+    "distance": 20
+  },
+  {
+    "id": "e135",
+    "from": "SC-F0-DOOR-13",
+    "to": "SC-F0-J-29",
+    "distance": 13
+  },
+  {
+    "id": "e136",
+    "from": "SC-F0-J-29",
+    "to": "SC-F0-DOOR-14",
+    "distance": 30
+  },
+  {
+    "id": "e137",
+    "from": "SC-F0-ENTRY-22",
+    "to": "SC-F0-DOOR-13",
+    "distance": 13
+  },
+  {
+    "id": "e138",
+    "from": "SC-F0-ENTRY-21",
+    "to": "SC-F0-ENTRY-24",
+    "distance": 24
+  },
+  {
+    "id": "e139",
+    "from": "SC-F0-ENTRY-23",
+    "to": "SC-F0-J-29",
+    "distance": 26
+  },
+  {
+    "id": "e140",
+    "from": "SC-F0-J-27",
+    "to": "SC-F0-DOOR-13",
+    "distance": 17
+  },
+  {
+    "id": "e141",
+    "from": "SC-F0-DOOR-14",
+    "to": "SC-F0-DOOR-13",
+    "distance": 24
+  },
+  {
+    "id": "e142",
+    "from": "SC-F0-ENTRY-22",
+    "to": "SC-F0-J-27",
+    "distance": 15
+  },
+  {
+    "id": "e143",
+    "from": "SC-F0-DOOR-14",
+    "to": "SC-F0-ENTRY-21",
+    "distance": 19
+  },
+  {
+    "id": "e144",
+    "from": "SC-F0-ENTRY-22",
+    "to": "SC-F0-ENTRY-24",
+    "distance": 19
+  },
+  {
+    "id": "e145",
+    "from": "SC-F0-ENTRY-23",
+    "to": "SC-F0-ENTRY-24",
+    "distance": 13
+  },
+  {
+    "id": "e146",
+    "from": "SC-F0-ENTRY-23",
+    "to": "SC-F0-J-27",
+    "distance": 17
+  },
+  {
+    "id": "e147",
+    "from": "SC-F0-ENTRY-23",
+    "to": "SC-F0-J-26",
+    "distance": 31
+  },
+  {
+    "id": "e148",
+    "from": "SC-F0-DOOR-14",
+    "to": "SC-F0-J-26",
+    "distance": 27
+  },
+  {
+    "id": "e149",
+    "from": "SC-F0-ENTRY-24",
+    "to": "SC-F0-STAIRS-4",
+    "distance": 38
+  },
+  {
+    "id": "e150",
+    "from": "SC-F0-ENTRY-24",
+    "to": "SC-F0-J-29",
+    "distance": 32
+  },
+  {
+    "id": "e151",
+    "from": "SC-F0-J-29",
+    "to": "SC-F0-J-28",
+    "distance": 16
+  },
+  {
+    "id": "e152",
+    "from": "SC-F0-STAIRS-4",
+    "to": "SC-F0-J-28",
+    "distance": 20
+  },
+  {
+    "id": "e153",
+    "from": "SC-F0-J-28",
+    "to": "SC-F0-DOOR-13",
+    "distance": 22
+  },
+  {
+    "id": "e154",
+    "from": "SC-F0-J-28",
+    "to": "SC-F0-ENTRY-19",
+    "distance": 17
+  },
+  {
+    "id": "e155",
+    "from": "SC-F0-J-28",
+    "to": "SC-F0-ENTRY-18",
+    "distance": 15
+  },
+  {
+    "id": "e156",
+    "from": "SC-F0-J-28",
+    "to": "SC-F0-ENTRY-20",
+    "distance": 17
+  },
+  {
+    "id": "e157",
+    "from": "SC-F0-ENTRY-20",
+    "to": "SC-F0-ENTRY-18",
+    "distance": 7
+  },
+  {
+    "id": "e158",
+    "from": "SC-F0-ENTRY-18",
+    "to": "SC-F0-ENTRY-19",
+    "distance": 7
+  },
+  {
+    "id": "e159",
+    "from": "SC-F0-ENTRY-18",
+    "to": "SC-F0-J-29",
+    "distance": 22
+  },
+  {
+    "id": "e160",
+    "from": "SC-F0-J-29",
+    "to": "SC-F0-ENTRY-19",
+    "distance": 18
+  },
+  {
+    "id": "e161",
+    "from": "SC-F0-ENTRY-19",
+    "to": "SC-F0-STAIRS-4",
+    "distance": 30
+  },
+  {
+    "id": "e162",
+    "from": "SC-F0-STAIRS-4",
+    "to": "SC-F0-ENTRY-18",
+    "distance": 33
+  },
+  {
+    "id": "e163",
+    "from": "SC-F0-ENTRY-20",
+    "to": "SC-F0-J-29",
+    "distance": 28
+  },
+  {
+    "id": "e164",
+    "from": "SC-F0-ENTRY-20",
+    "to": "SC-F0-DOOR-12",
+    "distance": 11
+  },
+  {
+    "id": "e165",
+    "from": "SC-F0-DOOR-15",
+    "to": "SC-F0-J-28",
+    "distance": 18
+  },
+  {
+    "id": "e166",
+    "from": "SC-F0-J-28",
+    "to": "SC-F0-DOOR-12",
+    "distance": 17
+  },
+  {
+    "id": "e167",
+    "from": "SC-F0-DOOR-12",
+    "to": "SC-F0-ENTRY-18",
+    "distance": 17
+  },
+  {
+    "id": "e168",
+    "from": "SC-F0-DOOR-12",
+    "to": "SC-F0-ENTRY-19",
+    "distance": 23
+  },
+  {
+    "id": "e169",
+    "from": "SC-F0-DOOR-12",
+    "to": "SC-F0-J-29",
+    "distance": 32
+  },
+  {
+    "id": "e170",
+    "from": "SC-F0-DOOR-12",
+    "to": "SC-F0-DOOR-13",
+    "distance": 34
+  },
+  {
+    "id": "e171",
+    "from": "SC-F0-STAIRS-4",
+    "to": "SC-F0-DOOR-15",
+    "distance": 31
+  },
+  {
+    "id": "e172",
+    "from": "SC-F0-DOOR-15",
+    "to": "SC-F0-DOOR-12",
+    "distance": 16
+  },
+  {
+    "id": "e173",
+    "from": "SC-F0-DOOR-15",
+    "to": "SC-F0-J-29",
+    "distance": 33
+  },
+  {
+    "id": "e174",
+    "from": "SC-F0-DOOR-15",
+    "to": "SC-F0-J-31",
+    "distance": 13
+  },
+  {
+    "id": "e175",
+    "from": "SC-F0-J-31",
+    "to": "SC-F0-DOOR-12",
+    "distance": 11
+  },
+  {
+    "id": "e176",
+    "from": "SC-F0-DOOR-12",
+    "to": "SC-F0-DOOR-30",
+    "distance": 7
+  },
+  {
+    "id": "e177",
+    "from": "SC-F0-DOOR-30",
+    "to": "SC-F0-J-31",
+    "distance": 12
+  },
+  {
+    "id": "e178",
+    "from": "SC-F0-DOOR-15",
+    "to": "SC-F0-DOOR-30",
+    "distance": 21
+  },
+  {
+    "id": "e179",
+    "from": "SC-F0-DOOR-30",
+    "to": "SC-F0-STAIRS-3",
+    "distance": 10
+  },
+  {
+    "id": "e180",
+    "from": "SC-F0-STAIRS-3",
+    "to": "SC-F0-ENTRY-17",
+    "distance": 7
+  },
+  {
+    "id": "e181",
+    "from": "SC-F0-ENTRY-17",
+    "to": "SC-F0-J-31",
+    "distance": 15
+  },
+  {
+    "id": "e182",
+    "from": "SC-F0-J-31",
+    "to": "SC-F0-STAIRS-3",
+    "distance": 11
+  },
+  {
+    "id": "e183",
+    "from": "SC-F0-DOOR-30",
+    "to": "SC-F0-ENTRY-17",
+    "distance": 6
+  },
+  {
+    "id": "e184",
+    "from": "SC-F0-STAIRS-3",
+    "to": "SC-F0-J-32",
+    "distance": 14
+  },
+  {
+    "id": "e185",
+    "from": "SC-F0-J-32",
+    "to": "SC-F0-DOOR-9",
+    "distance": 11
+  },
+  {
+    "id": "e186",
+    "from": "SC-F0-DOOR-9",
+    "to": "SC-F0-DOOR-10",
+    "distance": 6
+  },
+  {
+    "id": "e187",
+    "from": "SC-F0-DOOR-10",
+    "to": "SC-F0-ENTRY-16",
+    "distance": 6
+  },
+  {
+    "id": "e188",
+    "from": "SC-F0-ENTRY-16",
+    "to": "SC-F0-STAIRS-3",
+    "distance": 12
+  },
+  {
+    "id": "e189",
+    "from": "SC-F0-STAIRS-3",
+    "to": "SC-F0-DOOR-9",
+    "distance": 19
+  },
+  {
+    "id": "e190",
+    "from": "SC-F0-DOOR-10",
+    "to": "SC-F0-STAIRS-3",
+    "distance": 15
+  },
+  {
+    "id": "e191",
+    "from": "SC-F0-J-32",
+    "to": "SC-F0-DOOR-10",
+    "distance": 12
+  },
+  {
+    "id": "e192",
+    "from": "SC-F0-ENTRY-16",
+    "to": "SC-F0-J-32",
+    "distance": 15
+  },
+  {
+    "id": "e193",
+    "from": "SC-F0-J-32",
+    "to": "SC-F0-DOOR-8",
+    "distance": 12
+  },
+  {
+    "id": "e194",
+    "from": "SC-F0-DOOR-8",
+    "to": "SC-F0-DOOR-9",
+    "distance": 16
+  },
+  {
+    "id": "e195",
+    "from": "SC-F0-DOOR-8",
+    "to": "SC-F0-DOOR-15",
+    "distance": 32
+  },
+  {
+    "id": "e196",
+    "from": "SC-F0-J-31",
+    "to": "SC-F0-DOOR-8",
+    "distance": 25
+  },
+  {
+    "id": "e197",
+    "from": "SC-F0-J-32",
+    "to": "SC-F0-J-31",
+    "distance": 16
+  },
+  {
+    "id": "e198",
+    "from": "SC-F0-DOOR-12",
+    "to": "SC-F0-STAIRS-3",
+    "distance": 14
+  },
+  {
+    "id": "e199",
+    "from": "SC-F0-J-32",
+    "to": "SC-F0-DOOR-15",
+    "distance": 26
+  },
+  {
+    "id": "e200",
+    "from": "SC-F0-ENTRY-17",
+    "to": "SC-F0-ENTRY-16",
+    "distance": 15
+  },
+  {
+    "id": "e201",
+    "from": "SC-F0-DOOR-6",
+    "to": "SC-F0-DOOR-7",
+    "distance": 5
+  }
+]
