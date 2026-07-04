@@ -5,7 +5,7 @@ from navigation.views import navigate_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/users/', include('users.urls')),
+    path('api/auth/', include('users.urls')),
     path('api/rooms/', include('rooms.urls')),
     path('api/navigate/', navigate_view), 
 ]
