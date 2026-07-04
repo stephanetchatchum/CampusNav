@@ -20,7 +20,7 @@ const roomData = [
     // ── SOCIAL COMMONS ── Floor 1
     { code: 'SC-F1-MO', x: 260,  y: 810,  w: 140, h: 150, label: 'Morocco',           building: 'Social Commons',      floor: 1 },
     { code: 'SC-F1-AL', x: 400, y: 810,  w: 170, h: 170, label: 'Algeria',           building: 'Social Commons',      floor: 1 },
-    { code: 'SC-F1-FC', x: 245, y: 50,  w:  80, h: 60, label: 'Food Court',        building: 'Social Commons',      floor: 1 },
+    { code: 'SC-F1-FC', x: 220,  y: 380,  w: 165, h: 220, label: 'Food Court', building: 'Social Commons', floor: 1 },
     { code: 'SC-F1-ET', x: 85,  y: 40, w: 170, h: 150, label: 'Ethiopia',          building: 'Social Commons',      floor: 1 },
     { code: 'SC-F1-WR', x: 110, y: 350, w:  95, h: 200, label: 'Washrooms',         building: 'Social Commons',      floor: 1 },
     { code: 'SC-F1-PD-1', x: 240, y: 170,  w: 50, h: 50, label: 'POD',       building: 'Social Commons', floor: 1 },
