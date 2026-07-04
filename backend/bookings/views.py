@@ -59,3 +59,13 @@ def booking_update_status(request, pk):
     booking.status = new_status
     booking.save()
     return Response(BookingSerializer(booking).data)
+
+
+
+# Returns all bookings across all users — for admin panel only
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def all_bookings(request):
+    bookings = Booking.objects.all().order_by('-created_at')
+    serializer = BookingSerializer(bookings, many=True)
+    return Response(serializer.data)
