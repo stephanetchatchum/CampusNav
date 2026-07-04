@@ -20,7 +20,7 @@ const roomData = [
     // ── SOCIAL COMMONS ── Floor 1
     { code: 'SC-F1-MO', x: 260,  y: 810,  w: 140, h: 150, label: 'Morocco',           building: 'Social Commons',      floor: 1 },
     { code: 'SC-F1-AL', x: 400, y: 810,  w: 170, h: 170, label: 'Algeria',           building: 'Social Commons',      floor: 1 },
-    { code: 'SC-F1-FC', x: 245, y: 50,  w:  80, h: 60, label: 'Food Court',        building: 'Social Commons',      floor: 1 },
+    { code: 'SC-F1-FC', x: 220,  y: 380,  w: 165, h: 220, label: 'Food Court', building: 'Social Commons', floor: 1 },
     { code: 'SC-F1-ET', x: 85,  y: 40, w: 170, h: 150, label: 'Ethiopia',          building: 'Social Commons',      floor: 1 },
     { code: 'SC-F1-WR', x: 110, y: 350, w:  95, h: 200, label: 'Washrooms',         building: 'Social Commons',      floor: 1 },
     { code: 'SC-F1-PD-1', x: 240, y: 170,  w: 50, h: 50, label: 'POD',       building: 'Social Commons', floor: 1 },
@@ -173,8 +173,8 @@ function Map2D({
         // Tune these until nodes line up perfectly
         const NODE_TRANSFORM = {
         'Social Commons-2': { scaleX: 0.7, scaleY: 0.68, offsetX: -4, offsetY: 95 },
-        'Social Commons-1': { scaleX: 0.63, scaleY: 0.57, offsetX: 0, offsetY: 0 },
-        'Social Commons-0': { scaleX: 0.64, scaleY: 0.56, offsetX: 0, offsetY: 0 },
+        'Social Commons-1': { scaleX: 0.61, scaleY: 0.65, offsetX: 45, offsetY: -25 },
+        'Social Commons-0': { scaleX: 0.6, scaleY: 0.6, offsetX: 45, offsetY: 0 },
         }
 
         const floorNodes = nodesData

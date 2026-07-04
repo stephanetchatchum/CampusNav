@@ -43,11 +43,8 @@ def find_room_entrance(nodes, room_code):
         n for n in nodes.values()
         if n.get('room_code') == room_code
     ]
-    print(f"DEBUG: looking for room_code={room_code}, found {len(candidates)} candidates")
-    for n in candidates:
-        print(f"  - {n['id']} type={n['type']}")
     if candidates:
-        return candidates[0]
+        return max(candidates, key=lambda n: len(n.get('connects_to', [])))
 
     # Second try: match by floor and building, pick closest entrance
     parts = room_code.split('-')
