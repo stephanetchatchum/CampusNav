@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Map2D from '../components/Map2D'
 
 const API = 'http://127.0.0.1:8000/api'
 
 function Home() {
+  const navigate = useNavigate()
   const [rooms, setRooms] = useState([])
   const [selectedRoom, setSelectedRoom] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -17,7 +19,9 @@ function Home() {
   useEffect(() => {
     fetch(`${API}/rooms/`)
       .then(res => res.json())
-      .then(data => setRooms(data))
+      .then(data => {
+        setRooms(data)
+      })
       .catch(err => console.error('Failed to fetch rooms:', err))
   }, [])
 
@@ -30,11 +34,12 @@ function Home() {
 
   const handleRoomSelect = async (roomCode) => {
     setSelectedRoom(roomCode)
+    console.log('Room clicked:', roomCode)
     setSearchQuery('')
     setError(null)
 
+    // If no position set, go straight to booking page
     if (!currentNode) {
-      setError('Please set your position first — tap the 📍 button then tap a node on the map')
       return
     }
 
@@ -82,7 +87,7 @@ function Home() {
   }
 
   const selectedRoomData = rooms.find(r => r.code === selectedRoom)
-
+  
   return (
     <div style={{ padding: '16px', maxWidth: '900px', margin: '0 auto' }}>
 
@@ -286,6 +291,18 @@ function Home() {
                 }}
               >
                 Navigate here
+              </button>
+            )}
+            {selectedRoomData.is_available && (
+              <button
+                onClick={() => navigate(`/book?room=${selectedRoomData.code}`)}
+                style={{
+                  padding: '4px 12px', borderRadius: '20px', fontSize: '12px',
+                  fontWeight: '500', border: 'none', cursor: 'pointer',
+                  background: '#16a34a', color: 'white'
+                }}
+              >
+                Book this room
               </button>
             )}
           </div>
