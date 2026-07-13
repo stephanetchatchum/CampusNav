@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Map2D from '../components/Map2D'
+import { useGeolocation } from '../hooks/useGeolocation'
 
 const API = 'http://127.0.0.1:8000/api'
 
@@ -15,6 +16,14 @@ function Home() {
   const [settingPosition, setSettingPosition] = useState(false)
   const [floorChanges, setFloorChanges] = useState([])
   const [error, setError] = useState(null)
+  const { position, currentBuilding, error: gpsError } = useGeolocation()
+
+  // Auto-set position when GPS detects building entry
+  useEffect(() => {
+    if (currentBuilding && !currentNode) {
+      setCurrentNode(currentBuilding.nodeId)
+    }
+  }, [currentBuilding, currentNode])
 
   useEffect(() => {
     fetch(`${API}/rooms/`)
@@ -34,7 +43,6 @@ function Home() {
 
   const handleRoomSelect = async (roomCode) => {
     setSelectedRoom(roomCode)
-    console.log('Room clicked:', roomCode)
     setSearchQuery('')
     setError(null)
 
@@ -109,6 +117,25 @@ function Home() {
               📍 {currentNode}
             </span>
           )}
+
+          {/* GPS status */}
+          {position && (
+            <span style={{
+              fontSize: '11px', color: '#16a34a', padding: '4px 8px',
+              background: '#dcfce7', borderRadius: '6px'
+            }}>
+              📡 GPS active
+            </span>
+          )}
+          {gpsError && (
+            <span style={{
+              fontSize: '11px', color: '#dc2626', padding: '4px 8px',
+              background: '#fee2e2', borderRadius: '6px'
+            }}>
+              📡 No GPS
+            </span>
+          )}
+
           {/* Set position button */}
           {!isNavigating && (
             <button
