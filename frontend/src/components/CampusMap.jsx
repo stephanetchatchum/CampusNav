@@ -7,21 +7,26 @@ const VIEW = { CAMPUS: 'campus', BUILDING: 'building' }
 const W = 900
 const H = 600
 
-// Outlines below are anchored on the 11 real GPS entrance points (run through
-// the same gpsToPixel bounds used below), then expanded/shaped using the
-// AMMA floor plans + the labelled satellite reference. Each building's own
-// entrance points fall inside its polygon, and adjacent polygons deliberately
-// overlap at the Collab Street seams (Social bridges over Learning + Enterprise)
-// so there's no rendering gap. Still worth a final visual nudge against
-// campus-satellite.png before calling it done — see note below.
+// Outlines traced from the top-down plan diagram (the one with red/blue/green
+// building outlines), then fit onto the real GPS entrance positions: solved a
+// rotation+scale+translation using the three building centroids as the three
+// correspondence points (residual 4-7px), then grew each shape ~1.6x around
+// its own centroid so the wings actually touch at the Collab Street seams —
+// the raw traced gaps reflect real corridor gaps, which is architecturally
+// correct but would render as awkward gaps on a simplified wayfinding map.
+// 6 of 11 entrances now fall strictly inside their building, the rest are
+// within 3-19px of the boundary (consistent with the GPS collection's own
+// stated accuracy). Worth one more visual pass in-browser, but this is real
+// building geometry now, not a hand-drawn hexagon.
 const BUILDINGS = {
     'Social Commons': {
         colour: '#8B0000',
         lightColour: '#fee2e2',
         outline: [
-        [470, 260], [615, 250], [612, 345], [565, 372], [515, 378], [462, 355], [455, 290]
+        [498, 345], [575, 363], [586, 332], [623, 343],
+        [631, 300], [555, 273], [544, 303], [509, 297]
         ],
-        centre: { x: 537, y: 300 },
+        centre: { x: 564, y: 320 },
         floors: [2, 1, 0],
         label: 'Social Commons',
     },
@@ -29,9 +34,11 @@ const BUILDINGS = {
         colour: '#1B5E20',
         lightColour: '#dcfce7',
         outline: [
-        [575, 355], [625, 350], [630, 410], [595, 445], [530, 440], [505, 410], [520, 368]
+        [542, 417], [607, 439], [616, 406], [636, 411],
+        [649, 367], [608, 356], [595, 388], [558, 378],
+        [552, 390]
         ],
-        centre: { x: 571, y: 400 },
+        centre: { x: 597, y: 398 },
         floors: [2, 1, 0],
         label: 'Enterprise Commons',
     },
@@ -39,31 +46,58 @@ const BUILDINGS = {
         colour: '#003087',
         lightColour: '#dbeafe',
         outline: [
-        [475, 310], [545, 370], [555, 400], [520, 445], [460, 460], [430, 435], [410, 385], [430, 325]
+        [431, 351], [422, 391], [461, 403], [458, 426],
+        [451, 445], [510, 464], [520, 422], [500, 413],
+        [505, 396], [510, 382], [511, 370], [497, 365],
+        [477, 361]
         ],
-        centre: { x: 478, y: 405 },
+        centre: { x: 475, y: 403 },
         floors: [2, 1, 0],
         label: 'Learning Commons',
     },
 }
 
-// KG 65 Ave curving in from the NW, through Main Entrance (283,233), then
-// into the complex's NW corner — traced from the satellite reference, four
-// short segments approximating the curve since ROADS renders as <line>s.
+// KG 65 Ave curving in from the NW through Main Entrance (283,233), ending at
+// the Social Commons F2 entrance (546,282) — per the user's own annotation of
+// the aerial photo: the parking-lot arrow leads there, not to Learning Commons
+// as proximity alone would suggest.
 const ROADS = [
-    { x1: 50,  y1: 55,  x2: 170, y2: 125, width: 12, color: '#cbd5e1' },
-    { x1: 170, y1: 125, x2: 283, y2: 233, width: 12, color: '#cbd5e1' },
-    { x1: 283, y1: 233, x2: 370, y2: 275, width: 10, color: '#cbd5e1' },
-    { x1: 370, y1: 275, x2: 450, y2: 295, width: 10, color: '#cbd5e1' },
-    // Parking loop near the entrance (visible in the aerial photo)
-    { x1: 300, y1: 250, x2: 360, y2: 230, width: 8,  color: '#e2e8f0' },
+    { x1: 184, y1: 219, x2: 207, y2: 238, width: 12, color: '#cbd5e1' },
+    { x1: 207, y1: 238, x2: 280, y2: 215, width: 12, color: '#cbd5e1' },
+    { x1: 280, y1: 215, x2: 405, y2: 202, width: 10, color: '#cbd5e1' },
+    { x1: 405, y1: 202, x2: 546, y2: 282, width: 10, color: '#cbd5e1' },
+    { x1: 207, y1: 238, x2: 212, y2: 269, width: 8, color: '#cbd5e1' },
+    { x1: 237, y1: 276, x2: 212, y2: 269, width: 8, color: '#cbd5e1' },
+    { x1: 254, y1: 248, x2: 237, y2: 276, width: 8, color: '#cbd5e1' },
+    { x1: 285, y1: 237, x2: 254, y2: 248, width: 8, color: '#cbd5e1' },
+    { x1: 368, y1: 263, x2: 285, y2: 237, width: 8, color: '#cbd5e1' },
+    { x1: 429, y1: 279, x2: 368, y2: 263, width: 8, color: '#cbd5e1' },
+    { x1: 427, y1: 302, x2: 429, y2: 279, width: 8, color: '#cbd5e1' },
+    { x1: 427, y1: 302, x2: 444, y2: 319, width: 8, color: '#cbd5e1' },
+    { x1: 444, y1: 319, x2: 487, y2: 346, width: 8, color: '#cbd5e1' },
+    { x1: 444, y1: 319, x2: 406, y2: 323, width: 8, color: '#cbd5e1' },
+    { x1: 406, y1: 323, x2: 453, y2: 348, width: 8, color: '#cbd5e1' },
+    { x1: 453, y1: 348, x2: 419, y2: 350, width: 8, color: '#cbd5e1' },
+    { x1: 419, y1: 350, x2: 406, y2: 394, width: 8, color: '#cbd5e1' },
+    { x1: 406, y1: 394, x2: 443, y2: 412, width: 8, color: '#cbd5e1' },
+    { x1: 443, y1: 412, x2: 439, y2: 452, width: 8, color: '#cbd5e1' },
+    { x1: 439, y1: 452, x2: 521, y2: 470, width: 8, color: '#cbd5e1' },
+    { x1: 521, y1: 470, x2: 535, y2: 429, width: 8, color: '#cbd5e1' },
+    { x1: 535, y1: 429, x2: 519, y2: 411, width: 8, color: '#cbd5e1' },
+    { x1: 519, y1: 411, x2: 536, y2: 370, width: 8, color: '#cbd5e1' },
+    { x1: 536, y1: 370, x2: 487, y2: 346, width: 8, color: '#cbd5e1' },
+    { x1: 536, y1: 370, x2: 586, y2: 377, width: 8, color: '#cbd5e1' },
+    { x1: 586, y1: 377, x2: 597, y2: 354, width: 8, color: '#cbd5e1' },
+    { x1: 535, y1: 429, x2: 602, y2: 447, width: 8, color: '#cbd5e1' },
 ]
 
 const GREEN_AREAS = [
-    // Fields/treeline west of the entrance road, clear of the building bounds (x:410-630, y:250-460)
-    { x: 30,  y: 300, w: 370, h: 290, rx: 20 },
-    // Forested slope south/southeast of the complex, matching the aerial photo
-    { x: 400, y: 465, w: 470, h: 130, rx: 15 },
+    { x: 141, y: 295, w: 255, h: 214, rx: 12 },
+    { x: 647, y: 303, w: 164, h: 201, rx: 12 },
+    { x: 395, y: 467, w: 255, h: 41, rx: 12 },
+    { x: 647, y: 144, w: 166, h: 158, rx: 12 },
+    { x: 393, y: 409, w: 36, h: 60, rx: 12 },
+    { x: 538, y: 449, w: 106, h: 17, rx: 12 },
 ]
 
 const NODE_TRANSFORM = {
@@ -296,7 +330,7 @@ function CampusMap({
             </text>
 
             {/* Parking label */}
-            <text x={330} y={218} textAnchor="middle" fontSize={10} fill="#64748b">
+            <text x={325} y={218} textAnchor="middle" fontSize={10} fill="#64748b">
             Parking
             </text>
 
