@@ -101,9 +101,9 @@ const GREEN_AREAS = [
 ]
 
 const NODE_TRANSFORM = {
-    'Social Commons-2': { scaleX: 0.44, scaleY: 0.56, offsetX: 0, offsetY: 0 },
-    'Social Commons-1': { scaleX: 0.63, scaleY: 0.57, offsetX: 0, offsetY: 0 },
-    'Social Commons-0': { scaleX: 0.64, scaleY: 0.56, offsetX: 0, offsetY: 0 },
+    'Social Commons-2': { scaleX: 0.7, scaleY: 0.7, offsetX: 1, offsetY: 80 },
+    'Social Commons-1': { scaleX: 0.65, scaleY: 0.6, offsetX: 15, offsetY: -5 },
+    'Social Commons-0': { scaleX: 0.6, scaleY: 0.6, offsetX: 45, offsetY: -5 },
 }
 
 const NON_BOOKABLE = new Set([
@@ -169,9 +169,11 @@ const ROOM_DATA = [
     // ── LEARNING COMMONS ── Floor 1
     { code: 'LC-F1-RC', x: 25, y: 50, w: 120, h: 60, label: 'Resource Center', building: 'Learning Commons', floor: 1 },
     { code: 'LC-F1-GN', x: 155, y: 50, w: 100, h: 60, label: 'Guinea', building: 'Learning Commons', floor: 1 },
-    { code: 'LC-F1-GL', x: 25, y: 120, w: 150, h: 60, label: 'Gambia & Liberia', building: 'Learning Commons', floor: 1 },
-    { code: 'LC-F1-MM', x: 185, y: 120, w: 150, h: 60, label: 'Mozambique & Malawi', building: 'Learning Commons', floor: 1 },
     { code: 'LC-F1-WR', x: 345, y: 50, w: 50, h: 60, label: 'Washrooms', building: 'Learning Commons', floor: 1 },
+    { code: 'LC-F1-GM', x: 25, y: 120, w: 100, h: 60, label: 'Gambia', building: 'Learning Commons', floor: 1 },
+    { code: 'LC-F1-LB', x: 135, y: 120, w: 100, h: 60, label: 'Liberia', building: 'Learning Commons', floor: 1 },
+    { code: 'LC-F1-MZ', x: 245, y: 120, w: 100, h: 60, label: 'Mozambique', building: 'Learning Commons', floor: 1 },
+    { code: 'LC-F1-MW', x: 355, y: 120, w: 100, h: 60, label: 'Malawi', building: 'Learning Commons', floor: 1 },
     // ── LEARNING COMMONS ── Floor 2
     { code: 'LC-F2-RE', x: 25, y: 50, w: 80, h: 60, label: 'Reception', building: 'Learning Commons', floor: 2 },
     { code: 'LC-F2-AD', x: 115, y: 50, w: 80, h: 60, label: 'Administration', building: 'Learning Commons', floor: 2 },
@@ -470,28 +472,6 @@ function CampusMap({
                 {activeFloor === 0 ? 'Ground Floor' : `Floor ${activeFloor}`}
             </text>
 
-            {/* Navigation path */}
-            {navigationPath.length > 1 && (() => {
-                const key = `${activeBuilding}-${activeFloor}`
-                const t = NODE_TRANSFORM[key] || { scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 }
-                const scaledPath = navigationPath
-                .filter(p => p.floor === activeFloor)
-                .map(p => ({
-                    x: Math.round(p.x * t.scaleX + t.offsetX),
-                    y: Math.round(p.y * t.scaleY + t.offsetY),
-                }))
-                if (scaledPath.length < 2) return null
-                return (
-                <polyline
-                    points={scaledPath.map(p => `${p.x},${p.y}`).join(' ')}
-                    fill="none"
-                    stroke="#1d4ed8"
-                    strokeWidth={3}
-                    strokeDasharray="8 6"
-                />
-                )
-            })()}
-
             {/* Rooms */}
             {floorRooms.map(room => {
                 const isNonBookable = NON_BOOKABLE.has(room.code)
@@ -553,6 +533,28 @@ function CampusMap({
                 </g>
                 )
             })}
+
+            {/* Navigation path */}
+            {navigationPath.length > 1 && (() => {
+                const key = `${activeBuilding}-${activeFloor}`
+                const t = NODE_TRANSFORM[key] || { scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 }
+                const scaledPath = navigationPath
+                .filter(p => p.floor === activeFloor)
+                .map(p => ({
+                    x: Math.round(p.x * t.scaleX + t.offsetX),
+                    y: Math.round(p.y * t.scaleY + t.offsetY),
+                }))
+                if (scaledPath.length < 2) return null
+                return (
+                <polyline
+                    points={scaledPath.map(p => `${p.x},${p.y}`).join(' ')}
+                    fill="none"
+                    stroke="#1d4ed8"
+                    strokeWidth={3}
+                    strokeDasharray="8 6"
+                />
+                )
+            })()}
 
             {/* Tappable nodes when setting position */}
             {settingPosition && floorNodes
