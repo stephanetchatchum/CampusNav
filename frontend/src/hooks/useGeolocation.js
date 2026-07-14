@@ -1,107 +1,102 @@
 import { useState, useEffect, useCallback } from "react";
 
 const GEOFENCES = [
-    // ── SOCIAL COMMONS FLOOR 2 ──────────────────────────────────
     {
-        id: 'SC-ENT-F2-MAIN',
+        id: 'MAIN-ENT',
+        building: null,
+        floor: null,
+        nodeId: null,
+        label: 'Main Campus Entrance',
+        lat: -1.929967, lng: 30.152060, radius: 0.00015,
+    },
+    {
+        id: 'SC-ENT-F2',
         building: 'Social Commons',
         floor: 2,
         nodeId: 'SC-F2-ENTRY-10',
-        label: 'Social Commons Floor 2 — parking entrance',
-        lat_min: -1.930354, lat_max: -1.930154,
-        lng_min: 30.153128, lng_max: 30.153328,
+        label: 'Social Commons Floor 2 entrance',
+        lat: -1.930212, lng: 30.153226, radius: 0.00009,
     },
-
-    // ── SOCIAL COMMONS FLOOR 1 ──────────────────────────────────
     {
-        id: 'SC-ENT-F1-A',
+        id: 'SC-ENT-F1',
         building: 'Social Commons',
         floor: 1,
         nodeId: 'SC-F1-ENTRY-11',
-        label: 'Social Commons Floor 1 — entrance A',
-        lat_min: -1.930454, lat_max: -1.930254,  // update on campus walk
-        lng_min: 30.153128, lng_max: 30.153328,
+        label: 'Social Commons Floor 1 entrance',
+        lat: -1.930507, lng: 30.153412, radius: 0.00006,
     },
     {
-        id: 'SC-ENT-F1-B',
-        building: 'Social Commons',
-        floor: 1,
-        nodeId: 'SC-F1-ENTRY-13',
-        label: 'Social Commons Floor 1 — entrance B (elevator side)',
-        lat_min: -1.930454, lat_max: -1.930254,  // update on campus walk
-        lng_min: 30.153228, lng_max: 30.153428,
-    },
-
-    // ── SOCIAL COMMONS FLOOR 0 ──────────────────────────────────
-    {
-        id: 'SC-ENT-F0-A',
+        id: 'SC-ENT-F0',
         building: 'Social Commons',
         floor: 0,
         nodeId: 'SC-F0-ENTRY-16',
-        label: 'Social Commons Ground — entrance A',
-        lat_min: -1.930454, lat_max: -1.930254,  // update on campus walk
-        lng_min: 30.153128, lng_max: 30.153328,
+        label: 'Social Commons Ground entrance',
+        lat: -1.930576, lng: 30.153193, radius: 0.00009,
     },
     {
-        id: 'SC-ENT-F0-B',
-        building: 'Social Commons',
-        floor: 0,
-        nodeId: 'SC-F0-ENTRY-18',
-        label: 'Social Commons Ground — entrance B',
-        lat_min: -1.930554, lat_max: -1.930354,  // update on campus walk
-        lng_min: 30.153128, lng_max: 30.153328,
-    },
-    {
-        id: 'SC-ENT-F0-C',
-        building: 'Social Commons',
-        floor: 0,
-        nodeId: 'SC-F0-ENTRY-21',
-        label: 'Social Commons Ground — entrance C',
-        lat_min: -1.930654, lat_max: -1.930454,  // update on campus walk
-        lng_min: 30.153128, lng_max: 30.153328,
-    },
-    {
-        id: 'SC-ENT-F0-D',
-        building: 'Social Commons',
-        floor: 0,
-        nodeId: 'SC-F0-ENTRY-24',
-        label: 'Social Commons Ground — entrance D',
-        lat_min: -1.930754, lat_max: -1.930554,  // update on campus walk
-        lng_min: 30.153128, lng_max: 30.153328,
-    },
-
-    // ── ENTERPRISE COMMONS ───────────────────────────────────────
-    // Add after EC nodes are built
-    {
-        id: 'EC-ENT-F2-MAIN',
+        id: 'EC-ENT-F2-A',
         building: 'Enterprise Commons',
         floor: 2,
-        nodeId: 'EC-F2-ENTRY-1',  // update when EC nodes done
-        label: 'Enterprise Commons Floor 2 entrance',
-        lat_min: -1.930706, lat_max: -1.930506,
-        lng_min: 30.153330, lng_max: 30.153530,
+        nodeId: 'EC-F2-ENTRY-1',
+        label: 'Enterprise Commons Floor 2 entrance A',
+        lat: -1.930677, lng: 30.153457, radius: 0.00006,
     },
-
-    // ── LEARNING COMMONS ─────────────────────────────────────────
-    // Add after LC nodes are built
     {
-        id: 'LC-ENT-F0-MAIN',
+        id: 'EC-ENT-F2-B',
+        building: 'Enterprise Commons',
+        floor: 2,
+        nodeId: 'EC-F2-ENTRY-1',
+        label: 'Enterprise Commons Floor 2 entrance B',
+        lat: -1.930802, lng: 30.153410, radius: 0.00008,
+    },
+    {
+        id: 'EC-ENT-F0',
+        building: 'Enterprise Commons',
+        floor: 0,
+        nodeId: 'EC-F0-ENTRY-1',
+        label: 'Enterprise Commons Ground entrance',
+        lat: -1.930957, lng: 30.153344, radius: 0.00005,
+    },
+    {
+        id: 'LC-ENT-F0-A',
         building: 'Learning Commons',
         floor: 0,
-        nodeId: 'LC-F0-ENTRY-1',  // update when LC nodes done
-        label: 'Learning Commons Ground entrance',
-        lat_min: -1.930806, lat_max: -1.930606,
-        lng_min: 30.153430, lng_max: 30.153630,
+        nodeId: 'LC-F0-ENTRY-1',
+        label: 'Learning Commons Ground entrance A',
+        lat: -1.931090, lng: 30.152922, radius: 0.00009,
+    },
+    {
+        id: 'LC-ENT-F0-B',
+        building: 'Learning Commons',
+        floor: 0,
+        nodeId: 'LC-F0-ENTRY-2',
+        label: 'Learning Commons Ground entrance B (near Benin)',
+        lat: -1.930834, lng: 30.152787, radius: 0.00009,
+    },
+    {
+        id: 'LC-ENT-F1',
+        building: 'Learning Commons',
+        floor: 1,
+        nodeId: 'LC-F1-ENTRY-1',
+        label: 'Learning Commons Floor 1 entrance (near Mozambique)',
+        lat: -1.930691, lng: 30.153096, radius: 0.00005,
+    },
+    {
+        id: 'LC-ENT-F2',
+        building: 'Learning Commons',
+        floor: 2,
+        nodeId: 'LC-F2-ENTRY-1',
+        label: 'Learning Commons Floor 2 entrance (near Reception/Gabon)',
+        lat: -1.930602, lng: 30.152924, radius: 0.00009,
     },
 ]
 
+
 function isInsideGeofence(lat, lng, fence) {
-    return(
-        lat >= fence.lat_min &&
-        lat <= fence.lat_max &&
-        lng >= fence.lng_min &&
-        lng <= fence.lng_max
-    )
+    const dlat = lat - fence.lat
+    const dlng = lng - fence.lng
+    const distance = Math.sqrt(dlat * dlat + dlng * dlng)
+    return distance <= fence.radius
 }
 
 export function useGeolocation() {
