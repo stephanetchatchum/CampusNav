@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Map2D from '../components/Map2D'
+import CampusMap from '../components/CampusMap'
 import { useGeolocation } from '../hooks/useGeolocation'
 
 const API = 'http://127.0.0.1:8000/api'
@@ -278,7 +278,7 @@ function Home() {
       )}
 
       {/* Map */}
-      <Map2D
+      <CampusMap
         rooms={rooms}
         highlightedRoom={selectedRoom}
         navigationPath={navigationPath}
