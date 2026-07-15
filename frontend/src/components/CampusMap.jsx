@@ -7,17 +7,6 @@ const VIEW = { CAMPUS: 'campus', BUILDING: 'building' }
 const W = 900
 const H = 600
 
-// Outlines traced from the top-down plan diagram (the one with red/blue/green
-// building outlines), then fit onto the real GPS entrance positions: solved a
-// rotation+scale+translation using the three building centroids as the three
-// correspondence points (residual 4-7px), then grew each shape ~1.6x around
-// its own centroid so the wings actually touch at the Collab Street seams —
-// the raw traced gaps reflect real corridor gaps, which is architecturally
-// correct but would render as awkward gaps on a simplified wayfinding map.
-// 6 of 11 entrances now fall strictly inside their building, the rest are
-// within 3-19px of the boundary (consistent with the GPS collection's own
-// stated accuracy). Worth one more visual pass in-browser, but this is real
-// building geometry now, not a hand-drawn hexagon.
 const BUILDINGS = {
     'Social Commons': {
         colour: '#8B0000',
@@ -57,10 +46,6 @@ const BUILDINGS = {
     },
 }
 
-// KG 65 Ave curving in from the NW through Main Entrance (283,233), ending at
-// the Social Commons F2 entrance (546,282) — per the user's own annotation of
-// the aerial photo: the parking-lot arrow leads there, not to Learning Commons
-// as proximity alone would suggest.
 const ROADS = [
     { x1: 184, y1: 219, x2: 207, y2: 238, width: 12, color: '#cbd5e1' },
     { x1: 207, y1: 238, x2: 280, y2: 215, width: 12, color: '#cbd5e1' },
@@ -106,11 +91,119 @@ const NODE_TRANSFORM = {
     'Social Commons-0': { scaleX: 0.6, scaleY: 0.6, offsetX: 45, offsetY: -5 },
 }
 
+const FLOOR_WALLS = {
+    'Social Commons-2': [
+        { points: [[113,141], [209,137]], smooth: false },
+        { points: [[211,137], [215,110], [267,110]], smooth: true },
+        { points: [[433,175], [433,299]], smooth: false },
+        { points: [[435,299], [431,324], [404,328]], smooth: true },
+        { points: [[404,330], [406,432], [534,434]], smooth: false },
+        { points: [[537,432], [599,427], [596,492]], smooth: true },
+        { points: [[597,492], [567,492], [568,594], [593,598]], smooth: false },
+        { points: [[595,598], [602,642], [570,656]], smooth: true },
+        { points: [[570,654], [571,759]], smooth: false },
+        { points: [[571,759], [605,771], [589,809]], smooth: true },
+        { points: [[589,812], [558,827], [536,789]], smooth: true },
+        { points: [[86,812], [204,814], [204,756], [243,756], [242,463]], smooth: false },
+        { points: [[271,684], [271,789], [534,790]], smooth: false },
+        { points: [[242,463], [340,462]], smooth: false },
+        { points: [[321,381], [245,382], [245,433]], smooth: false },
+        { points: [[269,461], [258,438], [236,436], [220,447], [212,461]], smooth: true },
+        { points: [[211,462], [57,462], [57,621]], smooth: false },
+        { points: [[56,460], [61,441], [83,436]], smooth: true },
+        { points: [[82,439], [79,167]], smooth: false },
+        { points: [[265,110], [372,106]], smooth: false },
+        { points: [[432,174], [441,106], [372,106]], smooth: true },
+        { points: [[85,813], [85,649]], smooth: false },
+        { points: [[85,720], [152,722], [151,569]], smooth: false },
+        { points: [[152,723], [152,815]], smooth: false },
+        { points: [[240,624], [85,623], [83,521], [56,522]], smooth: false },
+        { points: [[85,543], [215,544], [215,625]], smooth: false },
+        { points: [[214,544], [212,461]], smooth: false },
+        { points: [[152,463], [152,523]], smooth: false },
+        { points: [[119,463], [88,460], [82,423]], smooth: true },
+        { points: [[81,303], [214,303]], smooth: false },
+        { points: [[269,301], [376,300]], smooth: false },
+        { points: [[269,299], [267,324], [240,330]], smooth: true },
+        { points: [[240,632], [319,632]], smooth: false },
+        { points: [[240,551], [347,554], [347,529]], smooth: false },
+        { points: [[347,554], [347,576]], smooth: false },
+        { points: [[318,632], [321,380]], smooth: false },
+        { points: [[243,755], [242,816], [204,815]], smooth: false },
+        { points: [[539,433], [536,462]], smooth: false },
+        { points: [[85,652], [61,647], [57,621]], smooth: true },
+        { points: [[78,168], [59,164], [51,133], [73,110], [103,117], [110,142]], smooth: true },
+        { points: [[406,432], [378,438], [375,482], [404,492]], smooth: true },
+        { points: [[433,431], [432,462]], smooth: false },
+        { points: [[271,685], [567,687]], smooth: false },
+        { points: [[404,595], [422,603], [432,626], [414,629], [404,650], [395,629], [373,627], [382,606], [403,594]], smooth: true },
+    ],
+}
+
+const FLOOR_DOORS = {
+    'Social Commons-2': [
+        {x1:245, y1:656, x2:245, y2:688},
+        {x1:247, y1:788, x2:274, y2:788},
+        {x1:239, y1:436, x2:223, y2:445},
+        {x1:243, y1:625, x2:221, y2:626},
+        {x1:155, y1:815, x2:187, y2:815},
+        {x1:85, y1:562, x2:83, y2:544},
+        {x1:76, y1:521, x2:56, y2:521},
+        {x1:356, y1:300, x2:372, y2:300},
+        {x1:272, y1:301, x2:290, y2:301},
+        {x1:193, y1:303, x2:212, y2:303},
+        {x1:114, y1:304, x2:130, y2:304},
+        {x1:403, y1:596, x2:382, y2:606},
+        {x1:319, y1:551, x2:318, y2:526},
+        {x1:318, y1:574, x2:319, y2:553},
+        {x1:208, y1:814, x2:239, y2:815},
+        {x1:318, y1:791, x2:332, y2:789},
+        {x1:384, y1:791, x2:401, y2:789},
+        {x1:436, y1:792, x2:455, y2:792},
+        {x1:474, y1:792, x2:489, y2:791},
+        {x1:515, y1:792, x2:533, y2:792},
+    ],
+}
+
+const FLOOR_STAIRS = {
+    'Social Commons-2': [
+        {x:539, y:490, w:26, h:138},
+    ],
+}
+
+function wallPathD(points, smooth) {
+    let d = `M ${points[0][0]} ${points[0][1]}`
+    if (!smooth || points.length < 3) {
+        for (let i = 1; i < points.length; i++) d += ` L ${points[i][0]} ${points[i][1]}`
+        return d
+    }
+    for (let i = 1; i < points.length - 1; i++) {
+        const mx = (points[i][0] + points[i + 1][0]) / 2
+        const my = (points[i][1] + points[i + 1][1]) / 2
+        d += ` Q ${points[i][0]} ${points[i][1]}, ${mx} ${my}`
+    }
+    const last = points[points.length - 1]
+    d += ` L ${last[0]} ${last[1]}`
+    return d
+}
+
+function doorPaths(d) {
+    const dx = d.x2 - d.x1, dy = d.y2 - d.y1
+    const doorW = Math.hypot(dx, dy) || 1
+    const px = -dy / doorW, py = dx / doorW
+    const leafX = d.x1 + px * doorW, leafY = d.y1 + py * doorW
+    return {
+        gap: `M ${d.x1} ${d.y1} L ${d.x2} ${d.y2}`,
+        leaf: `M ${d.x1} ${d.y1} L ${leafX} ${leafY}`,
+        arc: `M ${leafX} ${leafY} A ${doorW} ${doorW} 0 0 0 ${d.x2} ${d.y2}`,
+    }
+}
+
 const NON_BOOKABLE = new Set([
     'SC-F0-WR', 'SC-F0-PR', 'SC-F0-EL',
     'SC-F0-PD-1', 'SC-F0-PD-2', 'SC-F0-PD-3', 'SC-F0-PD-4',
     'SC-F1-WR', 'SC-F1-EL', 'SC-F1-PD-1', 'SC-F1-PD-2', 'SC-F1-PD-3',
-    'SC-F2-PD-1', 'SC-F2-EL', 'SC-F2-WR',
+    'SC-F2-PD-1', 'SC-F2-EL', 'SC-F2-WR', 'SC-F2-MR', 'SC-F2-ER',
     'EC-F0-WR', 'EC-F1-WR', 'EC-F2-WR',
     'LC-F0-WR', 'LC-F1-WR', 'LC-F2-WR',
 ])
@@ -139,12 +232,14 @@ const ROOM_DATA = [
     // ── SOCIAL COMMONS ── Floor 2
     { code: 'SC-F2-DJ', x: 90, y: 150, w: 150, h: 155, label: 'Djibouti', building: 'Social Commons', floor: 2 },
     { code: 'SC-F2-SS', x: 240, y: 120, w: 185, h: 185, label: 'South Sudan', building: 'Social Commons', floor: 2 },
-    { code: 'SC-F2-BT', x: 370, y: 280, w: 55, h: 50, label: 'Bibi Titi', building: 'Social Commons', floor: 2 },
+    { code: 'SC-F2-BT', x: 378, y: 274, w: 55, h: 50, label: 'Bibi Titi', building: 'Social Commons', floor: 2 },
     { code: 'SC-F2-PD-1', x: 220, y: 280, w: 45, h: 45, label: 'POD', building: 'Social Commons', floor: 2 },
-    { code: 'SC-F2-VD', x: 270, y: 683, w: 285, h: 100, label: 'Vendors', building: 'Social Commons', floor: 2 },
-    { code: 'SC-F2-FC', x: 320, y: 463, w: 210, h: 170, label: 'Food Court', building: 'Social Commons', floor: 2 },
-    { code: 'SC-F2-EL', x: 370, y: 440, w: 50, h: 50, label: 'Elevator', building: 'Social Commons', floor: 2 },
-    { code: 'SC-F2-WR', x: 240, y: 463, w: 79, h: 170, label: 'Washrooms', building: 'Social Commons', floor: 2 },
+    { code: 'SC-F2-VD', x: 270, y: 683, w: 297, h: 105, label: 'Vendors', building: 'Social Commons', floor: 2 },
+    { code: 'SC-F2-FC', x: 324, y: 466, w: 212, h: 189, label: 'Food Court', building: 'Social Commons', floor: 2 },
+    { code: 'SC-F2-EL', x: 381, y: 439, w: 50, h: 50, label: 'Elevator', building: 'Social Commons', floor: 2 },
+    { code: 'SC-F2-WR', x: 239, y: 462, w: 83, h: 169, label: 'Washrooms', building: 'Social Commons', floor: 2 },
+    { code: 'SC-F2-MR', x: 215, y: 463, w: 25, h: 161, label: 'Mechanical Room', building: 'Social Commons', floor: 2 },
+    { code: 'SC-F2-ER', x: 543, y: 759, w: 54, h: 59, label: 'Electrical Room', building: 'Social Commons', floor: 2 },
     // ── ENTERPRISE COMMONS ── Floor 0
     { code: 'EC-F0-LE', x: 25, y: 50, w: 120, h: 60, label: 'Lesotho', building: 'Enterprise Commons', floor: 0 },
     { code: 'EC-F0-FL', x: 155, y: 50, w: 100, h: 60, label: 'Fab Lab', building: 'Enterprise Commons', floor: 0 },
@@ -202,14 +297,12 @@ function CampusMap({
 
     const { position, currentBuilding } = useGeolocation()
 
-    // Auto-enter building when GPS crosses entrance geofence
     useEffect(() => {
         if (currentBuilding && view === VIEW.CAMPUS) {
         enterBuilding(currentBuilding.building, currentBuilding.floor)
         }
     }, [currentBuilding])
 
-    // Auto-switch floor when geofence detects floor change
     useEffect(() => {
         if (
         currentBuilding &&
@@ -253,7 +346,6 @@ function CampusMap({
         }))
     }
 
-    // Pan and zoom handlers
     const handleWheel = (e) => {
         e.preventDefault()
         const delta = e.deltaY > 0 ? 0.9 : 1.1
@@ -272,7 +364,6 @@ function CampusMap({
 
     const handleMouseUp = () => setIsDragging(false)
 
-    // Convert GPS coordinates to pixel position on campus canvas
     const gpsToPixel = (lat, lng) => {
         const LAT_TOP    = -1.9288
         const LAT_BOTTOM = -1.9318
@@ -284,7 +375,6 @@ function CampusMap({
         }
     }
 
-    // ── CAMPUS VIEW ────────────────────────────────────────────────────────
     const renderCampusView = () => (
         <svg
         viewBox={`0 0 ${W} ${H}`}
@@ -301,12 +391,6 @@ function CampusMap({
         onMouseLeave={handleMouseUp}
         >
         <g transform={`translate(${pan.x},${pan.y}) scale(${zoom})`}>
-            {/* Satellite overlay removed now that outlines are anchored on real
-                GPS coordinates. To spot-check alignment, temporarily add back:
-                <image href="/campus-satellite.png" x={0} y={0} width={W} height={H}
-                       opacity={0.4} preserveAspectRatio="xMidYMid meet" /> */}
-
-            {/* Green areas — trees and grass */}
             {GREEN_AREAS.map((g, i) => (
             <rect
                 key={i}
@@ -315,7 +399,6 @@ function CampusMap({
             />
             ))}
 
-            {/* Roads and paths */}
             {ROADS.map((r, i) => (
             <line
                 key={i}
@@ -325,25 +408,21 @@ function CampusMap({
             />
             ))}
 
-            {/* School entrance marker — position matches MAIN-ENT (-1.929967, 30.152060) via gpsToPixel */}
             <circle cx={284} cy={233} r={8} fill="#f59e0b"/>
             <text x={284} y={218} textAnchor="middle" fontSize={11} fill="#92400e" fontWeight="600">
             Main Entrance
             </text>
 
-            {/* Parking label */}
             <text x={325} y={218} textAnchor="middle" fontSize={10} fill="#64748b">
             Parking
             </text>
 
-            {/* Building polygons */}
             {Object.entries(BUILDINGS).map(([name, bld]) => (
             <g
                 key={name}
                 onClick={() => enterBuilding(name)}
                 style={{ cursor: 'pointer' }}
             >
-                {/* Building filled polygon */}
                 <polygon
                 points={bld.outline.map(([x, y]) => `${x},${y}`).join(' ')}
                 fill={bld.lightColour}
@@ -352,7 +431,6 @@ function CampusMap({
                 strokeLinejoin="round"
                 />
 
-                {/* Building name */}
                 <text
                 x={bld.centre.x}
                 y={bld.centre.y - 8}
@@ -373,7 +451,6 @@ function CampusMap({
                 {bld.label.split(' ').slice(1).join(' ')}
                 </text>
 
-                {/* Tap hint */}
                 <text
                 x={bld.centre.x}
                 y={bld.centre.y + 24}
@@ -387,7 +464,6 @@ function CampusMap({
             </g>
             ))}
 
-            {/* GPS dot on campus */}
             {position && (() => {
             const { x, y } = gpsToPixel(position.lat, position.lng)
             return (
@@ -403,7 +479,6 @@ function CampusMap({
         </svg>
     )
 
-    // ── BUILDING / FLOOR VIEW ──────────────────────────────────────────────
     const renderBuildingView = () => {
         const bldData = BUILDINGS[activeBuilding]
         if (!bldData) return null
@@ -415,7 +490,6 @@ function CampusMap({
 
         return (
         <div>
-            {/* Building header */}
             <div style={{
             background: colour, color: 'white',
             padding: '10px 16px', borderRadius: '10px 10px 0 0',
@@ -436,7 +510,6 @@ function CampusMap({
                 {activeBuilding}
                 </span>
             </div>
-            {/* Floor switcher */}
             <div style={{ display: 'flex', gap: '6px' }}>
                 {bldData.floors.map(f => (
                 <button
@@ -456,7 +529,6 @@ function CampusMap({
             </div>
             </div>
 
-            {/* Floor SVG */}
             <svg
             viewBox="0 0 820 1000"
             style={{
@@ -467,12 +539,16 @@ function CampusMap({
                 borderTop: 'none',
             }}
             >
-            {/* Floor label */}
             <text x={12} y={20} fontSize={12} fontWeight="600" fill={colour}>
                 {activeFloor === 0 ? 'Ground Floor' : `Floor ${activeFloor}`}
             </text>
 
-            {/* Rooms */}
+            <defs>
+                <pattern id="stairHatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
+                    <line x1="0" y1="0" x2="0" y2="8" stroke="#94a3b8" strokeWidth="1.5" />
+                </pattern>
+            </defs>
+
             {floorRooms.map(room => {
                 const isNonBookable = NON_BOOKABLE.has(room.code)
                 const isAvailable = isNonBookable ? null : getAvailability(room.code)
@@ -498,9 +574,16 @@ function CampusMap({
                     strokeWidth={isHighlighted ? 3 : 1.5}
                     rx={6}
                     />
+                    {room.label === 'Elevator' && (
+                    <g transform={`translate(${room.x + room.w / 2}, ${room.y + room.h / 2 - 12})`}>
+                        <circle r={9} fill="white" stroke="#475569" strokeWidth={1.2} />
+                        <path d="M 0,-5 L 3,-1 L -3,-1 Z" fill="#475569" />
+                        <path d="M 0,5 L 3,1 L -3,1 Z" fill="#475569" />
+                    </g>
+                    )}
                     <text
                     x={room.x + room.w / 2}
-                    y={room.y + room.h / 2 - (isNonBookable ? 0 : 8)}
+                    y={room.y + room.h / 2 - (isNonBookable ? 0 : 8) + (room.label === 'Elevator' ? 14 : 0)}
                     textAnchor="middle"
                     fontSize={10}
                     fontWeight="500"
@@ -534,7 +617,43 @@ function CampusMap({
                 )
             })}
 
-            {/* Navigation path */}
+            {(FLOOR_WALLS[`${activeBuilding}-${activeFloor}`] || []).map((w, i) => (
+                <path
+                    key={`wall-${i}`}
+                    d={wallPathD(w.points, w.smooth)}
+                    fill="none"
+                    stroke="#94a3b8" strokeWidth={5} strokeLinecap="round" strokeLinejoin="round"
+                />
+            ))}
+
+            {(FLOOR_DOORS[`${activeBuilding}-${activeFloor}`] || []).map((d, i) => {
+                const p = doorPaths(d)
+                return (
+                    <g key={`door-${i}`}>
+                        <path d={p.gap} stroke="#f8fafc" strokeWidth={7} strokeLinecap="round" />
+                        <path d={p.leaf} fill="none" stroke="#cbd5e1" strokeWidth={1.5} />
+                        <path d={p.arc} fill="none" stroke="#cbd5e1" strokeWidth={1} strokeDasharray="3 2" />
+                    </g>
+                )
+            })}
+
+            {(FLOOR_STAIRS[`${activeBuilding}-${activeFloor}`] || []).map((s, i) => (
+                <g key={`stairs-${i}`}>
+                    <rect
+                        x={s.x} y={s.y} width={s.w} height={s.h} rx={2}
+                        fill="url(#stairHatch)" stroke="#64748b" strokeWidth={1.5}
+                    />
+                    <g transform={`translate(${s.x + s.w / 2}, ${s.y + s.h / 2})`}>
+                        <circle r={11} fill="white" stroke="#475569" strokeWidth={1.2} />
+                        <path
+                            d="M -6,6 L -6,3 L -3,3 L -3,0 L 0,0 L 0,-3 L 3,-3 L 3,-6 L 6,-6"
+                            fill="none" stroke="#475569" strokeWidth={1.4}
+                            strokeLinecap="round" strokeLinejoin="round"
+                        />
+                    </g>
+                </g>
+            ))}
+
             {navigationPath.length > 1 && (() => {
                 const key = `${activeBuilding}-${activeFloor}`
                 const t = NODE_TRANSFORM[key] || { scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 }
@@ -556,7 +675,6 @@ function CampusMap({
                 )
             })()}
 
-            {/* Tappable nodes when setting position */}
             {settingPosition && floorNodes
                 .filter(n => ['junction','staircase','building_entry','entrance'].includes(n.type))
                 .map(n => (
@@ -579,7 +697,6 @@ function CampusMap({
                 ))
             }
 
-            {/* Current position dot */}
             {currentNodeId && floorNodes
                 .filter(n => n.id === currentNodeId)
                 .map(n => (
@@ -605,7 +722,6 @@ function CampusMap({
         )
     }
 
-    // ── MAIN RENDER ────────────────────────────────────────────────────────
     return (
         <div style={{
         borderRadius: '12px',
