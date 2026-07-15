@@ -172,7 +172,7 @@ function Map2D({
 
         // Tune these until nodes line up perfectly
         const NODE_TRANSFORM = {
-        'Social Commons-2': { scaleX: 0.7, scaleY: 0.68, offsetX: -4, offsetY: 95 },
+        'Social Commons-2': { scaleX: 0, scaleY: 0, offsetX: 0, offsetY: 100 },
         'Social Commons-1': { scaleX: 0.61, scaleY: 0.65, offsetX: 45, offsetY: -25 },
         'Social Commons-0': { scaleX: 0.6, scaleY: 0.6, offsetX: 45, offsetY: 0 },
         }
