@@ -86,7 +86,13 @@ const GREEN_AREAS = [
 ]
 
 const NODE_TRANSFORM = {
-    'Social Commons-2': { scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 2 },
+    // Floor 2 intentionally has no entry here: the current node set was
+    // traced directly in the same 820x1000 space as FLOOR_WALLS/ROOM_DATA,
+    // so it needs no scaling -- it falls through to the identity transform
+    // below in getFloorNodes(). The old entry (scaleX:0.7, offsetX:1,
+    // offsetY:80) was calibrated for the previous, smaller node set and
+    // was silently misplacing every Floor 2 node by up to ~150px once the
+    // new graph went in without updating this.
     'Social Commons-1': { scaleX: 0.65, scaleY: 0.6, offsetX: 15, offsetY: -5 },
     'Social Commons-0': { scaleX: 0.6, scaleY: 0.6, offsetX: 45, offsetY: -5 },
 }
@@ -212,7 +218,7 @@ const NON_BOOKABLE = new Set([
     'SC-F0-WR', 'SC-F0-PR', 'SC-F0-EL',
     'SC-F0-PD-1', 'SC-F0-PD-2', 'SC-F0-PD-3', 'SC-F0-PD-4',
     'SC-F1-WR', 'SC-F1-EL', 'SC-F1-PD-1', 'SC-F1-PD-2', 'SC-F1-PD-3',
-    'SC-F2-PD-1', 'SC-F2-EL', 'SC-F2-WR', 'SC-F2-MR', 'SC-F2-ER',
+    'SC-F2-PD-1', 'SC-F2-EL', 'SC-F2-WR',
     'EC-F0-WR', 'EC-F1-WR', 'EC-F2-WR',
     'LC-F0-WR', 'LC-F1-WR', 'LC-F2-WR',
 ])
@@ -247,8 +253,6 @@ const ROOM_DATA = [
     { code: 'SC-F2-FC', x: 320, y: 463, w: 210, h: 170, label: 'Food Court', building: 'Social Commons', floor: 2 },
     { code: 'SC-F2-EL', x: 380, y: 447, w: 50, h: 50, label: 'Elevator', building: 'Social Commons', floor: 2 },
     { code: 'SC-F2-WR', x: 240, y: 463, w: 79, h: 170, label: 'Washrooms', building: 'Social Commons', floor: 2 },
-    { code: 'SC-F2-MR', x: 215, y: 463, w: 25, h: 161, label: 'Mechanical Room', building: 'Social Commons', floor: 2 },
-    { code: 'SC-F2-ER', x: 543, y: 759, w: 54, h: 59, label: 'Electrical Room', building: 'Social Commons', floor: 2 },
     // ── ENTERPRISE COMMONS ── Floor 0
     { code: 'EC-F0-LE', x: 25, y: 50, w: 120, h: 60, label: 'Lesotho', building: 'Enterprise Commons', floor: 0 },
     { code: 'EC-F0-FL', x: 155, y: 50, w: 100, h: 60, label: 'Fab Lab', building: 'Enterprise Commons', floor: 0 },
@@ -295,6 +299,7 @@ function CampusMap({
     settingPosition = false,
     onRoomClick,
     onNodeClick,
+    onMapClick,
 }) {
     const [view, setView] = useState(VIEW.CAMPUS)
     const [activeBuilding, setActiveBuilding] = useState(null)
@@ -303,6 +308,7 @@ function CampusMap({
     const [pan, setPan] = useState({ x: 0, y: 0 })
     const [isDragging, setIsDragging] = useState(false)
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+    const floorSvgRef = useRef(null)
 
     const { position, currentBuilding } = useGeolocation()
 
@@ -382,6 +388,21 @@ function CampusMap({
         x: ((lng - LNG_LEFT)   / (LNG_RIGHT  - LNG_LEFT))   * W,
         y: ((lat - LAT_TOP)    / (LAT_BOTTOM - LAT_TOP))    * H,
         }
+    }
+
+    // Converts a click event into exact SVG viewBox coordinates (820x1000),
+    // correctly accounting for the SVG's responsive scaling. Rooms call
+    // e.stopPropagation() so this only fires for clicks on walls, floor
+    // space, or anything else without its own click handler -- exactly
+    // the "click anywhere, navigate to the nearest node" behaviour.
+    const handleFloorClick = (e) => {
+        if (settingPosition || !onMapClick || !floorSvgRef.current) return
+        const svg = floorSvgRef.current
+        const pt = svg.createSVGPoint()
+        pt.x = e.clientX
+        pt.y = e.clientY
+        const svgP = pt.matrixTransform(svg.getScreenCTM().inverse())
+        onMapClick(Math.round(svgP.x), Math.round(svgP.y), activeBuilding, activeFloor)
     }
 
     const renderCampusView = () => (
@@ -539,6 +560,8 @@ function CampusMap({
             </div>
 
             <svg
+            ref={floorSvgRef}
+            onClick={handleFloorClick}
             viewBox="0 0 820 1000"
             style={{
                 width: '100%', height: 'auto',
@@ -546,6 +569,7 @@ function CampusMap({
                 borderRadius: '0 0 10px 10px',
                 border: `1px solid ${colour}`,
                 borderTop: 'none',
+                cursor: onMapClick ? 'crosshair' : 'default',
             }}
             >
             <text x={12} y={20} fontSize={12} fontWeight="600" fill={colour}>
@@ -572,7 +596,7 @@ function CampusMap({
                 return (
                 <g
                     key={room.code}
-                    onClick={() => onRoomClick && onRoomClick(room.code)}
+                    onClick={(e) => { e.stopPropagation(); onRoomClick && onRoomClick(room.code) }}
                     style={{ cursor: 'pointer' }}
                 >
                     <rect
@@ -689,7 +713,7 @@ function CampusMap({
                 .map(n => (
                 <g
                     key={`pos-${n.id}`}
-                    onClick={() => onNodeClick && onNodeClick(n.id)}
+                    onClick={(e) => { e.stopPropagation(); onNodeClick && onNodeClick(n.id) }}
                     style={{ cursor: 'pointer' }}
                 >
                     <circle cx={n.x} cy={n.y} r={16} fill="#7c3aed" opacity={0.15}/>

@@ -89,7 +89,7 @@
   {"id":"SC-F2-DOOR-32","label":"Vendor 1","building":"Social Commons","floor":2,"x":517,"y":779,"type":"entrance","connects_to":["SC-F2-DOOR-31"]},
   {"id":"SC-F2-STAIRS-33","label":"SC-F2-STAIRS-33","building":"Social Commons","floor":2,"x":542,"y":624,"type":"staircase","connects_to":["SC-F2-J-25","SC-F2-J-20","SC-F2-J-21","SC-F2-J-22","SC-F2-EL-34"]},
   {"id":"SC-F2-EL-34","label":"SC-F2-EL-34","building":"Social Commons","floor":2,"x":411,"y":482,"type":"elevator","connects_to":["SC-F2-J-25","SC-F2-J-39","SC-F2-DOOR-7","SC-F2-J-20","SC-F2-STAIRS-33"]},
-  {"id":"SC-F2-ENTRY-35","label":"SC-F2-ENTRY-35","building":"Social Commons","floor":2,"x":174,"y":806,"type":"building_entry","connects_to":["SC-F2-DOOR-13","SC-F2-DOOR-36","SC-F2-DOOR-11","SC-F2-J-40"]},
+  {"id":"SC-F2-ENTRY-35","label":"SC-F2-ENTRY-35","building":"Social Commons","floor":2,"x":174,"y":806,"type":"building_entry", "room_code":"SC-F2-EXIT","connects_to":["SC-F2-DOOR-13","SC-F2-DOOR-36","SC-F2-DOOR-11","SC-F2-J-40"]},
   {"id":"SC-F2-DOOR-36","label":"Mechanical room","building":"Social Commons","floor":2,"x":231,"y":627,"type":"entrance","connects_to":["SC-F2-DOOR-11","SC-F2-DOOR-13","SC-F2-ENTRY-35"]},
   {"id":"SC-F2-DOOR-38","label":"SC-F2-DOOR-38","building":"Social Commons","floor":2,"x":233,"y":450,"type":"entrance","connects_to":["SC-F2-J-27","SC-F2-DOOR-6","SC-F2-DOOR-2","SC-F2-DOOR-1","SC-F2-DOOR-3"]},
   {"id":"SC-F2-J-39","label":"SC-F2-J-39","building":"Social Commons","floor":2,"x":362,"y":553,"type":"junction","connects_to":["SC-F2-DOOR-9","SC-F2-DOOR-10","SC-F2-J-25","SC-F2-J-24","SC-F2-EL-34","SC-F2-DOOR-7"]},

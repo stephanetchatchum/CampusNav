@@ -18,7 +18,6 @@ function Home() {
   const [error, setError] = useState(null)
   const { position, currentBuilding, error: gpsError } = useGeolocation()
 
-  // Auto-set position when GPS detects building entry
   useEffect(() => {
     if (currentBuilding && !currentNode) {
       setCurrentNode(currentBuilding.nodeId)
@@ -46,7 +45,6 @@ function Home() {
     setSearchQuery('')
     setError(null)
 
-    // If no position set, go straight to booking page
     if (!currentNode) {
       return
     }
@@ -56,6 +54,46 @@ function Home() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ from_node: currentNode, to_room: roomCode })
+      })
+      const data = await res.json()
+
+      if (data.error) {
+        setError(data.error)
+        setNavigationPath([])
+        return
+      }
+
+      setNavigationPath(data.path)
+      setFloorChanges(data.floor_changes || [])
+      setIsNavigating(true)
+
+    } catch (err) {
+      setError('Could not connect to navigation server')
+      console.error(err)
+    }
+  }
+
+  // NEW: navigate to an arbitrary clicked point instead of a named room.
+  // Mirrors handleRoomSelect's structure closely on purpose -- same error
+  // handling, same state updates -- just a different request payload and
+  // no selectedRoom to set (there's no room being selected here).
+  const handleMapClick = async (x, y, building, floor) => {
+    setSelectedRoom(null)
+    setSearchQuery('')
+    setError(null)
+
+    if (!currentNode) {
+      return
+    }
+
+    try {
+      const res = await fetch(`${API}/navigate/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from_node: currentNode,
+          to_point: { x, y, floor, building }
+        })
       })
       const data = await res.json()
 
@@ -99,7 +137,6 @@ function Home() {
   return (
     <div style={{ padding: '16px', maxWidth: '900px', margin: '0 auto' }}>
 
-      {/* Header */}
       <div style={{
         display: 'flex', justifyContent: 'space-between',
         alignItems: 'center', marginBottom: '16px'
@@ -108,7 +145,6 @@ function Home() {
           CampusNav
         </h1>
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          {/* Current node indicator */}
           {currentNode && !isNavigating && (
             <span style={{
               fontSize: '11px', color: '#64748b', padding: '4px 8px',
@@ -118,7 +154,6 @@ function Home() {
             </span>
           )}
 
-          {/* GPS status */}
           {position && (
             <span style={{
               fontSize: '11px', color: '#16a34a', padding: '4px 8px',
@@ -136,7 +171,6 @@ function Home() {
             </span>
           )}
 
-          {/* Set position button */}
           {!isNavigating && (
             <button
               onClick={() => setSettingPosition(!settingPosition)}
@@ -150,7 +184,6 @@ function Home() {
               {settingPosition ? '👆 Tap a node...' : '📍 Set position'}
             </button>
           )}
-          {/* Stop navigation button */}
           {isNavigating && (
             <button
               onClick={stopNavigation}
@@ -166,7 +199,6 @@ function Home() {
         </div>
       </div>
 
-      {/* Position setting hint */}
       {settingPosition && (
         <div style={{
           padding: '10px 14px', borderRadius: '8px', marginBottom: '12px',
@@ -177,7 +209,6 @@ function Home() {
         </div>
       )}
 
-      {/* No position set warning */}
       {!currentNode && !settingPosition && (
         <div style={{
           padding: '10px 14px', borderRadius: '8px', marginBottom: '12px',
@@ -188,7 +219,6 @@ function Home() {
         </div>
       )}
 
-      {/* Search bar — hidden during active navigation */}
       {!isNavigating && (
         <div style={{ position: 'relative', marginBottom: '12px' }}>
           <input
@@ -244,7 +274,6 @@ function Home() {
         </div>
       )}
 
-      {/* Error */}
       {error && (
         <div style={{
           padding: '10px 14px', borderRadius: '8px', marginBottom: '12px',
@@ -254,8 +283,7 @@ function Home() {
         </div>
       )}
 
-      {/* Navigation status bar */}
-      {isNavigating && selectedRoomData && (
+      {isNavigating && (
         <div style={{
           padding: '12px 16px', borderRadius: '8px', marginBottom: '12px',
           background: '#eff6ff', border: '1px solid #bfdbfe',
@@ -263,7 +291,7 @@ function Home() {
         }}>
           <div>
             <span style={{ fontWeight: '600', color: '#1d4ed8', fontSize: '14px' }}>
-              Navigating to {selectedRoomData.name}
+              Navigating to {selectedRoomData ? selectedRoomData.name : 'selected point'}
             </span>
             <span style={{ color: '#64748b', fontSize: '12px', marginLeft: '8px' }}>
               {navigationPath.length} steps
@@ -277,7 +305,6 @@ function Home() {
         </div>
       )}
 
-      {/* Map */}
       <CampusMap
         rooms={rooms}
         highlightedRoom={selectedRoom}
@@ -286,9 +313,9 @@ function Home() {
         settingPosition={settingPosition}
         onRoomClick={handleRoomSelect}
         onNodeClick={handleNodeClick}
+        onMapClick={handleMapClick}
       />
 
-      {/* Room detail panel */}
       {selectedRoom && selectedRoomData && !isNavigating && (
         <div style={{
           marginTop: '12px', padding: '16px', background: 'white',
