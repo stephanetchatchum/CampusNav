@@ -86,15 +86,10 @@ const GREEN_AREAS = [
 ]
 
 const NODE_TRANSFORM = {
-    // Floor 2 intentionally has no entry here: the current node set was
-    // traced directly in the same 820x1000 space as FLOOR_WALLS/ROOM_DATA,
-    // so it needs no scaling -- it falls through to the identity transform
-    // below in getFloorNodes(). The old entry (scaleX:0.7, offsetX:1,
-    // offsetY:80) was calibrated for the previous, smaller node set and
-    // was silently misplacing every Floor 2 node by up to ~150px once the
-    // new graph went in without updating this.
-    'Social Commons-1': { scaleX: 0.65, scaleY: 0.6, offsetX: 15, offsetY: -5 },
-    'Social Commons-0': { scaleX: 0.6, scaleY: 0.6, offsetX: 45, offsetY: -5 },
+    // Empty: all three floors now use native canvas coordinates, no
+    // per-floor scaling needed. Kept as a lookup (with the identity
+    // fallback already in getFloorNodes()) in case Enterprise or
+    // Learning Commons ever need one during their own tracing.
 }
 
 const FLOOR_WALLS = {
@@ -152,6 +147,52 @@ const FLOOR_WALLS = {
         { points: [[450,683], [450,779]], smooth: false },
         { points: [[499,680], [498,780]], smooth: false },
     ],
+    'Social Commons-1': [
+        { points: [[223,54], [76,56], [78,654]], smooth: false },
+        { points: [[223,56], [225,49], [228,42], [234,36], [240,33], [248,31], [255,31], [262,33], [269,38], [274,44], [277,51], [278,58], [277,66], [274,73], [269,78], [262,83], [255,85]], smooth: false },
+        { points: [[373,353], [375,348], [377,344], [381,339], [385,336], [390,334], [395,332], [400,331], [405,331], [410,332], [415,334], [420,337], [423,341], [427,345], [429,350], [430,355], [431,360]], smooth: false },
+        { points: [[549,624], [554,625], [559,627], [564,630], [568,633], [571,638], [573,643], [575,648], [575,653], [575,658], [573,663], [570,668], [567,672], [563,676], [558,679], [553,680], [548,681]], smooth: false },
+        { points: [[252,82], [252,180]], smooth: false },
+        { points: [[280,235], [252,235], [252,328], [278,330], [278,353], [369,355]], smooth: false },
+        { points: [[431,356], [518,355]], smooth: false },
+        { points: [[75,179], [124,176], [130,214]], smooth: true },
+        { points: [[223,208]], smooth: true },
+        { points: [[223,208], [224,202], [225,197], [228,192], [231,187], [236,184], [241,181], [246,180], [252,179], [258,180], [263,182], [268,184], [272,188], [276,193], [278,198], [280,203], [280,209]], smooth: false },
+        { points: [[278,233], [278,212]], smooth: false },
+        { points: [[132,211], [220,209]], smooth: false },
+        { points: [[401,384], [403,627]], smooth: false },
+        { points: [[378,652], [379,645], [383,638], [388,633], [394,630], [401,628], [408,628], [415,631], [421,635], [425,641], [428,648], [428,655], [427,662], [423,668], [418,673], [411,677], [404,678]], smooth: false },
+        { points: [[406,983], [552,983]], smooth: false },
+        { points: [[255,804], [521,804]], smooth: false },
+        { points: [[403,681], [403,706]], smooth: false },
+        { points: [[548,678], [548,773]], smooth: false },
+        { points: [[577,926], [578,839]], smooth: false },
+        { points: [[545,623], [549,531], [574,530]], smooth: false },
+        { points: [[551,474], [549,384], [556,363], [578,359]], smooth: false },
+        { points: [[574,530], [574,506]], smooth: true },
+        { points: [[521,504], [520,498], [521,492], [523,486], [526,481], [531,477], [536,474], [541,472], [547,472], [553,473], [559,475], [564,479], [568,483], [571,488], [572,494], [572,500], [571,506]], smooth: false },
+        { points: [[520,353], [532,329], [577,328]], smooth: true },
+        { points: [[76,309], [105,312], [105,546], [174,546], [174,355], [104,356]], smooth: false },
+        { points: [[104,454], [201,458]], smooth: false },
+        { points: [[201,434], [202,481]], smooth: false },
+        { points: [[578,328], [578,358]], smooth: false },
+        { points: [[375,958], [379,974], [406,983]], smooth: true },
+        { points: [[546,773], [578,778], [578,839]], smooth: true },
+        { points: [[552,982], [578,978], [578,923]], smooth: true },
+        { points: [[543,622], [539,624], [535,627], [532,630], [529,633], [527,637], [525,642], [524,646], [524,651], [524,655], [525,660], [527,664], [529,668], [532,671], [535,674], [539,677], [543,679]], smooth: false },
+        { points: [[252,327], [246,328], [241,330], [236,333], [232,337], [229,342], [226,347], [225,353], [225,359], [226,364], [229,370], [232,374], [236,378], [241,381], [247,383], [252,384], [258,384]], smooth: false },
+        { points: [[228,505], [229,500], [230,496], [233,491], [236,487], [240,484], [244,482], [249,481], [254,480], [258,480], [263,482], [268,484], [272,487], [275,490], [277,495], [279,499], [280,504]], smooth: false },
+        { points: [[429,651], [524,647]], smooth: true },
+        { points: [[372,802], [394,797], [401,773]], smooth: true },
+        { points: [[401,773], [404,797], [429,803]], smooth: true },
+        { points: [[520,805], [527,786], [548,772]], smooth: true },
+        { points: [[230,508], [249,516], [252,530]], smooth: true },
+        { points: [[520,506], [529,522], [549,533]], smooth: true },
+        { points: [[521,351], [523,376], [549,384]], smooth: true },
+        { points: [[252,529], [259,514], [278,504]], smooth: true },
+        { points: [[256,660], [252,954], [375,956]], smooth: false },
+        { points: [[353,653], [78,653]], smooth: false },
+    ],
 }
 
 const FLOOR_DOORS = {
@@ -178,11 +219,32 @@ const FLOOR_DOORS = {
         {x1:246, y1:628, x2:220, y2:628},
         {x1:161, y1:627, x2:161, y2:648},
     ],
+    'Social Commons-1': [
+        {x1:376, y1:804, x2:356, y2:804},
+        {x1:447, y1:802, x2:431, y2:804},
+        {x1:521, y1:802, x2:505, y2:804},
+        {x1:540, y1:776, x2:529, y2:787},
+        {x1:297, y1:803, x2:278, y2:802},
+        {x1:208, y1:208, x2:225, y2:208},
+        {x1:130, y1:210, x2:146, y2:210},
+        {x1:231, y1:217, x2:247, y2:233},
+        {x1:253, y1:326, x2:252, y2:308},
+        {x1:253, y1:255, x2:253, y2:235},
+        {x1:346, y1:354, x2:313, y2:354},
+        {x1:174, y1:451, x2:174, y2:438},
+        {x1:173, y1:480, x2:174, y2:458},
+        {x1:81, y1:547, x2:103, y2:547},
+    ],
 }
 
 const FLOOR_STAIRS = {
     'Social Commons-2': [
         {x:530, y:496, w:28, h:128},
+    ],
+    'Social Commons-1': [
+        {x:397, y:707, w:136, h:24},
+        {x:378, y:378, w:20, h:126},
+        {x:403, y:382, w:22, h:122},
     ],
 }
 
@@ -217,10 +279,10 @@ function doorPaths(d) {
 const NON_BOOKABLE = new Set([
     'SC-F0-WR', 'SC-F0-PR', 'SC-F0-EL',
     'SC-F0-PD-1', 'SC-F0-PD-2', 'SC-F0-PD-3', 'SC-F0-PD-4',
-    'SC-F1-WR', 'SC-F1-EL', 'SC-F1-PD-1', 'SC-F1-PD-2', 'SC-F1-PD-3',
     'SC-F2-PD-1', 'SC-F2-EL', 'SC-F2-WR',
     'EC-F0-WR', 'EC-F1-WR', 'EC-F2-WR',
     'LC-F0-WR', 'LC-F1-WR', 'LC-F2-WR',
+    'SC-F1-WR', 'SC-F1-EL', 'SC-F1-PD-1', 'SC-F1-PD-2', 'SC-F1-PD-3', 'SC-F1-MR',
 ])
 
 const ROOM_DATA = [
@@ -235,15 +297,13 @@ const ROOM_DATA = [
     { code: 'SC-F0-PD-4', x: 465, y: 100, w: 65, h: 65, label: 'POD', building: 'Social Commons', floor: 0 },
     { code: 'SC-F0-EL', x: 100, y: 100, w: 60, h: 60, label: 'Elevator', building: 'Social Commons', floor: 0 },
     // ── SOCIAL COMMONS ── Floor 1
-    { code: 'SC-F1-MO', x: 260, y: 810, w: 140, h: 150, label: 'Morocco', building: 'Social Commons', floor: 1 },
-    { code: 'SC-F1-AL', x: 400, y: 810, w: 170, h: 170, label: 'Algeria', building: 'Social Commons', floor: 1 },
-    { code: 'SC-F1-FC', x: 220, y: 380, w: 165, h: 220, label: 'Food Court', building: 'Social Commons', floor: 1 },
-    { code: 'SC-F1-ET', x: 85, y: 40, w: 170, h: 150, label: 'Ethiopia', building: 'Social Commons', floor: 1 },
-    { code: 'SC-F1-WR', x: 110, y: 350, w: 95, h: 200, label: 'Washrooms', building: 'Social Commons', floor: 1 },
-    { code: 'SC-F1-PD-1', x: 240, y: 170, w: 50, h: 50, label: 'POD', building: 'Social Commons', floor: 1 },
-    { code: 'SC-F1-PD-2', x: 390, y: 630, w: 50, h: 50, label: 'POD', building: 'Social Commons', floor: 1 },
-    { code: 'SC-F1-PD-3', x: 540, y: 785, w: 50, h: 50, label: 'POD', building: 'Social Commons', floor: 1 },
-    { code: 'SC-F1-EL', x: 240, y: 320, w: 50, h: 50, label: 'Elevator', building: 'Social Commons', floor: 1 },
+    { code: 'SC-F1-ET', x: 84, y: 61, w: 171, h: 153, label: 'Ethiopia', building: 'Social Commons', floor: 1 },
+    { code: 'SC-F1-WR', x: 109, y: 351, w: 71, h: 200, label: 'Washrooms', building: 'Social Commons', floor: 1 },
+    { code: 'SC-F1-PD-1', x: 228, y: 185, w: 54, h: 58, label: 'POD', building: 'Social Commons', floor: 1 },
+    { code: 'SC-F1-PD-2', x: 380, y: 631, w: 50, h: 50, label: 'POD', building: 'Social Commons', floor: 1 },
+    { code: 'SC-F1-PD-3', x: 529, y: 781, w: 50, h: 50, label: 'POD', building: 'Social Commons', floor: 1 },
+    { code: 'SC-F1-EL', x: 230, y: 332, w: 50, h: 50, label: 'Elevator', building: 'Social Commons', floor: 1 },
+    { code: 'SC-F1-MR', x: 76, y: 316, w: 27, h: 233, label: 'Mechanical Room', building: 'Social Commons', floor: 1 },
     // ── SOCIAL COMMONS ── Floor 2
     { code: 'SC-F2-DJ', x: 95, y: 162, w: 150, h: 155, label: 'Djibouti', building: 'Social Commons', floor: 2 },
     { code: 'SC-F2-SS', x: 246, y: 131, w: 185, h: 185, label: 'South Sudan', building: 'Social Commons', floor: 2 },

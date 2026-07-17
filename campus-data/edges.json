@@ -222,5 +222,10 @@
   {"id":"e221","from":"SC-F2-DOOR-7","to":"SC-F2-J-21","distance":19},
   {"id":"e222","from":"SC-F2-EL-34","to":"SC-F2-J-20","distance":22},
   {"id":"e223","from":"SC-F2-STAIRS-33","to":"SC-F2-EL-34","distance":19},
-  {"id":"e224","from":"SC-F2-J-24","to":"SC-F2-J-25","distance":17}
+  {"id":"e224","from":"SC-F2-J-24","to":"SC-F2-J-25","distance":17},
+  {"id":"e225","from":"SC-F2-STAIRS-33","to":"SC-F1-STAIRS-8","distance":15},
+  {"id":"e226","from":"SC-F1-STAIRS-9","to":"SC-F0-STAIRS-4","distance":15},
+  {"id":"e227","from":"SC-F1-STAIRS-15","to":"SC-F0-STAIRS-3","distance":15},
+  {"id":"e228","from":"SC-F0-EL-1","to":"SC-F1-EL-10","distance":10},
+  {"id":"e229","from":"SC-F1-EL-10","to":"SC-F2-EL-34","distance":10}
 ]
