@@ -2,6 +2,29 @@ import { useState, useEffect, useRef } from "react"
 import { useSearchParams } from "react-router-dom"
 import { authHeaders } from "../api"
 
+// Rooms confirmed NOT bookable by students — staff offices, pods, and
+// shared/public spaces. Confirmed with Stephane, July 2026.
+const NOT_STUDENT_BOOKABLE = new Set([
+  'Administration',
+  'Bibi Titi',        // pod
+  'Congo',            // staff office
+  'Elevator',
+  'Fab Lab Gallery',
+  'Food Court',
+  'Gabon',            // staff office
+  'Guinea',           // pod
+  'Leadership Center',
+  'POD',
+  'Prayer Room',
+  'Reception',
+  'Resource Center',
+  'Sahel',            // pod
+  'Staff Work Hive',
+  'Vendors',
+  'Washrooms',
+  'Wellness Center',
+])
+
 function Book() {
   const [rooms, setRooms] = useState([])
   const [loading, setLoading] = useState(true)
@@ -27,13 +50,8 @@ function Book() {
     const fetchRooms = async () => {
       const response = await fetch("http://127.0.0.1:8000/api/rooms/")
       const data = await response.json()
-      // Only show bookable rooms — filter out washrooms, elevators, PODs
-      const bookable = data.filter(r =>
-        !['bathroom', 'corridor'].includes(r.room_type) &&
-        !r.name.toLowerCase().includes('pod') &&
-        !r.name.toLowerCase().includes('elevator') &&
-        !r.name.toLowerCase().includes('washroom')
-      )
+      // Only show rooms students are actually allowed to book
+      const bookable = data.filter(r => !NOT_STUDENT_BOOKABLE.has(r.name))
       setRooms(bookable)
       setLoading(false)
 
@@ -95,7 +113,6 @@ function Book() {
       <h1 className="text-3xl font-bold text-[#003087] mb-2">Book a Room</h1>
       <p className="text-gray-500 mb-6">Select an available room to make a booking</p>
 
-      {/* Success message */}
       {successMsg && (
         <div className="bg-green-50 border border-green-200 text-green-700 rounded-lg p-4 mb-6">
           {successMsg}
@@ -128,7 +145,6 @@ function Book() {
         ))}
       </div>
 
-      {/* Booking form — only shows when a room is selected */}
       {selectedRoom && (
         <div ref={bookingFormRef} className="mt-8 bg-white rounded-xl shadow p-6 max-w-lg">
           <h2 className="text-xl font-bold text-[#003087] mb-1">
