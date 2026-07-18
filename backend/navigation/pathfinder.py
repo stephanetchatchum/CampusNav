@@ -44,7 +44,14 @@ def find_room_entrance(nodes, room_code):
         if n.get('room_code') == room_code
     ]
     if candidates:
-        return max(candidates, key=lambda n: len(n.get('connects_to', [])))
+        # Prefer a junction/hallway point over a specific door when both are
+        # tagged with this room's code -- e.g. for an open area like Vendors,
+        # this walks you to the shared hallway in front of it rather than
+        # one particular stall's door. Tag the junction (not just individual
+        # doors) with the room's code in the editor to get this behaviour.
+        junctions = [n for n in candidates if n['type'] == 'junction']
+        pool = junctions if junctions else candidates
+        return max(pool, key=lambda n: len(n.get('connects_to', [])))
 
     # Second try: match by floor and building, pick closest entrance
     parts = room_code.split('-')
@@ -101,6 +108,22 @@ def find_room_entrance(nodes, room_code):
     ]
     return candidates[0] if candidates else None
 
+def find_nearest_node(nodes, x, y, floor, building, types=None):
+    """
+    Find the node closest to an arbitrary point on a given floor/building.
+    New: used for 'navigate to wherever I tapped on the map', and can also
+    serve as a fallback destination for a room that has no room_code-tagged
+    node yet (the caller supplies that room's current centre as x/y).
+    """
+    candidates = [
+        n for n in nodes.values()
+        if n.get('floor') == floor and n.get('building') == building
+        and (types is None or n['type'] in types)
+    ]
+    if not candidates:
+        return None
+    return min(candidates, key=lambda n: (n['x'] - x)**2 + (n['y'] - y)**2)
+
 def astar(start_node_id, end_node_id, nodes, adjacency):
     """
     A* algorithm.
@@ -146,17 +169,35 @@ def astar(start_node_id, end_node_id, nodes, adjacency):
 
     return None  # no path found
 
-def navigate(start_node_id, destination_room_code):
+def navigate(start_node_id, destination_room_code=None, destination_point=None):
     """
     Main entry point for pathfinding.
-    Returns a dict with path coordinates and metadata.
+
+    destination_room_code: e.g. 'SC-F2-VD' -- navigate to a named room.
+        Unchanged behaviour from before if this is all you pass.
+    destination_point: NEW, optional. A dict {'x', 'y', 'floor', 'building'}
+        -- navigate to an arbitrary point instead of (or as a fallback for)
+        a room. Pass this alone for 'navigate to wherever was tapped on the
+        map'. Pass both together and destination_point is only used if the
+        room_code lookup comes up empty.
     """
     nodes, adjacency = load_graph()
 
-    # Find the destination entrance node for the room
-    dest_node = find_room_entrance(nodes, destination_room_code)
+    dest_node = None
+    if destination_room_code:
+        dest_node = find_room_entrance(nodes, destination_room_code)
+
+    if not dest_node and destination_point:
+        dest_node = find_nearest_node(
+            nodes,
+            destination_point['x'], destination_point['y'],
+            destination_point['floor'], destination_point['building'],
+        )
+
     if not dest_node:
-        return {'error': f'No entrance node found for room {destination_room_code}'}
+        if destination_room_code:
+            return {'error': f'No entrance node found for room {destination_room_code}'}
+        return {'error': 'No navigable point found near that location'}
 
     if start_node_id not in nodes:
         return {'error': f'Start node {start_node_id} not found'}
@@ -208,4 +249,4 @@ def navigate(start_node_id, destination_room_code):
         'floor_changes': floor_changes,
         'total_distance': total_distance,
         'step_count': len(path_nodes)
-    }  
+    }
