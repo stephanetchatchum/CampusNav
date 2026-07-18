@@ -193,6 +193,35 @@ const FLOOR_WALLS = {
         { points: [[256,660], [252,954], [375,956]], smooth: false },
         { points: [[353,653], [78,653]], smooth: false },
     ],
+    'Social Commons-0': [
+        { points: [[315,910], [315,337], [98,334], [98,151], [129,121], [167,150], [283,151]], smooth: false },
+        { points: [[283,151], [284,145], [286,139], [289,134], [294,129], [299,125], [304,122], [310,121], [317,120], [323,121], [329,123], [334,126], [339,130], [343,134], [346,140], [348,146], [349,152]], smooth: false },
+        { points: [[466,151], [467,145], [469,139], [472,133], [477,128], [482,125], [487,122], [494,120], [500,120], [506,121], [512,123], [518,127], [522,131], [526,137], [529,142], [530,149], [530,155]], smooth: false },
+        { points: [[493,303], [500,303], [507,304], [514,306], [520,310], [525,315], [529,321], [531,327], [532,334], [532,341], [530,348], [526,354], [522,360], [516,364], [510,367], [503,369], [496,369]], smooth: false },
+        { points: [[499,850], [509,851], [517,855], [525,861], [530,869], [534,878], [534,887], [532,897], [527,905], [520,912], [512,916], [502,918], [493,917], [484,914], [476,908], [470,900], [467,891]], smooth: false },
+        { points: [[350,153], [466,153]], smooth: false },
+        { points: [[532,155], [507,157], [498,186]], smooth: true },
+        { points: [[493,483], [534,483], [533,553]], smooth: true },
+        { points: [[499,731], [532,728], [532,667]], smooth: true },
+        { points: [[493,482], [488,484], [482,487], [478,491], [474,496], [471,501], [470,507], [469,513], [469,518], [470,524], [472,530], [476,535], [480,539], [484,543], [489,546], [495,547], [501,548]], smooth: false },
+        { points: [[501,662], [501,554], [530,552]], smooth: false },
+        { points: [[498,662], [532,665]], smooth: false },
+        { points: [[498,183], [492,302]], smooth: false },
+        { points: [[496,369], [492,482]], smooth: false },
+        { points: [[349,888], [466,888]], smooth: false },
+        { points: [[312,910], [337,911], [349,888]], smooth: true },
+        { points: [[97,234], [315,234], [313,338]], smooth: false },
+        { points: [[234,202], [234,335]], smooth: false },
+        { points: [[98,180], [133,182]], smooth: false },
+        { points: [[204,204], [262,204]], smooth: false },
+        { points: [[313,513], [469,513]], smooth: false },
+        { points: [[160,233], [158,335]], smooth: false },
+        { points: [[95,298], [158,298]], smooth: false },
+        { points: [[466,332], [469,357], [499,369]], smooth: true },
+        { points: [[499,851], [499,731]], smooth: false },
+        { points: [[313,696], [467,695]], smooth: false },
+        { points: [[467,695], [473,717], [498,731]], smooth: true },
+    ],
 }
 
 const FLOOR_DOORS = {
@@ -235,6 +264,28 @@ const FLOOR_DOORS = {
         {x1:173, y1:480, x2:174, y2:458},
         {x1:81, y1:547, x2:103, y2:547},
     ],
+    'Social Commons-0': [
+        {x1:372, y1:697, x2:346, y2:697},
+        {x1:461, y1:695, x2:439, y2:696},
+        {x1:501, y1:664, x2:467, y2:692},
+        {x1:471, y1:525, x2:483, y2:544},
+        {x1:372, y1:512, x2:349, y2:512},
+        {x1:467, y1:512, x2:442, y2:513},
+        {x1:491, y1:472, x2:492, y2:446},
+        {x1:493, y1:441, x2:495, y2:406},
+        {x1:495, y1:402, x2:496, y2:369},
+        {x1:492, y1:307, x2:467, y2:332},
+        {x1:493, y1:296, x2:493, y2:266},
+        {x1:495, y1:262, x2:495, y2:225},
+        {x1:495, y1:221, x2:496, y2:191},
+        {x1:466, y1:154, x2:499, y2:186},
+        {x1:445, y1:151, x2:422, y2:152},
+        {x1:225, y1:236, x2:201, y2:236},
+        {x1:261, y1:233, x2:239, y2:232},
+        {x1:157, y1:233, x2:135, y2:232},
+        {x1:502, y1:661, x2:501, y2:641},
+        {x1:501, y1:576, x2:502, y2:557},
+    ],
 }
 
 const FLOOR_STAIRS = {
@@ -245,6 +296,10 @@ const FLOOR_STAIRS = {
         {x:397, y:707, w:136, h:24},
         {x:378, y:378, w:20, h:126},
         {x:403, y:382, w:22, h:122},
+    ],
+    'Social Commons-0': [
+        {x:318, y:578, w:155, h:31},
+        {x:315, y:179, w:29, h:167},
     ],
 }
 
@@ -277,7 +332,7 @@ function doorPaths(d) {
 }
 
 const NON_BOOKABLE = new Set([
-    'SC-F0-WR', 'SC-F0-PR', 'SC-F0-EL',
+    'SC-F0-WR', 'SC-F0-PR', 'SC-F0-EL', 'SC-F0-ER',
     'SC-F0-PD-1', 'SC-F0-PD-2', 'SC-F0-PD-3', 'SC-F0-PD-4',
     'SC-F2-PD-1', 'SC-F2-EL', 'SC-F2-WR',
     'EC-F0-WR', 'EC-F1-WR', 'EC-F2-WR',
@@ -287,15 +342,16 @@ const NON_BOOKABLE = new Set([
 
 const ROOM_DATA = [
     // ── SOCIAL COMMONS ── Floor 0
-    { code: 'SC-F0-EG', x: 315, y: 700, w: 185, h: 190, label: 'Egypt', building: 'Social Commons', floor: 0 },
-    { code: 'SC-F0-FC', x: 315, y: 140, w: 180, h: 360, label: 'Food Court', building: 'Social Commons', floor: 0 },
-    { code: 'SC-F0-WR', x: 150, y: 190, w: 165, h: 130, label: 'Washrooms', building: 'Social Commons', floor: 0 },
-    { code: 'SC-F0-PR', x: 90, y: 220, w: 60, h: 100, label: 'Prayer Room', building: 'Social Commons', floor: 0 },
-    { code: 'SC-F0-PD-1', x: 480, y: 670, w: 65, h: 65, label: 'POD', building: 'Social Commons', floor: 0 },
-    { code: 'SC-F0-PD-2', x: 465, y: 480, w: 65, h: 65, label: 'POD', building: 'Social Commons', floor: 0 },
-    { code: 'SC-F0-PD-3', x: 465, y: 290, w: 65, h: 65, label: 'POD', building: 'Social Commons', floor: 0 },
-    { code: 'SC-F0-PD-4', x: 465, y: 100, w: 65, h: 65, label: 'POD', building: 'Social Commons', floor: 0 },
-    { code: 'SC-F0-EL', x: 100, y: 100, w: 60, h: 60, label: 'Elevator', building: 'Social Commons', floor: 0 },
+    { code: 'SC-F0-EG', x: 315, y: 699, w: 185, h: 190, label: 'Egypt', building: 'Social Commons', floor: 0 },
+    { code: 'SC-F0-FC', x: 314, y: 153, w: 180, h: 360, label: 'Food Court', building: 'Social Commons', floor: 0 },
+    { code: 'SC-F0-WR', x: 159, y: 234, w: 156, h: 101, label: 'Washrooms', building: 'Social Commons', floor: 0 },
+    { code: 'SC-F0-PR', x: 98, y: 235, w: 59, h: 65, label: 'Prayer Room', building: 'Social Commons', floor: 0 },
+    { code: 'SC-F0-PD-1', x: 473, y: 664, w: 65, h: 65, label: 'POD', building: 'Social Commons', floor: 0 },
+    { code: 'SC-F0-PD-2', x: 468, y: 487, w: 65, h: 65, label: 'POD', building: 'Social Commons', floor: 0 },
+    { code: 'SC-F0-PD-3', x: 468, y: 304, w: 65, h: 65, label: 'POD', building: 'Social Commons', floor: 0 },
+    { code: 'SC-F0-PD-4', x: 467, y: 121, w: 65, h: 65, label: 'POD', building: 'Social Commons', floor: 0 },
+    { code: 'SC-F0-EL', x: 103, y: 119, w: 60, h: 60, label: 'Elevator', building: 'Social Commons', floor: 0 },
+    { code: 'SC-F0-ER', x: 470, y: 853, w: 61, h: 59, label: 'Electrical Room', building: 'Social Commons', floor: 0 },
     // ── SOCIAL COMMONS ── Floor 1
     { code: 'SC-F1-ET', x: 84, y: 61, w: 171, h: 153, label: 'Ethiopia', building: 'Social Commons', floor: 1 },
     { code: 'SC-F1-WR', x: 109, y: 351, w: 71, h: 200, label: 'Washrooms', building: 'Social Commons', floor: 1 },
