@@ -18,12 +18,12 @@ function App() {
         <Route path="/" element={<Home />} />
 
         {/* Dorcase owns these routes */}
-        <Route path="/book" element={<ProtectedRoute><Book /></ProtectedRoute>} />
-        <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+        <Route path="/book" element={<ProtectedRoute tier="student"><Book /></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute tier="admin"><Admin /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/my-bookings" element={<ProtectedRoute><MyBookings /></ProtectedRoute>} />
+        <Route path="/my-bookings" element={<ProtectedRoute tier="student"><MyBookings /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   )

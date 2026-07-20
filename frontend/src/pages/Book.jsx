@@ -23,6 +23,11 @@ const NOT_STUDENT_BOOKABLE = new Set([
   'Vendors',
   'Washrooms',
   'Wellness Center',
+  // Superseded by 4 individual rooms — kept in the database for booking
+  // history, hidden from students until Stephane adds map nodes for them.
+  'Gambia & Liberia',
+  'Mozambique & Malawi',
+  'Fab Lab',
 ])
 
 function Book() {
@@ -98,7 +103,7 @@ function Book() {
     setSubmitting(false)
 
     if (response.ok) {
-      setSuccessMsg(`Booking submitted for ${selectedRoom.name} on ${date}! Status: Pending approval.`)
+      setSuccessMsg(`Booking submitted for ${selectedRoom.name} on ${date}! Status: ${data.status.charAt(0).toUpperCase() + data.status.slice(1)}.`)
       setSelectedRoom(null)
       setDate("")
       setStartTime("")

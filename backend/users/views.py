@@ -8,7 +8,10 @@ from .models import User
 def register(request):
     email = request.data.get('email')
     password = request.data.get('password')
-    role = request.data.get('role', 'student')
+    # Every public registration is a student-tier account. Admin access
+    # is granted manually and never exposed through this endpoint,
+    # regardless of what a request sends for "role".
+    role = 'student'
     first_name = request.data.get('first_name', '')
     last_name = request.data.get('last_name', '')
 
@@ -36,6 +39,8 @@ def register(request):
         'message': 'Account created successfully',
         'access': str(token.access_token),
         'refresh': str(token),
+        'email': user.email,
+        'role': user.role,
     }, status=status.HTTP_201_CREATED)
 
 
@@ -61,4 +66,6 @@ def login(request):
     return Response({
         'access': str(token.access_token),
         'refresh': str(token),
+        'email': user.email,
+        'role': user.role,
     })

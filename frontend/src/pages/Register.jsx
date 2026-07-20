@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { registerUser, saveToken } from "../api"
+import { registerUser, saveToken, saveUser } from "../api"
 
 function Register() {
   const [firstName, setFirstName] = useState("")
@@ -20,8 +20,8 @@ function Register() {
     setLoading(false)
 
     if (response.ok) {
-      // Save token and send straight to home — no need to log in separately
       saveToken(data.access)
+      saveUser(data.email, data.role)
       window.location.href = "/"
     } else {
       setError(data.error || "Registration failed. Please try again.")
@@ -33,7 +33,7 @@ function Register() {
       <div className="bg-white rounded-xl shadow-md p-8 w-full max-w-md">
 
         <h1 className="text-3xl font-bold text-[#003087] mb-1">CampusNav</h1>
-        <p className="text-gray-500 mb-8">Create your ALU account</p>
+        <p className="text-gray-500 mb-8">Create your account</p>
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg p-3 mb-4 text-sm">
@@ -41,7 +41,6 @@ function Register() {
           </div>
         )}
 
-        {/* First and last name side by side */}
         <div className="flex gap-3 mb-4">
           <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
@@ -63,34 +62,34 @@ function Register() {
           </div>
         </div>
 
-        <label className="block text-sm font-medium text-gray-700 mb-1">ALU Email</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
         <input
-          className="w-full border border-gray-300 rounded-lg p-3 mb-4 focus:outline-none focus:border-[#003087]"
+          className="w-full border border-gray-300 rounded-lg p-3 mb-1 focus:outline-none focus:border-[#003087]"
           type="email"
-          placeholder="you@alustudent.com"
+          placeholder="Enter your email"
           value={email}
           onChange={e => setEmail(e.target.value)}
         />
+        <p className="text-xs text-gray-400 mb-4">
+          Anyone can create an account. ALU student and staff emails also unlock room booking.
+        </p>
 
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-            Password
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
         <div className="relative mb-6">
-            <input
-                className="w-full border border-gray-300 rounded-lg p-3 pr-16 focus:outline-none focus:border-[#003087]"
-                type={showPassword ? "text" : "password"}
-                placeholder="Choose a password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-            />
-            {/* Toggle button — shows or hides the password */}
-            <button
-                type="button"
-                className="absolute right-3 top-3 text-sm text-[#003087] font-medium"
-                onClick={() => setShowPassword(!showPassword)}
-            >
-                {showPassword ? "Hide" : "Show"}
-            </button>
+          <input
+            className="w-full border border-gray-300 rounded-lg p-3 pr-16 focus:outline-none focus:border-[#003087]"
+            type={showPassword ? "text" : "password"}
+            placeholder="Choose a password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+          />
+          <button
+            type="button"
+            className="absolute right-3 top-3 text-sm text-[#003087] font-medium"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? "Hide" : "Show"}
+          </button>
         </div>
 
         <button
