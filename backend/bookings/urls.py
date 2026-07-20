@@ -10,4 +10,5 @@ urlpatterns = [
     path('all/', views.all_bookings, name='all-bookings'),
     # Admin: approve or cancel a booking
     path('<int:pk>/status/', views.booking_update_status, name='booking-update-status'),
+    path('room/<str:code>/', views.room_availability, name='room-availability'),
 ]
