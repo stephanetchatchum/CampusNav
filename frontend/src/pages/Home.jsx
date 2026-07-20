@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import CampusMap from '../components/CampusMap'
 import { useGeolocation } from '../hooks/useGeolocation'
 
-const API = 'http://127.0.0.1:8000/api'
+const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
 
 function Home() {
   const navigate = useNavigate()
