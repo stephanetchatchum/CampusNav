@@ -5,6 +5,18 @@ import { useGeolocation } from '../hooks/useGeolocation'
 
 const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
 
+// Turns a step's raw node info into something readable in a prompt --
+// infrastructure nodes (stairs/elevator/entrance) mostly have unhelpful
+// IDs as labels (e.g. "SC-F2-STAIRS-33"), so name the type instead where
+// that's more useful than the literal label.
+function describeStep(node) {
+  if (!node) return null
+  if (node.type === 'staircase') return 'the stairs'
+  if (node.type === 'elevator') return 'the elevator'
+  if (node.type === 'building_entry') return 'the building entrance'
+  return node.label
+}
+
 function Home() {
   const navigate = useNavigate()
   const [rooms, setRooms] = useState([])
@@ -16,6 +28,7 @@ function Home() {
   const [settingPosition, setSettingPosition] = useState(false)
   const [floorChanges, setFloorChanges] = useState([])
   const [error, setError] = useState(null)
+  const [currentStepIndex, setCurrentStepIndex] = useState(0)
   const { position, currentBuilding, error: gpsError } = useGeolocation()
 
   useEffect(() => {
@@ -65,6 +78,7 @@ function Home() {
 
       setNavigationPath(data.path)
       setFloorChanges(data.floor_changes || [])
+      setCurrentStepIndex(0)
       setIsNavigating(true)
 
     } catch (err) {
@@ -105,6 +119,7 @@ function Home() {
 
       setNavigationPath(data.path)
       setFloorChanges(data.floor_changes || [])
+      setCurrentStepIndex(0)
       setIsNavigating(true)
 
     } catch (err) {
@@ -124,15 +139,33 @@ function Home() {
     }
   }
 
+  // NEW: advances progress by one step along the current route. This is
+  // the "am I still going the right way" confirmation -- not real
+  // position tracking, just you telling the app you've reached the next
+  // point, which moves the "You" dot there and (via CampusMap's own
+  // effect) switches floor automatically if that step crossed one.
+  // Also keeps currentNode in sync, so if navigation is stopped partway
+  // and a new route is started, it correctly starts from wherever the
+  // user actually got to, not the original starting point.
+  const handleConfirmStep = () => {
+    const nextIndex = currentStepIndex + 1
+    if (nextIndex >= navigationPath.length) return
+    setCurrentStepIndex(nextIndex)
+    setCurrentNode(navigationPath[nextIndex].id)
+  }
+
   const stopNavigation = () => {
     setIsNavigating(false)
     setNavigationPath([])
     setFloorChanges([])
     setSelectedRoom(null)
     setError(null)
+    setCurrentStepIndex(0)
   }
 
   const selectedRoomData = rooms.find(r => r.code === selectedRoom)
+  const hasArrived = isNavigating && currentStepIndex === navigationPath.length - 1
+  const nextStepNode = isNavigating ? navigationPath[currentStepIndex + 1] : null
   
   return (
     <div style={{ padding: '16px', maxWidth: '900px', margin: '0 auto' }}>
@@ -283,24 +316,53 @@ function Home() {
         </div>
       )}
 
+      {/* Navigation status bar -- now doubles as the step confirmation UI */}
       {isNavigating && (
         <div style={{
           padding: '12px 16px', borderRadius: '8px', marginBottom: '12px',
-          background: '#eff6ff', border: '1px solid #bfdbfe',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+          background: hasArrived ? '#f0fdf4' : '#eff6ff',
+          border: hasArrived ? '1px solid #bbf7d0' : '1px solid #bfdbfe',
         }}>
-          <div>
-            <span style={{ fontWeight: '600', color: '#1d4ed8', fontSize: '14px' }}>
-              Navigating to {selectedRoomData ? selectedRoomData.name : 'selected point'}
-            </span>
-            <span style={{ color: '#64748b', fontSize: '12px', marginLeft: '8px' }}>
-              {navigationPath.length} steps
-            </span>
+          <div style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            marginBottom: hasArrived ? 0 : '10px',
+          }}>
+            <div>
+              <span style={{
+                fontWeight: '600', fontSize: '14px',
+                color: hasArrived ? '#16a34a' : '#1d4ed8',
+              }}>
+                {hasArrived
+                  ? `You've arrived at ${selectedRoomData ? selectedRoomData.name : 'your destination'}`
+                  : `Navigating to ${selectedRoomData ? selectedRoomData.name : 'selected point'}`}
+              </span>
+              <span style={{ color: '#64748b', fontSize: '12px', marginLeft: '8px' }}>
+                step {currentStepIndex + 1} of {navigationPath.length}
+              </span>
+            </div>
+            {floorChanges.length > 0 && (
+              <span style={{ fontSize: '12px', color: '#7c3aed' }}>
+                ⬆ Floor change via {floorChanges[0].type}
+              </span>
+            )}
           </div>
-          {floorChanges.length > 0 && (
-            <span style={{ fontSize: '12px', color: '#7c3aed' }}>
-              ⬆ Floor change via {floorChanges[0].type}
-            </span>
+
+          {!hasArrived && (
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '13px', color: '#334155' }}>
+                Next: head to {describeStep(nextStepNode)}
+              </span>
+              <button
+                onClick={handleConfirmStep}
+                style={{
+                  padding: '6px 14px', borderRadius: '8px', border: 'none',
+                  background: '#1d4ed8', color: 'white',
+                  fontWeight: '600', cursor: 'pointer', fontSize: '13px'
+                }}
+              >
+                I'm here →
+              </button>
+            </div>
           )}
         </div>
       )}

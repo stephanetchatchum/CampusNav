@@ -447,6 +447,14 @@ function CampusMap({
         }
     }, [currentBuilding])
 
+    useEffect(() => {
+        if (!currentNodeId || !navigationPath.length || view !== VIEW.BUILDING) return
+        const stepNode = navigationPath.find(p => p.id === currentNodeId)
+        if (stepNode && stepNode.floor !== activeFloor) {
+            setActiveFloor(stepNode.floor)
+        }
+    }, [currentNodeId, navigationPath])
+    
     const enterBuilding = (buildingName, floor = 2) => {
         setActiveBuilding(buildingName)
         setActiveFloor(floor)
@@ -809,21 +817,38 @@ function CampusMap({
             {navigationPath.length > 1 && (() => {
                 const key = `${activeBuilding}-${activeFloor}`
                 const t = NODE_TRANSFORM[key] || { scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 }
-                const scaledPath = navigationPath
-                .filter(p => p.floor === activeFloor)
-                .map(p => ({
-                    x: Math.round(p.x * t.scaleX + t.offsetX),
-                    y: Math.round(p.y * t.scaleY + t.offsetY),
-                }))
-                if (scaledPath.length < 2) return null
+                const toScaled = pts => pts
+                    .filter(p => p.floor === activeFloor)
+                    .map(p => ({
+                        x: Math.round(p.x * t.scaleX + t.offsetX),
+                        y: Math.round(p.y * t.scaleY + t.offsetY),
+                    }))
+
+                const stepIdx = navigationPath.findIndex(p => p.id === currentNodeId)
+                const walked = stepIdx >= 0 ? toScaled(navigationPath.slice(0, stepIdx + 1)) : []
+                const remaining = stepIdx >= 0 ? toScaled(navigationPath.slice(stepIdx)) : toScaled(navigationPath)
+
                 return (
-                <polyline
-                    points={scaledPath.map(p => `${p.x},${p.y}`).join(' ')}
-                    fill="none"
-                    stroke="#1d4ed8"
-                    strokeWidth={3}
-                    strokeDasharray="8 6"
-                />
+                <>
+                    {walked.length > 1 && (
+                    <polyline
+                        points={walked.map(p => `${p.x},${p.y}`).join(' ')}
+                        fill="none"
+                        stroke="#94a3b8"
+                        strokeWidth={3}
+                        strokeDasharray="2 4"
+                    />
+                    )}
+                    {remaining.length > 1 && (
+                    <polyline
+                        points={remaining.map(p => `${p.x},${p.y}`).join(' ')}
+                        fill="none"
+                        stroke="#1d4ed8"
+                        strokeWidth={3}
+                        strokeDasharray="8 6"
+                    />
+                    )}
+                </>
                 )
             })()}
 
