@@ -351,7 +351,7 @@ const ROOM_DATA = [
     { code: 'SC-F0-PD-3', x: 468, y: 304, w: 65, h: 65, label: 'POD', building: 'Social Commons', floor: 0 },
     { code: 'SC-F0-PD-4', x: 467, y: 121, w: 65, h: 65, label: 'POD', building: 'Social Commons', floor: 0 },
     { code: 'SC-F0-EL', x: 103, y: 119, w: 60, h: 60, label: 'Elevator', building: 'Social Commons', floor: 0 },
-    { code: 'SC-F0-ER', x: 470, y: 853, w: 61, h: 59, label: 'Electrical Room', building: 'Social Commons', floor: 0 },
+    { code: 'SC-F0-EG', x: 470, y: 853, w: 61, h: 59, label: 'Electrical Room', building: 'Social Commons', floor: 0 },
     // ── SOCIAL COMMONS ── Floor 1
     { code: 'SC-F1-ET', x: 84, y: 61, w: 171, h: 153, label: 'Ethiopia', building: 'Social Commons', floor: 1 },
     { code: 'SC-F1-WR', x: 109, y: 351, w: 71, h: 200, label: 'Washrooms', building: 'Social Commons', floor: 1 },
@@ -548,12 +548,35 @@ function CampusMap({
         onMouseLeave={handleMouseUp}
         >
         <g transform={`translate(${pan.x},${pan.y}) scale(${zoom})`}>
+            {/* Satellite overlay removed now that outlines are anchored on real
+                GPS coordinates. To spot-check alignment, temporarily add back:
+                <image href="/campus-satellite.png" x={0} y={0} width={W} height={H}
+                       opacity={0.4} preserveAspectRatio="xMidYMid meet" /> */}
+
+            <defs>
+                <pattern id="groundHatch" patternUnits="userSpaceOnUse" width="14" height="14" patternTransform="rotate(45)">
+                    <line x1="0" y1="0" x2="0" y2="14" stroke="#e2e8f0" strokeWidth="1" />
+                </pattern>
+                <pattern id="treeTexture" patternUnits="userSpaceOnUse" width="16" height="16">
+                    <circle cx="4" cy="4" r="1.4" fill="none" stroke="#86efac" strokeWidth="0.8" />
+                    <circle cx="12" cy="10" r="1.4" fill="none" stroke="#86efac" strokeWidth="0.8" />
+                    <circle cx="8" cy="14" r="1" fill="none" stroke="#86efac" strokeWidth="0.7" />
+                </pattern>
+            </defs>
+            <rect x={0} y={0} width={W} height={H} fill="url(#groundHatch)" />
+
+            {/* Green areas — trees and grass */}
             {GREEN_AREAS.map((g, i) => (
-            <rect
-                key={i}
-                x={g.x} y={g.y} width={g.w} height={g.h} rx={g.rx}
-                fill="#bbf7d0" opacity={0.6}
-            />
+            <g key={i}>
+                <rect
+                    x={g.x} y={g.y} width={g.w} height={g.h} rx={g.rx}
+                    fill="#bbf7d0" opacity={0.6}
+                />
+                <rect
+                    x={g.x} y={g.y} width={g.w} height={g.h} rx={g.rx}
+                    fill="url(#treeTexture)"
+                />
+            </g>
             ))}
 
             {ROADS.map((r, i) => (
@@ -633,6 +656,12 @@ function CampusMap({
             })()}
 
         </g>
+
+        <g transform={`translate(${W - 44}, 34)`}>
+            <circle r={22} fill="white" opacity={0.9} stroke="#cbd5e1" strokeWidth={1.5} />
+            <path d="M 0,-14 L 5,4 L 0,-1 L -5,4 Z" fill="#475569" />
+            <text y={19} textAnchor="middle" fontSize={9} fontWeight="700" fill="#475569">N</text>
+        </g>
         </svg>
     )
 
@@ -693,10 +722,10 @@ function CampusMap({
             style={{
                 width: '100%', height: 'auto',
                 background: '#f8fafc',
-                borderRadius: '0 0 10px 10px',
-                border: `1px solid ${colour}`,
-                borderTop: 'none',
+                borderLeft: `1px solid ${colour}`,
+                borderRight: `1px solid ${colour}`,
                 cursor: onMapClick ? 'crosshair' : 'default',
+                display: 'block',
             }}
             >
             <text x={12} y={20} fontSize={12} fontWeight="600" fill={colour}>
@@ -707,7 +736,14 @@ function CampusMap({
                 <pattern id="stairHatch" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(45)">
                     <line x1="0" y1="0" x2="0" y2="8" stroke="#94a3b8" strokeWidth="1.5" />
                 </pattern>
+                <filter id="roomShadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="1.5" stdDeviation="2" floodColor="#0f172a" floodOpacity="0.12" />
+                </filter>
+                <pattern id="blueprintGrid" patternUnits="userSpaceOnUse" width="20" height="20">
+                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e2e8f0" strokeWidth="1" />
+                </pattern>
             </defs>
+            <rect x={0} y={0} width={820} height={1000} fill="url(#blueprintGrid)" />
 
             {floorRooms.map(room => {
                 const isNonBookable = NON_BOOKABLE.has(room.code)
@@ -733,6 +769,7 @@ function CampusMap({
                     stroke={strokeColour}
                     strokeWidth={isHighlighted ? 3 : 1.5}
                     rx={6}
+                    filter="url(#roomShadow)"
                     />
                     {room.label === 'Elevator' && (
                     <g transform={`translate(${room.x + room.w / 2}, ${room.y + room.h / 2 - 12})`}>
@@ -746,7 +783,7 @@ function CampusMap({
                     y={room.y + room.h / 2 - (isNonBookable ? 0 : 8) + (room.label === 'Elevator' ? 14 : 0)}
                     textAnchor="middle"
                     fontSize={10}
-                    fontWeight="500"
+                    fontWeight="600"
                     fill="#1e293b"
                     >
                     {room.label}
@@ -782,7 +819,7 @@ function CampusMap({
                     key={`wall-${i}`}
                     d={wallPathD(w.points, w.smooth)}
                     fill="none"
-                    stroke="#94a3b8" strokeWidth={5} strokeLinecap="round" strokeLinejoin="round"
+                    stroke="#1e293b" strokeWidth={6} strokeLinecap="round" strokeLinejoin="round"
                 />
             ))}
 
@@ -790,19 +827,33 @@ function CampusMap({
                 const p = doorPaths(d)
                 return (
                     <g key={`door-${i}`}>
-                        <path d={p.gap} stroke="#f8fafc" strokeWidth={7} strokeLinecap="round" />
-                        <path d={p.leaf} fill="none" stroke="#cbd5e1" strokeWidth={1.5} />
-                        <path d={p.arc} fill="none" stroke="#cbd5e1" strokeWidth={1} strokeDasharray="3 2" />
+                        <path d={p.gap} stroke="#f8fafc" strokeWidth={8} strokeLinecap="round" />
+                        <path d={p.leaf} fill="none" stroke="#475569" strokeWidth={3} strokeLinecap="round" />
+                        <path d={p.arc} fill="none" stroke="#94a3b8" strokeWidth={1.2} strokeDasharray="4 2" />
                     </g>
                 )
             })}
 
-            {(FLOOR_STAIRS[`${activeBuilding}-${activeFloor}`] || []).map((s, i) => (
+            {(FLOOR_STAIRS[`${activeBuilding}-${activeFloor}`] || []).map((s, i) => {
+                const isVertical = s.h >= s.w
+                const treadCount = Math.max(3, Math.round((isVertical ? s.h : s.w) / 14))
+                const treads = []
+                for (let t = 1; t < treadCount; t++) {
+                    if (isVertical) {
+                        const ty = s.y + (s.h / treadCount) * t
+                        treads.push(<line key={t} x1={s.x} y1={ty} x2={s.x + s.w} y2={ty} stroke="#94a3b8" strokeWidth={1} />)
+                    } else {
+                        const tx = s.x + (s.w / treadCount) * t
+                        treads.push(<line key={t} x1={tx} y1={s.y} x2={tx} y2={s.y + s.h} stroke="#94a3b8" strokeWidth={1} />)
+                    }
+                }
+                return (
                 <g key={`stairs-${i}`}>
                     <rect
                         x={s.x} y={s.y} width={s.w} height={s.h} rx={2}
-                        fill="url(#stairHatch)" stroke="#64748b" strokeWidth={1.5}
+                        fill="#f1f5f9" stroke="#475569" strokeWidth={1.5}
                     />
+                    {treads}
                     <g transform={`translate(${s.x + s.w / 2}, ${s.y + s.h / 2})`}>
                         <circle r={11} fill="white" stroke="#475569" strokeWidth={1.2} />
                         <path
@@ -812,7 +863,8 @@ function CampusMap({
                         />
                     </g>
                 </g>
-            ))}
+                )
+            })}
 
             {navigationPath.length > 1 && (() => {
                 const key = `${activeBuilding}-${activeFloor}`
@@ -899,6 +951,57 @@ function CampusMap({
             }
 
             </svg>
+
+            <div style={{
+                display: 'flex', flexWrap: 'wrap', gap: '14px',
+                padding: '10px 14px', background: '#f8fafc',
+                borderRadius: '0 0 10px 10px',
+                borderLeft: `1px solid ${colour}`,
+                borderRight: `1px solid ${colour}`,
+                borderBottom: `1px solid ${colour}`,
+                fontSize: '11px', color: '#475569',
+            }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <span style={{ width: 11, height: 11, borderRadius: 3, background: '#dcfce7', border: '1.5px solid #16a34a' }} />
+                    Free to book
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <span style={{ width: 11, height: 11, borderRadius: 3, background: '#fee2e2', border: '1.5px solid #dc2626' }} />
+                    Booked
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <span style={{ width: 11, height: 11, borderRadius: 3, background: '#e2e8f0', border: '1.5px solid #94a3b8' }} />
+                    Not bookable
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <svg width={14} height={14} viewBox="-8 -8 16 16">
+                        <circle r={7} fill="white" stroke="#475569" strokeWidth={1.2} />
+                        <path d="M -3,3 L -3,1 L -1,1 L -1,-1 L 1,-1 L 1,-3 L 3,-3"
+                            fill="none" stroke="#475569" strokeWidth={1.2}
+                            strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    Stairs
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <svg width={14} height={14} viewBox="-8 -8 16 16">
+                        <circle r={7} fill="white" stroke="#475569" strokeWidth={1.2} />
+                        <path d="M 0,-4 L 2,-1 L -2,-1 Z" fill="#475569" />
+                        <path d="M 0,4 L 2,1 L -2,1 Z" fill="#475569" />
+                    </svg>
+                    Elevator
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <svg width={14} height={14} viewBox="0 0 14 14">
+                        <path d="M 2,12 L 2,2" fill="none" stroke="#94a3b8" strokeWidth={2} strokeLinecap="round" />
+                        <path d="M 2,2 A 10 10 0 0 0 12,12" fill="none" stroke="#cbd5e1" strokeWidth={1} strokeDasharray="2 1.5" />
+                    </svg>
+                    Door
+                </span>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#1d4ed8', border: '2px solid white', boxShadow: '0 0 0 1px #1d4ed8' }} />
+                    Your location
+                </span>
+            </div>
         </div>
         )
     }

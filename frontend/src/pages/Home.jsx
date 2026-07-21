@@ -26,6 +26,35 @@ function describeStep(node) {
   return node.label
 }
 
+// Small inline icons replacing emoji -- drawn to match the map's own
+// line-icon language (elevator/stairs badges) rather than generic
+// pictograms, so the chrome and the map read as one designed system.
+const IconPin = ({ size = 12, color = 'currentColor' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+    <path d="M12 21.5C12 21.5 5.5 14.5 5.5 9.5C5.5 5.91 8.41 3 12 3C15.59 3 18.5 5.91 18.5 9.5C18.5 14.5 12 21.5 12 21.5Z" stroke={color} strokeWidth="1.8" strokeLinejoin="round" />
+    <circle cx="12" cy="9.5" r="2.3" fill={color} />
+  </svg>
+)
+
+const IconClose = ({ size = 11, color = 'currentColor' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+    <path d="M5 5 L19 19 M19 5 L5 19" stroke={color} strokeWidth="2.6" strokeLinecap="round" />
+  </svg>
+)
+
+const IconArrowUp = ({ size = 11, color = 'currentColor' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+    <path d="M12 19 V5 M5 11 L12 4 L19 11" stroke={color} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
+// GPS status is a plain dot, not a satellite pictogram -- the same
+// "small coloured circle means status" convention used for room
+// availability elsewhere in the app, so it reads as one system.
+const StatusDot = ({ color }) => (
+  <span style={{ width: 6, height: 6, borderRadius: '50%', background: color, display: 'inline-block', flexShrink: 0 }} />
+)
+
 function Home() {
   const navigate = useNavigate()
   const [rooms, setRooms] = useState([])
@@ -43,6 +72,10 @@ function Home() {
   // -- independent of whether the original target was a named room or an
   // arbitrary tapped point.
   const [destination, setDestination] = useState(null)
+  // Explicit opt-in for "the dot is wrong, I'm actually here" -- when
+  // true, the NEXT map tap is treated as a position correction instead
+  // of a new destination. Mirrors how settingPosition already works.
+  const [correctingPosition, setCorrectingPosition] = useState(false)
   const { position, currentBuilding, error: gpsError } = useGeolocation()
 
   useEffect(() => {
@@ -60,6 +93,13 @@ function Home() {
       .catch(err => console.error('Failed to fetch rooms:', err))
   }, [])
 
+  // Reads QR-code deep links on load: ?room=CODE shows that room's status
+  // immediately (the same detail panel a normal search opens), ?position=
+  // NODE_ID sets that as your current position directly, skipping "Set
+  // position -> tap a node" entirely. Both are meant to be scanned with
+  // the phone's own camera app -- a QR code is just a URL, so nothing in
+  // CampusNav itself needs to know how to scan anything. Runs once on
+  // mount, then cleans the URL so a page refresh doesn't re-trigger it.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const roomParam = params.get('room')
@@ -119,21 +159,19 @@ function Home() {
     }
   }
 
-  // Two different jobs depending on whether a route is already active:
-  //
-  // NOT navigating: same as before -- tap anywhere, start a fresh route
-  // there. Sets `destination` to that point so it's remembered correctly
-  // if this route later needs a correction too.
-  //
-  // ALREADY navigating: this is now a correction, not a new destination.
-  // Recalculates from wherever was actually tapped, to the SAME
-  // destination the route was already headed towards -- this is what
-  // "I'm not where the dot says I am" looks like, replacing the need to
-  // tap through every single step manually.
+  // A normal map tap ALWAYS means "take me here" -- whether or not a
+  // route is already active. No hidden second meaning depending on state,
+  // which is what made this confusing for anyone unfamiliar with the app:
+  // there was previously no visual cue distinguishing "tap = new
+  // destination" from "tap = I'm actually here", so a guest tapping to
+  // change where they're headed could silently get treated as a position
+  // correction instead. Correction now requires the explicit opt-in below
+  // (correctingPosition), the same pattern "Set position" already uses.
   const handleMapClick = async (x, y, building, floor) => {
     setError(null)
 
-    if (isNavigating && destination) {
+    if (correctingPosition && isNavigating && destination) {
+      setCorrectingPosition(false)
       try {
         const body = {
           from_point: { x, y, floor, building },
@@ -262,13 +300,20 @@ function Home() {
     setError(null)
     setCurrentStepIndex(0)
     setDestination(null)
+    setCorrectingPosition(false)
   }
 
   const selectedRoomData = rooms.find(r => r.code === selectedRoom)
   const nextStepNode = isNavigating ? navigationPath[currentStepIndex + 1] : null
   
   return (
-    <div style={{ padding: '16px', maxWidth: '900px', margin: '0 auto' }}>
+    <div style={{
+      padding: '16px', maxWidth: '900px', margin: '0 auto',
+      fontFamily: "'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+    }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap');
+      `}</style>
 
       <div style={{
         display: 'flex', justifyContent: 'space-between',
@@ -280,27 +325,30 @@ function Home() {
         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
           {currentNode && !isNavigating && (
             <span style={{
+              display: 'flex', alignItems: 'center', gap: '4px',
               fontSize: '11px', color: '#64748b', padding: '4px 8px',
               background: '#f1f5f9', borderRadius: '6px'
             }}>
-              📍 {currentNode}
+              <IconPin size={10} color="#64748b" /> <span style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{currentNode}</span>
             </span>
           )}
 
           {position && (
             <span style={{
+              display: 'flex', alignItems: 'center', gap: '5px',
               fontSize: '11px', color: '#16a34a', padding: '4px 8px',
               background: '#dcfce7', borderRadius: '6px'
             }}>
-              📡 GPS active
+              <StatusDot color="#16a34a" /> GPS active
             </span>
           )}
           {gpsError && (
             <span style={{
+              display: 'flex', alignItems: 'center', gap: '5px',
               fontSize: '11px', color: '#dc2626', padding: '4px 8px',
               background: '#fee2e2', borderRadius: '6px'
             }}>
-              📡 No GPS
+              <StatusDot color="#dc2626" /> No GPS
             </span>
           )}
 
@@ -308,25 +356,27 @@ function Home() {
             <button
               onClick={() => setSettingPosition(!settingPosition)}
               style={{
+                display: 'flex', alignItems: 'center', gap: '6px',
                 padding: '8px 14px', borderRadius: '8px', border: 'none',
                 background: settingPosition ? '#7c3aed' : '#e2e8f0',
                 color: settingPosition ? 'white' : '#475569',
                 fontWeight: '600', cursor: 'pointer', fontSize: '13px'
               }}
             >
-              {settingPosition ? '👆 Tap a node...' : '📍 Set position'}
+              {settingPosition ? 'Tap a node...' : (<><IconPin size={12} /> Set position</>)}
             </button>
           )}
           {isNavigating && (
             <button
               onClick={stopNavigation}
               style={{
+                display: 'flex', alignItems: 'center', gap: '6px',
                 padding: '8px 14px', borderRadius: '8px', border: 'none',
                 background: '#dc2626', color: 'white',
                 fontWeight: '600', cursor: 'pointer', fontSize: '13px'
               }}
             >
-              ✕ Stop navigation
+              <IconClose size={11} /> Stop navigation
             </button>
           )}
         </div>
@@ -348,7 +398,9 @@ function Home() {
           background: '#fff7ed', border: '1px solid #fed7aa',
           color: '#c2410c', fontSize: '13px'
         }}>
-          Tap <strong>📍 Set position</strong> then tap a node on the map before navigating
+          Tap <strong>Set position</strong> then tap a node on the map before navigating.
+          Lost? Look for a QR code posted nearby and scan it with your phone's camera:
+          no app steps needed, it sets your position instantly.
         </div>
       )}
 
@@ -389,7 +441,7 @@ function Home() {
                     <span style={{ fontWeight: '500', fontSize: '14px' }}>
                       {room.name}
                     </span>
-                    <span style={{ fontSize: '11px', color: '#94a3b8', marginLeft: '8px' }}>
+                    <span style={{ fontSize: '11px', color: '#94a3b8', marginLeft: '8px', fontFamily: "'IBM Plex Mono', monospace" }}>
                       {room.code}
                     </span>
                   </div>
@@ -442,8 +494,8 @@ function Home() {
               </span>
             </div>
             {floorChanges.length > 0 && (
-              <span style={{ fontSize: '12px', color: '#7c3aed' }}>
-                ⬆ Floor change via {floorChanges[0].type}
+              <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: '#7c3aed' }}>
+                <IconArrowUp size={10} color="#7c3aed" /> Floor change via {floorChanges[0].type}
               </span>
             )}
           </div>
@@ -454,20 +506,36 @@ function Home() {
                 <span style={{ fontSize: '13px', color: '#334155' }}>
                   Heading to {describeStep(nextStepNode)}
                 </span>
-                <button
-                  onClick={handleConfirmStep}
-                  style={{
-                    padding: '5px 12px', borderRadius: '8px', border: '1px solid #bfdbfe',
-                    background: 'white', color: '#1d4ed8',
-                    fontWeight: '500', cursor: 'pointer', fontSize: '12px'
-                  }}
-                >
-                  Skip ahead
-                </button>
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  <button
+                    onClick={() => setCorrectingPosition(c => !c)}
+                    style={{
+                      padding: '5px 12px', borderRadius: '8px',
+                      border: correctingPosition ? 'none' : '1px solid #bfdbfe',
+                      background: correctingPosition ? '#7c3aed' : 'white',
+                      color: correctingPosition ? 'white' : '#1d4ed8',
+                      fontWeight: '500', cursor: 'pointer', fontSize: '12px'
+                    }}
+                  >
+                    {correctingPosition ? 'Tap the map...' : "I'm somewhere else"}
+                  </button>
+                  <button
+                    onClick={handleConfirmStep}
+                    style={{
+                      padding: '5px 12px', borderRadius: '8px', border: '1px solid #bfdbfe',
+                      background: 'white', color: '#1d4ed8',
+                      fontWeight: '500', cursor: 'pointer', fontSize: '12px'
+                    }}
+                  >
+                    Skip ahead
+                  </button>
+                </div>
               </div>
-              <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px' }}>
-                Not where the dot shows? Tap the map where you actually are.
-              </div>
+              {correctingPosition && (
+                <div style={{ fontSize: '11px', color: '#7c3aed', marginTop: '4px', fontWeight: '500' }}>
+                  Tap where you actually are on the map below
+                </div>
+              )}
             </>
           )}
         </div>
@@ -493,7 +561,7 @@ function Home() {
             {selectedRoomData.name}
           </h2>
           <p style={{ color: '#64748b', fontSize: '13px', marginBottom: '10px' }}>
-            {selectedRoomData.code} · Floor {selectedRoomData.floor} · Capacity {selectedRoomData.capacity}
+            <span style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{selectedRoomData.code}</span> · Floor {selectedRoomData.floor} · Capacity {selectedRoomData.capacity}
           </p>
           <div style={{ display: 'flex', gap: '8px' }}>
             <span style={{
