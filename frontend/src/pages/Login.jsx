@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { loginUser, saveToken } from "../api"
+import { loginUser, saveToken, saveUser } from "../api"
 
 function Login() {
   const [email, setEmail] = useState("")
@@ -19,8 +19,9 @@ function Login() {
     setLoading(false)
 
     if (response.ok) {
-      // Save the token then send user to the home page
+      // Save the token and user info, then send user to the home page
       saveToken(data.access)
+      saveUser(data.email, data.role)
       window.location.href = "/"
     } else {
       setError(data.error || "Invalid email or password")
@@ -33,7 +34,7 @@ function Login() {
 
         {/* Logo / Title */}
         <h1 className="text-3xl font-bold text-[#003087] mb-1">CampusNav</h1>
-        <p className="text-gray-500 mb-8">Sign in to your ALU account</p>
+        <p className="text-gray-500 mb-8">Sign in to your account</p>
 
         {/* Error message */}
         {error && (
@@ -44,12 +45,12 @@ function Login() {
 
         {/* Email field */}
         <label className="block text-sm font-medium text-gray-700 mb-1">
-          ALU Email
+          Email
         </label>
         <input
           className="w-full border border-gray-300 rounded-lg p-3 mb-4 focus:outline-none focus:border-[#003087]"
           type="email"
-          placeholder="you@alustudent.com"
+          placeholder="Enter your email"
           value={email}
           onChange={e => setEmail(e.target.value)}
         />
@@ -84,6 +85,12 @@ function Login() {
         >
           {loading ? "Signing in..." : "Sign In"}
         </button>
+
+        <p className="text-center text-sm mb-4">
+          <a href="/forgot-password" className="text-[#003087] font-semibold hover:underline">
+            Forgot password?
+          </a>
+        </p>
 
         {/* Link to register */}
         <p className="text-center text-sm text-gray-500 mt-6">

@@ -1,26 +1,34 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Book from './pages/Book'
+import BookRoom from './pages/BookRoom'
 import Admin from './pages/Admin'
 import Profile from './pages/Profile'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 import MyBookings from './pages/MyBookings'
+import Nav from './components/Nav'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
   return (
     <BrowserRouter>
+      <Nav />
       <Routes>
-        {/* Stephane owns this route — map and navigation */}
+        {/* Stephane owns this route - map and navigation */}
         <Route path="/" element={<Home />} />
-
         {/* Dorcase owns these routes */}
-        <Route path="/book" element={<Book />} />
-        <Route path="/admin" element={<Admin />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/book" element={<ProtectedRoute tier="student"><Book /></ProtectedRoute>} />
+        <Route path="/book/:code" element={<ProtectedRoute tier="student"><BookRoom /></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute tier="admin"><Admin /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/my-bookings" element={<MyBookings />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/my-bookings" element={<ProtectedRoute tier="student"><MyBookings /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   )

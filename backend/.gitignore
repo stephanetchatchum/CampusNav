@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 .env
 *.sqlite3
+
+
+google_credentials_TEMP.txt
+*_TEMP.txt
