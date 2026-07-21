@@ -10,8 +10,34 @@ export const isLoggedIn = () => !!localStorage.getItem("token")
 // Save token after login or register
 export const saveToken = (token) => localStorage.setItem("token", token)
 
-// Remove token when user logs out
-export const logout = () => localStorage.removeItem("token")
+// Save user info alongside the token after login or register
+export const saveUser = (email, role) => {
+  localStorage.setItem("userEmail", email)
+  localStorage.setItem("userRole", role)
+}
+
+// Read stored user info
+export const getUserEmail = () => localStorage.getItem("userEmail")
+export const getUserRole = () => localStorage.getItem("userRole")
+
+// Which tier this account has:
+// "admin"   — the designated admin account, full access
+// "student" — real ALU student or staff email, can book rooms
+// "guest"   — everyone else, navigation only
+export const getUserTier = () => {
+  const role = getUserRole()
+  const email = getUserEmail() || ""
+  if (role === "admin") return "admin"
+  if (email.endsWith("@alustudent.com") || email.endsWith("@alueducation.com")) return "student"
+  return "guest"
+}
+
+// Remove token and user info when user logs out
+export const logout = () => {
+  localStorage.removeItem("token")
+  localStorage.removeItem("userEmail")
+  localStorage.removeItem("userRole")
+}
 
 // Ready-made headers for authenticated requests — attaches the JWT token automatically
 export const authHeaders = () => ({

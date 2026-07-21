@@ -60,7 +60,7 @@ function Admin() {
 
       {/* Bookings table */}
       {bookings.length > 0 && (
-        <div className="bg-white rounded-xl shadow overflow-hidden">
+        <div className="bg-white rounded-xl shadow overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="bg-[#003087] text-white text-left">

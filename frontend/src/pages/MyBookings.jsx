@@ -53,7 +53,7 @@ function MyBookings() {
           <div key={booking.id} className="bg-white rounded-xl shadow p-6 flex justify-between items-center">
             <div>
               {/* Room and date info */}
-              <p className="text-lg font-semibold text-[#003087]">Room {booking.room}</p>
+              <p className="text-lg font-semibold text-[#003087]">{booking.room_name}</p>
               <p className="text-gray-500 text-sm">{booking.date} · {booking.start_time} – {booking.end_time}</p>
             </div>
             {/* Status badge */}
