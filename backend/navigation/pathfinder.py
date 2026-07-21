@@ -111,7 +111,7 @@ def find_room_entrance(nodes, room_code):
 def find_nearest_node(nodes, x, y, floor, building, types=None):
     """
     Find the node closest to an arbitrary point on a given floor/building.
-    New: used for 'navigate to wherever I tapped on the map', and can also
+    Used for 'navigate to wherever I tapped on the map', and can also
     serve as a fallback destination for a room that has no room_code-tagged
     node yet (the caller supplies that room's current centre as x/y).
     """
@@ -169,19 +169,38 @@ def astar(start_node_id, end_node_id, nodes, adjacency):
 
     return None  # no path found
 
-def navigate(start_node_id, destination_room_code=None, destination_point=None):
+def navigate(start_node_id=None, start_point=None, destination_room_code=None, destination_point=None):
     """
     Main entry point for pathfinding.
 
+    start_node_id: e.g. 'SC-F2-J-16' -- the usual way to specify where
+        you're starting from. Unchanged behaviour from before.
+    start_point: optional. A dict {'x', 'y', 'floor', 'building'} -- an
+        alternative to start_node_id, for 'recalculate from wherever I
+        actually am' (e.g. a correction tap mid-navigation). Resolves to
+        the nearest node the same way destination_point already does.
     destination_room_code: e.g. 'SC-F2-VD' -- navigate to a named room.
         Unchanged behaviour from before if this is all you pass.
-    destination_point: NEW, optional. A dict {'x', 'y', 'floor', 'building'}
+    destination_point: optional. A dict {'x', 'y', 'floor', 'building'}
         -- navigate to an arbitrary point instead of (or as a fallback for)
         a room. Pass this alone for 'navigate to wherever was tapped on the
         map'. Pass both together and destination_point is only used if the
         room_code lookup comes up empty.
     """
     nodes, adjacency = load_graph()
+
+    actual_start_id = start_node_id
+    if not actual_start_id and start_point:
+        start_candidate = find_nearest_node(
+            nodes,
+            start_point['x'], start_point['y'],
+            start_point['floor'], start_point['building'],
+        )
+        if start_candidate:
+            actual_start_id = start_candidate['id']
+
+    if not actual_start_id:
+        return {'error': 'No starting point provided or found'}
 
     dest_node = None
     if destination_room_code:
@@ -199,11 +218,11 @@ def navigate(start_node_id, destination_room_code=None, destination_point=None):
             return {'error': f'No entrance node found for room {destination_room_code}'}
         return {'error': 'No navigable point found near that location'}
 
-    if start_node_id not in nodes:
-        return {'error': f'Start node {start_node_id} not found'}
+    if actual_start_id not in nodes:
+        return {'error': f'Start node {actual_start_id} not found'}
 
     # Run A*
-    path_ids = astar(start_node_id, dest_node['id'], nodes, adjacency)
+    path_ids = astar(actual_start_id, dest_node['id'], nodes, adjacency)
     if not path_ids:
         return {'error': 'No path found between these points'}
 
@@ -223,16 +242,25 @@ def navigate(start_node_id, destination_room_code=None, destination_point=None):
                 'type': path_nodes[i]['type']  # staircase or elevator
             })
 
-    # Calculate total distance
-    total_distance = sum(
-        e['distance'] for e in json.load(open(EDGES_PATH))
-        if path_ids.count(e['from']) and e['from'] in path_ids
-        and e['to'] in path_ids
-        and abs(path_ids.index(e['from']) - path_ids.index(e['to'])) == 1
-    )
+    # Per-step distances -- how far from each step to the next one. Built
+    # once as a from/to lookup rather than re-scanning the whole edge list
+    # per step. Used by the frontend to pace the "you are here" dot
+    # automatically (roughly how long each leg should take at a normal
+    # walking pace), not just to total up the full route length.
+    edges_list = json.load(open(EDGES_PATH))
+    edge_lookup = {}
+    for e in edges_list:
+        edge_lookup[(e['from'], e['to'])] = e['distance']
+        edge_lookup[(e['to'], e['from'])] = e['distance']
+
+    step_distances = []
+    for i in range(len(path_ids) - 1):
+        step_distances.append(edge_lookup.get((path_ids[i], path_ids[i + 1]), 0))
+
+    total_distance = sum(step_distances)
 
     return {
-        'start': start_node_id,
+        'start': actual_start_id,
         'destination_room': destination_room_code,
         'destination_node': dest_node['id'],
         'path': [
@@ -242,9 +270,10 @@ def navigate(start_node_id, destination_room_code=None, destination_point=None):
                 'y': n['y'],
                 'floor': n['floor'],
                 'type': n['type'],
-                'label': n.get('label', '')
+                'label': n.get('label', ''),
+                'distance_to_next': step_distances[i] if i < len(step_distances) else 0,
             }
-            for n in path_nodes
+            for i, n in enumerate(path_nodes)
         ],
         'floor_changes': floor_changes,
         'total_distance': total_distance,
