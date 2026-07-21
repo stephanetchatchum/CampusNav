@@ -58,6 +58,7 @@ const StatusDot = ({ color }) => (
 function Home() {
   const navigate = useNavigate()
   const [rooms, setRooms] = useState([])
+  const [roomsLoadError, setRoomsLoadError] = useState(false)
   const [selectedRoom, setSelectedRoom] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [navigationPath, setNavigationPath] = useState([])
@@ -86,11 +87,18 @@ function Home() {
 
   useEffect(() => {
     fetch(`${API}/rooms/`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(`Server responded with ${res.status}`)
+        return res.json()
+      })
       .then(data => {
         setRooms(data)
+        setRoomsLoadError(false)
       })
-      .catch(err => console.error('Failed to fetch rooms:', err))
+      .catch(err => {
+        console.error('Failed to fetch rooms:', err)
+        setRoomsLoadError(true)
+      })
   }, [])
 
   // Reads QR-code deep links on load: ?room=CODE shows that room's status
@@ -307,13 +315,7 @@ function Home() {
   const nextStepNode = isNavigating ? navigationPath[currentStepIndex + 1] : null
   
   return (
-    <div style={{
-      padding: '16px', maxWidth: '900px', margin: '0 auto',
-      fontFamily: "'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-    }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap');
-      `}</style>
+    <div style={{ padding: '16px', maxWidth: '900px', margin: '0 auto' }}>
 
       <div style={{
         display: 'flex', justifyContent: 'space-between',
@@ -388,7 +390,7 @@ function Home() {
           background: '#f3e8ff', border: '1px solid #d8b4fe',
           color: '#7c3aed', fontSize: '13px', fontWeight: '500'
         }}>
-          Purple dots show junction nodes — tap one to set your position
+          Purple dots show junction nodes. Tap one to set your position.
         </div>
       )}
 
@@ -399,8 +401,18 @@ function Home() {
           color: '#c2410c', fontSize: '13px'
         }}>
           Tap <strong>Set position</strong> then tap a node on the map before navigating.
-          Lost? Look for a QR code posted nearby and scan it with your phone's camera:
-          no app steps needed, it sets your position instantly.
+          Lost? Look for a QR code posted nearby and scan it with your phone's camera.
+          No app steps needed, it sets your position instantly.
+        </div>
+      )}
+
+      {!isNavigating && roomsLoadError && (
+        <div style={{
+          padding: '10px 14px', borderRadius: '8px', marginBottom: '12px',
+          background: '#fee2e2', border: '1px solid #fecaca',
+          color: '#dc2626', fontSize: '13px'
+        }}>
+          Couldn't load the room list. Search won't find anything until this is fixed. Check that the backend server is running.
         </div>
       )}
 
@@ -454,6 +466,17 @@ function Home() {
                   </span>
                 </div>
               ))}
+            </div>
+          )}
+          {searchQuery && filteredRooms.length === 0 && (
+            <div style={{
+              position: 'absolute', top: '100%', left: 0, right: 0,
+              background: 'white', border: '1px solid #e2e8f0',
+              borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+              zIndex: 100, padding: '14px 16px',
+              fontSize: '13px', color: '#94a3b8',
+            }}>
+              No rooms match "{searchQuery}". Check the spelling, or this room may not be mapped yet.
             </div>
           )}
         </div>
