@@ -877,12 +877,16 @@ function CampusMap({
             {currentNodeId && floorNodes
                 .filter(n => n.id === currentNodeId)
                 .map(n => (
-                <g key="current-pos">
-                    <circle cx={n.x} cy={n.y} r={16} fill="#1d4ed8" opacity={0.15}/>
-                    <circle cx={n.x} cy={n.y} r={9}  fill="#1d4ed8"/>
-                    <circle cx={n.x} cy={n.y} r={4}  fill="white"/>
+                <g
+                    key="current-pos"
+                    transform={`translate(${n.x}, ${n.y})`}
+                    style={{ transition: 'transform 0.8s ease-in-out' }}
+                >
+                    <circle r={16} fill="#1d4ed8" opacity={0.15}/>
+                    <circle r={9}  fill="#1d4ed8"/>
+                    <circle r={4}  fill="white"/>
                     <text
-                    x={n.x} y={n.y - 18}
+                    y={-18}
                     textAnchor="middle"
                     fontSize={9}
                     fontWeight="600"

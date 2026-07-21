@@ -5,6 +5,15 @@ import { useGeolocation } from '../hooks/useGeolocation'
 
 const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
 
+// Assumed walking pace in metres/second, used to convert each step's real
+// distance (from the backend) into how long the dot should take to reach
+// it. ~1.2 m/s is a typical unhurried adult walking speed.
+const WALKING_SPEED_MPS = 1.2
+// Floor so a step with distance_to_next of 0 (two co-located nodes, e.g.
+// a door right at a junction) still gets a moment on screen rather than
+// flashing past instantly.
+const MIN_STEP_MS = 600
+
 // Turns a step's raw node info into something readable in a prompt --
 // infrastructure nodes (stairs/elevator/entrance) mostly have unhelpful
 // IDs as labels (e.g. "SC-F2-STAIRS-33"), so name the type instead where
@@ -29,6 +38,11 @@ function Home() {
   const [floorChanges, setFloorChanges] = useState([])
   const [error, setError] = useState(null)
   const [currentStepIndex, setCurrentStepIndex] = useState(0)
+  // NEW: remembers what the current route is actually headed to, so a
+  // correction tap (see handleMapClick) knows what to recalculate towards
+  // -- independent of whether the original target was a named room or an
+  // arbitrary tapped point.
+  const [destination, setDestination] = useState(null)
   const { position, currentBuilding, error: gpsError } = useGeolocation()
 
   useEffect(() => {
@@ -44,6 +58,23 @@ function Home() {
         setRooms(data)
       })
       .catch(err => console.error('Failed to fetch rooms:', err))
+  }, [])
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const roomParam = params.get('room')
+    const positionParam = params.get('position')
+
+    if (!roomParam && !positionParam) return
+
+    if (roomParam) {
+      setSelectedRoom(roomParam)
+    }
+    if (positionParam) {
+      setCurrentNode(positionParam)
+    }
+
+    window.history.replaceState({}, '', window.location.pathname)
   }, [])
 
   const filteredRooms = searchQuery
@@ -79,6 +110,7 @@ function Home() {
       setNavigationPath(data.path)
       setFloorChanges(data.floor_changes || [])
       setCurrentStepIndex(0)
+      setDestination({ type: 'room', code: roomCode })
       setIsNavigating(true)
 
     } catch (err) {
@@ -87,14 +119,54 @@ function Home() {
     }
   }
 
-  // NEW: navigate to an arbitrary clicked point instead of a named room.
-  // Mirrors handleRoomSelect's structure closely on purpose -- same error
-  // handling, same state updates -- just a different request payload and
-  // no selectedRoom to set (there's no room being selected here).
+  // Two different jobs depending on whether a route is already active:
+  //
+  // NOT navigating: same as before -- tap anywhere, start a fresh route
+  // there. Sets `destination` to that point so it's remembered correctly
+  // if this route later needs a correction too.
+  //
+  // ALREADY navigating: this is now a correction, not a new destination.
+  // Recalculates from wherever was actually tapped, to the SAME
+  // destination the route was already headed towards -- this is what
+  // "I'm not where the dot says I am" looks like, replacing the need to
+  // tap through every single step manually.
   const handleMapClick = async (x, y, building, floor) => {
+    setError(null)
+
+    if (isNavigating && destination) {
+      try {
+        const body = {
+          from_point: { x, y, floor, building },
+          ...(destination.type === 'room'
+            ? { to_room: destination.code }
+            : { to_point: destination.point }),
+        }
+        const res = await fetch(`${API}/navigate/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        })
+        const data = await res.json()
+
+        if (data.error) {
+          setError(data.error)
+          return
+        }
+
+        setNavigationPath(data.path)
+        setFloorChanges(data.floor_changes || [])
+        setCurrentStepIndex(0)
+        setCurrentNode(data.start)
+
+      } catch (err) {
+        setError('Could not connect to navigation server')
+        console.error(err)
+      }
+      return
+    }
+
     setSelectedRoom(null)
     setSearchQuery('')
-    setError(null)
 
     if (!currentNode) {
       return
@@ -120,6 +192,7 @@ function Home() {
       setNavigationPath(data.path)
       setFloorChanges(data.floor_changes || [])
       setCurrentStepIndex(0)
+      setDestination({ type: 'point', point: { x, y, floor, building } })
       setIsNavigating(true)
 
     } catch (err) {
@@ -139,20 +212,47 @@ function Home() {
     }
   }
 
-  // NEW: advances progress by one step along the current route. This is
-  // the "am I still going the right way" confirmation -- not real
-  // position tracking, just you telling the app you've reached the next
-  // point, which moves the "You" dot there and (via CampusMap's own
-  // effect) switches floor automatically if that step crossed one.
-  // Also keeps currentNode in sync, so if navigation is stopped partway
-  // and a new route is started, it correctly starts from wherever the
-  // user actually got to, not the original starting point.
+  // Manual "skip ahead" -- kept available for anyone walking faster than
+  // the timer assumes, or who's just confident about the next step. Not
+  // required for normal use any more, since the effect below advances on
+  // its own; this just lets you jump the queue early if you want to.
   const handleConfirmStep = () => {
     const nextIndex = currentStepIndex + 1
     if (nextIndex >= navigationPath.length) return
     setCurrentStepIndex(nextIndex)
     setCurrentNode(navigationPath[nextIndex].id)
   }
+
+  const hasArrived = isNavigating && currentStepIndex === navigationPath.length - 1
+
+  // Auto-advances the current step on a timer sized to that step's real
+  // walking distance, so the dot moves on its own at a normal pace --
+  // no tap required under normal conditions. currentStepIndex is a
+  // dependency, so every time it changes (whether from this timer or the
+  // manual skip-ahead button), the cleanup below clears the old timer
+  // before a fresh one is scheduled for the new step. If you're off
+  // track, tapping the map (handleMapClick, above) recalculates and
+  // resets this from the real point instead of waiting the old timer out.
+  useEffect(() => {
+    if (!isNavigating || hasArrived) return
+    const currentStep = navigationPath[currentStepIndex]
+    if (!currentStep) return
+
+    const durationMs = Math.max(
+      MIN_STEP_MS,
+      (currentStep.distance_to_next / WALKING_SPEED_MPS) * 1000
+    )
+
+    const timer = setTimeout(() => {
+      const nextIndex = currentStepIndex + 1
+      if (nextIndex < navigationPath.length) {
+        setCurrentStepIndex(nextIndex)
+        setCurrentNode(navigationPath[nextIndex].id)
+      }
+    }, durationMs)
+
+    return () => clearTimeout(timer)
+  }, [isNavigating, currentStepIndex, navigationPath, hasArrived])
 
   const stopNavigation = () => {
     setIsNavigating(false)
@@ -161,10 +261,10 @@ function Home() {
     setSelectedRoom(null)
     setError(null)
     setCurrentStepIndex(0)
+    setDestination(null)
   }
 
   const selectedRoomData = rooms.find(r => r.code === selectedRoom)
-  const hasArrived = isNavigating && currentStepIndex === navigationPath.length - 1
   const nextStepNode = isNavigating ? navigationPath[currentStepIndex + 1] : null
   
   return (
@@ -316,7 +416,8 @@ function Home() {
         </div>
       )}
 
-      {/* Navigation status bar -- now doubles as the step confirmation UI */}
+      {/* Navigation status bar -- auto-advances on its own now; the button
+          here is an optional skip-ahead, not a required confirmation. */}
       {isNavigating && (
         <div style={{
           padding: '12px 16px', borderRadius: '8px', marginBottom: '12px',
@@ -325,7 +426,7 @@ function Home() {
         }}>
           <div style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            marginBottom: hasArrived ? 0 : '10px',
+            marginBottom: hasArrived ? 0 : '6px',
           }}>
             <div>
               <span style={{
@@ -348,21 +449,26 @@ function Home() {
           </div>
 
           {!hasArrived && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '13px', color: '#334155' }}>
-                Next: head to {describeStep(nextStepNode)}
-              </span>
-              <button
-                onClick={handleConfirmStep}
-                style={{
-                  padding: '6px 14px', borderRadius: '8px', border: 'none',
-                  background: '#1d4ed8', color: 'white',
-                  fontWeight: '600', cursor: 'pointer', fontSize: '13px'
-                }}
-              >
-                I'm here →
-              </button>
-            </div>
+            <>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '13px', color: '#334155' }}>
+                  Heading to {describeStep(nextStepNode)}
+                </span>
+                <button
+                  onClick={handleConfirmStep}
+                  style={{
+                    padding: '5px 12px', borderRadius: '8px', border: '1px solid #bfdbfe',
+                    background: 'white', color: '#1d4ed8',
+                    fontWeight: '500', cursor: 'pointer', fontSize: '12px'
+                  }}
+                >
+                  Skip ahead
+                </button>
+              </div>
+              <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '4px' }}>
+                Not where the dot shows? Tap the map where you actually are.
+              </div>
+            </>
           )}
         </div>
       )}
