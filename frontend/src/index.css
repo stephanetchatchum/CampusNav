@@ -1,1 +1,4 @@
 @import "tailwindcss";
+body {
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
