@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CampusMap from '../components/CampusMap'
 import { useGeolocation } from '../hooks/useGeolocation'
@@ -13,6 +13,32 @@ const WALKING_SPEED_MPS = 1.2
 // a door right at a junction) still gets a moment on screen rather than
 // flashing past instantly.
 const MIN_STEP_MS = 600
+
+// Motion detection: how often the countdown re-checks whether the phone
+// is currently showing walking-like motion, how much recent accelerometer
+// history it looks at to decide, and the variance threshold that
+// separates "rhythmic walking bounce" from "held still, just sensor
+// noise". This can only ever answer "is motion happening", not "is it
+// the right direction" -- that needs a compass heading, which the web
+// platform doesn't expose, so it isn't attempted here.
+const MOTION_CHECK_INTERVAL_MS = 200
+const MOTION_WINDOW_MS = 2000
+const MOTION_WALKING_STD_DEV_THRESHOLD = 1.0
+const MOTION_MIN_SAMPLES = 5
+
+// Formats remaining distance/time for the navigation status bar, matching
+// the pace convention used elsewhere (WALKING_SPEED_MPS). Only ever shown
+// while a route is active and not yet arrived, so the near-zero case
+// below is a defensive fallback rather than something the UI actually
+// reaches in normal use.
+function formatDistance(meters) {
+  if (meters < 1) return 'almost there'
+  return Math.round(meters) + 'm'
+}
+function formatDuration(totalSeconds) {
+  if (totalSeconds < 60) return Math.max(1, Math.round(totalSeconds)) + ' sec'
+  return '~' + Math.round(totalSeconds / 60) + ' min'
+}
 
 // Turns a step's raw node info into something readable in a prompt --
 // infrastructure nodes (stairs/elevator/entrance) mostly have unhelpful
@@ -77,6 +103,30 @@ function Home() {
   // true, the NEXT map tap is treated as a position correction instead
   // of a new destination. Mirrors how settingPosition already works.
   const [correctingPosition, setCorrectingPosition] = useState(false)
+  // Set once a ?find=<id> link resolves to a real node -- if currentNode
+  // isn't known yet at that point, this just waits (see the effect below)
+  // rather than failing, since sharing a link before setting your own
+  // position is a completely normal thing to do.
+  const [pendingFindTarget, setPendingFindTarget] = useState(null)
+  // Brief feedback after tapping "Share my location" -- 'sharing' while
+  // the request is in flight, 'copied'/'shared' after success, 'error' if
+  // it fails. Not a persistent state, just a moment of confirmation.
+  const [shareStatus, setShareStatus] = useState(null)
+  // Motion tracking (accelerometer) -- whether the person has granted
+  // permission (required explicitly on iOS, via a direct button tap) and
+  // whether the API exists at all on this device/browser. isMovingRef and
+  // motionSamplesRef are refs rather than state because they update many
+  // times a second and don't need to trigger a re-render themselves --
+  // only the actual step advancing (further below) does.
+  const [motionPermissionGranted, setMotionPermissionGranted] = useState(false)
+  const [motionSupported, setMotionSupported] = useState(true)
+  const isMovingRef = useRef(true)
+  const motionSamplesRef = useRef([])
+  // True while any navigate() request is in flight -- covers both "finding
+  // a fresh route" and "recalculating after a correction", distinguished
+  // in the UI by whether isNavigating was already true when the request
+  // started (captured per-call below, not read from state mid-flight).
+  const [isCalculatingRoute, setIsCalculatingRoute] = useState(false)
   const { position, currentBuilding, error: gpsError } = useGeolocation()
 
   useEffect(() => {
@@ -101,19 +151,22 @@ function Home() {
       })
   }, [])
 
-  // Reads QR-code deep links on load: ?room=CODE shows that room's status
+  // Reads deep links on load: ?room=CODE shows that room's status
   // immediately (the same detail panel a normal search opens), ?position=
   // NODE_ID sets that as your current position directly, skipping "Set
-  // position -> tap a node" entirely. Both are meant to be scanned with
-  // the phone's own camera app -- a QR code is just a URL, so nothing in
-  // CampusNav itself needs to know how to scan anything. Runs once on
-  // mount, then cleans the URL so a page refresh doesn't re-trigger it.
+  // position -> tap a node" entirely, ?find=SHARE_ID resolves a shared
+  // location link (see enableShareLocation below) back to the node it
+  // points at. All three are meant to be opened via a link someone
+  // scanned or was sent -- nothing in CampusNav itself needs to know how
+  // that link arrived. Runs once on mount, then cleans the URL so a page
+  // refresh doesn't re-trigger any of it.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const roomParam = params.get('room')
     const positionParam = params.get('position')
+    const findParam = params.get('find')
 
-    if (!roomParam && !positionParam) return
+    if (!roomParam && !positionParam && !findParam) return
 
     if (roomParam) {
       setSelectedRoom(roomParam)
@@ -121,9 +174,123 @@ function Home() {
     if (positionParam) {
       setCurrentNode(positionParam)
     }
+    if (findParam) {
+      fetch(`${API}/location/${findParam}/`)
+        .then(res => {
+          if (!res.ok) throw new Error('Invalid or expired link')
+          return res.json()
+        })
+        .then(data => setPendingFindTarget(data.node_id))
+        .catch(err => {
+          console.error('Failed to resolve shared location:', err)
+          setError("This location link doesn't work anymore.")
+        })
+    }
 
     window.history.replaceState({}, '', window.location.pathname)
   }, [])
+
+  // Once a shared-location link has resolved to a real node AND we know
+  // where the recipient currently is, navigate there automatically --
+  // same as any other destination. If currentNode isn't set yet when the
+  // link resolves, this just waits: the effect re-runs once currentNode
+  // changes (e.g. after "Set position"), so nothing is lost, it only
+  // fires the moment both pieces are actually available.
+  useEffect(() => {
+    if (!pendingFindTarget || !currentNode) return
+
+    const navigateToSharedLocation = async () => {
+      setIsCalculatingRoute(true)
+      try {
+        const res = await fetch(`${API}/navigate/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ from_node: currentNode, to_node: pendingFindTarget })
+        })
+        const data = await res.json()
+
+        if (data.error) {
+          setError(data.error)
+          return
+        }
+
+        setNavigationPath(data.path)
+        setFloorChanges(data.floor_changes || [])
+        setCurrentStepIndex(0)
+        setDestination({ type: 'node', nodeId: pendingFindTarget })
+        setIsNavigating(true)
+
+      } catch (err) {
+        setError('Could not connect to navigation server')
+        console.error(err)
+      } finally {
+        setIsCalculatingRoute(false)
+        setPendingFindTarget(null)
+      }
+    }
+
+    navigateToSharedLocation()
+  }, [pendingFindTarget, currentNode])
+
+  // Must be called directly from a user gesture (a real button tap, not
+  // inside an async chain triggered indirectly) -- iOS requires this
+  // exact pattern before it will grant motion sensor access at all.
+  const enableMotionTracking = async () => {
+    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+      try {
+        const result = await DeviceMotionEvent.requestPermission()
+        setMotionPermissionGranted(result === 'granted')
+      } catch (err) {
+        console.error('Motion permission request failed:', err)
+        setMotionPermissionGranted(false)
+      }
+    } else if (typeof DeviceMotionEvent !== 'undefined') {
+      // Browsers that support DeviceMotionEvent without an explicit
+      // permission prompt (most non-iOS browsers) -- just start listening.
+      setMotionPermissionGranted(true)
+    } else {
+      setMotionSupported(false)
+    }
+  }
+
+  // Tracks whether the phone is currently showing walking-like motion --
+  // rhythmic acceleration bounce, as opposed to being held still. This can
+  // only answer "is motion happening", never "which direction", so it
+  // pauses the auto-advance countdown below rather than trying to
+  // estimate position from it.
+  useEffect(() => {
+    if (!motionPermissionGranted) return
+
+    const handleMotion = (event) => {
+      const acc = event.acceleration
+      if (!acc || acc.x === null || acc.x === undefined) return
+      const magnitude = Math.sqrt((acc.x || 0) ** 2 + (acc.y || 0) ** 2 + (acc.z || 0) ** 2)
+      const now = Date.now()
+      motionSamplesRef.current.push({ t: now, magnitude })
+      motionSamplesRef.current = motionSamplesRef.current.filter(s => now - s.t <= MOTION_WINDOW_MS)
+    }
+
+    window.addEventListener('devicemotion', handleMotion)
+
+    const checkInterval = setInterval(() => {
+      const samples = motionSamplesRef.current
+      if (samples.length < MOTION_MIN_SAMPLES) {
+        // Not enough data yet to judge -- fail open (assume moving)
+        // rather than falsely freezing navigation before readings arrive.
+        isMovingRef.current = true
+        return
+      }
+      const mags = samples.map(s => s.magnitude)
+      const mean = mags.reduce((a, b) => a + b, 0) / mags.length
+      const variance = mags.reduce((a, b) => a + (b - mean) ** 2, 0) / mags.length
+      isMovingRef.current = Math.sqrt(variance) > MOTION_WALKING_STD_DEV_THRESHOLD
+    }, MOTION_CHECK_INTERVAL_MS)
+
+    return () => {
+      window.removeEventListener('devicemotion', handleMotion)
+      clearInterval(checkInterval)
+    }
+  }, [motionPermissionGranted])
 
   const filteredRooms = searchQuery
     ? rooms.filter(r =>
@@ -141,6 +308,7 @@ function Home() {
       return
     }
 
+    setIsCalculatingRoute(true)
     try {
       const res = await fetch(`${API}/navigate/`, {
         method: 'POST',
@@ -164,6 +332,8 @@ function Home() {
     } catch (err) {
       setError('Could not connect to navigation server')
       console.error(err)
+    } finally {
+      setIsCalculatingRoute(false)
     }
   }
 
@@ -180,11 +350,14 @@ function Home() {
 
     if (correctingPosition && isNavigating && destination) {
       setCorrectingPosition(false)
+      setIsCalculatingRoute(true)
       try {
         const body = {
           from_point: { x, y, floor, building },
           ...(destination.type === 'room'
             ? { to_room: destination.code }
+            : destination.type === 'node'
+            ? { to_node: destination.nodeId }
             : { to_point: destination.point }),
         }
         const res = await fetch(`${API}/navigate/`, {
@@ -207,6 +380,8 @@ function Home() {
       } catch (err) {
         setError('Could not connect to navigation server')
         console.error(err)
+      } finally {
+        setIsCalculatingRoute(false)
       }
       return
     }
@@ -218,6 +393,7 @@ function Home() {
       return
     }
 
+    setIsCalculatingRoute(true)
     try {
       const res = await fetch(`${API}/navigate/`, {
         method: 'POST',
@@ -244,6 +420,8 @@ function Home() {
     } catch (err) {
       setError('Could not connect to navigation server')
       console.error(err)
+    } finally {
+      setIsCalculatingRoute(false)
     }
   }
 
@@ -269,36 +447,94 @@ function Home() {
     setCurrentNode(navigationPath[nextIndex].id)
   }
 
+  // Shares the current position as a link -- saves currentNode on the
+  // backend, gets back a short id, builds a URL with it, then hands that
+  // to the native share sheet (navigator.share, works on mobile browsers
+  // including iOS Safari) if available, or just copies it to the
+  // clipboard otherwise (most desktop browsers). Either way the recipient
+  // ends up with a link that, once opened, resolves via the effect above
+  // and navigates to this exact spot -- reusing the same navigate()
+  // pipeline as any other destination, just fed a saved node instead of
+  // a room code.
+  const handleShareLocation = async () => {
+    if (!currentNode) return
+    setShareStatus('sharing')
+    try {
+      const res = await fetch(`${API}/location/share/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ node_id: currentNode }),
+      })
+      const data = await res.json()
+      if (data.error) {
+        setShareStatus('error')
+        return
+      }
+
+      const shareUrl = `${window.location.origin}${window.location.pathname}?find=${data.id}`
+
+      if (navigator.share) {
+        await navigator.share({ title: 'Find me on CampusNav', url: shareUrl })
+        setShareStatus('shared')
+      } else {
+        await navigator.clipboard.writeText(shareUrl)
+        setShareStatus('copied')
+      }
+    } catch (err) {
+      // navigator.share throws if the person cancels the share sheet --
+      // that's a normal dismissal, not a real error, so don't show one.
+      if (err.name !== 'AbortError') {
+        console.error('Failed to share location:', err)
+        setShareStatus('error')
+      } else {
+        setShareStatus(null)
+      }
+    }
+    setTimeout(() => setShareStatus(null), 3000)
+  }
+
   const hasArrived = isNavigating && currentStepIndex === navigationPath.length - 1
 
-  // Auto-advances the current step on a timer sized to that step's real
-  // walking distance, so the dot moves on its own at a normal pace --
-  // no tap required under normal conditions. currentStepIndex is a
-  // dependency, so every time it changes (whether from this timer or the
-  // manual skip-ahead button), the cleanup below clears the old timer
-  // before a fresh one is scheduled for the new step. If you're off
-  // track, tapping the map (handleMapClick, above) recalculates and
-  // resets this from the real point instead of waiting the old timer out.
+  // Auto-advances the current step on a countdown sized to that step's
+  // real walking distance, so the dot moves on its own at a normal pace --
+  // no tap required under normal conditions. Unlike a plain setTimeout,
+  // this ticks down in small increments (checking motion each tick)
+  // rather than firing once at a fixed delay, specifically so it CAN be
+  // paused: if motion tracking is enabled and the phone isn't currently
+  // showing walking-like movement, the tick is skipped rather than
+  // counted, so someone who's stopped doesn't see the dot keep gliding
+  // ahead of them. If motion tracking was never enabled (or isn't
+  // supported), this falls back to counting down unconditionally, same
+  // as before -- it should never require the permission to function, only
+  // improve on it. If you're off track, tapping the map (handleMapClick)
+  // still recalculates and resets this from the real point regardless.
   useEffect(() => {
     if (!isNavigating || hasArrived) return
     const currentStep = navigationPath[currentStepIndex]
     if (!currentStep) return
 
-    const durationMs = Math.max(
+    let remainingMs = Math.max(
       MIN_STEP_MS,
       (currentStep.distance_to_next / WALKING_SPEED_MPS) * 1000
     )
 
-    const timer = setTimeout(() => {
-      const nextIndex = currentStepIndex + 1
-      if (nextIndex < navigationPath.length) {
-        setCurrentStepIndex(nextIndex)
-        setCurrentNode(navigationPath[nextIndex].id)
+    const tick = setInterval(() => {
+      const shouldCountDown = !motionPermissionGranted || isMovingRef.current
+      if (shouldCountDown) {
+        remainingMs -= MOTION_CHECK_INTERVAL_MS
       }
-    }, durationMs)
+      if (remainingMs <= 0) {
+        clearInterval(tick)
+        const nextIndex = currentStepIndex + 1
+        if (nextIndex < navigationPath.length) {
+          setCurrentStepIndex(nextIndex)
+          setCurrentNode(navigationPath[nextIndex].id)
+        }
+      }
+    }, MOTION_CHECK_INTERVAL_MS)
 
-    return () => clearTimeout(timer)
-  }, [isNavigating, currentStepIndex, navigationPath, hasArrived])
+    return () => clearInterval(tick)
+  }, [isNavigating, currentStepIndex, navigationPath, hasArrived, motionPermissionGranted])
 
   const stopNavigation = () => {
     setIsNavigating(false)
@@ -313,75 +549,139 @@ function Home() {
 
   const selectedRoomData = rooms.find(r => r.code === selectedRoom)
   const nextStepNode = isNavigating ? navigationPath[currentStepIndex + 1] : null
+  const remainingMeters = isNavigating
+    ? navigationPath.slice(currentStepIndex).reduce((sum, step) => sum + (step.distance_to_next || 0), 0)
+    : 0
+  const remainingSeconds = remainingMeters / WALKING_SPEED_MPS
   
   return (
     <div style={{ padding: '16px', maxWidth: '900px', margin: '0 auto' }}>
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
 
       <div style={{
         display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', marginBottom: '16px'
+        alignItems: 'center', marginBottom: '10px'
       }}>
         <h1 style={{ fontSize: '22px', fontWeight: '600', color: '#1e293b' }}>
           CampusNav
         </h1>
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+        {/* Status only, nothing tappable -- position, GPS, and motion
+            tracking (once already granted) are informational, kept small
+            and secondary so the actual buttons below aren't competing
+            with them for attention. */}
+        <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
           {currentNode && !isNavigating && (
             <span style={{
               display: 'flex', alignItems: 'center', gap: '4px',
-              fontSize: '11px', color: '#64748b', padding: '4px 8px',
-              background: '#f1f5f9', borderRadius: '6px'
+              fontSize: '10px', color: '#64748b', padding: '3px 7px',
+              background: '#f1f5f9', borderRadius: '5px'
             }}>
-              <IconPin size={10} color="#64748b" /> <span style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{currentNode}</span>
+              <IconPin size={9} color="#64748b" /> <span style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{currentNode}</span>
             </span>
           )}
 
           {position && (
             <span style={{
-              display: 'flex', alignItems: 'center', gap: '5px',
-              fontSize: '11px', color: '#16a34a', padding: '4px 8px',
-              background: '#dcfce7', borderRadius: '6px'
+              display: 'flex', alignItems: 'center', gap: '4px',
+              fontSize: '10px', color: '#16a34a', padding: '3px 7px',
+              background: '#dcfce7', borderRadius: '5px'
             }}>
-              <StatusDot color="#16a34a" /> GPS active
+              <StatusDot color="#16a34a" /> GPS
             </span>
           )}
           {gpsError && (
             <span style={{
-              display: 'flex', alignItems: 'center', gap: '5px',
-              fontSize: '11px', color: '#dc2626', padding: '4px 8px',
-              background: '#fee2e2', borderRadius: '6px'
+              display: 'flex', alignItems: 'center', gap: '4px',
+              fontSize: '10px', color: '#dc2626', padding: '3px 7px',
+              background: '#fee2e2', borderRadius: '5px'
             }}>
               <StatusDot color="#dc2626" /> No GPS
             </span>
           )}
-
-          {!isNavigating && (
-            <button
-              onClick={() => setSettingPosition(!settingPosition)}
-              style={{
-                display: 'flex', alignItems: 'center', gap: '6px',
-                padding: '8px 14px', borderRadius: '8px', border: 'none',
-                background: settingPosition ? '#7c3aed' : '#e2e8f0',
-                color: settingPosition ? 'white' : '#475569',
-                fontWeight: '600', cursor: 'pointer', fontSize: '13px'
-              }}
-            >
-              {settingPosition ? 'Tap a node...' : (<><IconPin size={12} /> Set position</>)}
-            </button>
-          )}
-          {isNavigating && (
-            <button
-              onClick={stopNavigation}
-              style={{
-                display: 'flex', alignItems: 'center', gap: '6px',
-                padding: '8px 14px', borderRadius: '8px', border: 'none',
-                background: '#dc2626', color: 'white',
-                fontWeight: '600', cursor: 'pointer', fontSize: '13px'
-              }}
-            >
-              <IconClose size={11} /> Stop navigation
-            </button>
+          {motionPermissionGranted && (
+            <span style={{
+              display: 'flex', alignItems: 'center', gap: '4px',
+              fontSize: '10px', color: '#16a34a', padding: '3px 7px',
+              background: '#dcfce7', borderRadius: '5px'
+            }}>
+              <StatusDot color="#16a34a" /> Motion
+            </span>
           )}
         </div>
+      </div>
+
+      {/* Actions row -- the things you actually tap, kept visually
+          distinct and larger than the status badges above so they're
+          easy to find rather than blending into a row of status text. */}
+      <div style={{
+        display: 'flex', gap: '8px', flexWrap: 'wrap',
+        paddingTop: '10px', marginBottom: '16px',
+        borderTop: '1px solid #f1f5f9',
+      }}>
+        {!isNavigating && (
+          <button
+            onClick={() => setSettingPosition(!settingPosition)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '7px',
+              padding: '10px 16px', borderRadius: '10px', border: 'none',
+              background: settingPosition ? '#7c3aed' : '#e2e8f0',
+              color: settingPosition ? 'white' : '#475569',
+              fontWeight: '600', cursor: 'pointer', fontSize: '14px',
+              flex: '1', justifyContent: 'center', minWidth: '140px',
+            }}
+          >
+            {settingPosition ? 'Tap a node...' : (<><IconPin size={13} /> Set position</>)}
+          </button>
+        )}
+        {isNavigating && (
+          <button
+            onClick={stopNavigation}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '7px',
+              padding: '10px 16px', borderRadius: '10px', border: 'none',
+              background: '#dc2626', color: 'white',
+              fontWeight: '600', cursor: 'pointer', fontSize: '14px',
+              flex: '1', justifyContent: 'center', minWidth: '140px',
+            }}
+          >
+            <IconClose size={12} /> Stop navigation
+          </button>
+        )}
+
+        {currentNode && !isNavigating && (
+          <button
+            onClick={handleShareLocation}
+            disabled={shareStatus === 'sharing'}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '7px',
+              padding: '10px 16px', borderRadius: '10px', border: 'none',
+              background: '#eff6ff', color: '#1d4ed8',
+              fontWeight: '600', cursor: 'pointer', fontSize: '14px',
+              flex: '1', justifyContent: 'center', minWidth: '140px',
+            }}
+          >
+            {shareStatus === 'sharing' && 'Sharing...'}
+            {shareStatus === 'copied' && 'Link copied!'}
+            {shareStatus === 'shared' && 'Shared!'}
+            {shareStatus === 'error' && "Couldn't share"}
+            {!shareStatus && 'Share my location'}
+          </button>
+        )}
+
+        {motionSupported && !motionPermissionGranted && (
+          <button
+            onClick={enableMotionTracking}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '7px',
+              padding: '10px 16px', borderRadius: '10px', border: 'none',
+              background: '#f1f5f9', color: '#475569',
+              fontWeight: '600', cursor: 'pointer', fontSize: '14px',
+              flex: '1', justifyContent: 'center', minWidth: '140px',
+            }}
+          >
+            Enable motion tracking
+          </button>
+        )}
       </div>
 
       {settingPosition && (
@@ -413,6 +713,22 @@ function Home() {
           color: '#dc2626', fontSize: '13px'
         }}>
           Couldn't load the room list. Search won't find anything until this is fixed. Check that the backend server is running.
+        </div>
+      )}
+
+      {!isNavigating && isCalculatingRoute && (
+        <div style={{
+          padding: '10px 14px', borderRadius: '8px', marginBottom: '12px',
+          background: '#eff6ff', border: '1px solid #bfdbfe',
+          color: '#1d4ed8', fontSize: '13px', display: 'flex',
+          alignItems: 'center', gap: '8px',
+        }}>
+          <span style={{
+            width: 12, height: 12, borderRadius: '50%',
+            border: '2px solid #bfdbfe', borderTopColor: '#1d4ed8',
+            animation: 'spin 0.8s linear infinite', display: 'inline-block',
+          }} />
+          Finding route...
         </div>
       )}
 
@@ -514,6 +830,7 @@ function Home() {
               </span>
               <span style={{ color: '#64748b', fontSize: '12px', marginLeft: '8px' }}>
                 step {currentStepIndex + 1} of {navigationPath.length}
+                {!hasArrived && ` \u00b7 ${formatDistance(remainingMeters)}, ${formatDuration(remainingSeconds)} left`}
               </span>
             </div>
             {floorChanges.length > 0 && (
@@ -523,7 +840,18 @@ function Home() {
             )}
           </div>
 
-          {!hasArrived && (
+          {!hasArrived && isCalculatingRoute && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#1d4ed8' }}>
+              <span style={{
+                width: 12, height: 12, borderRadius: '50%',
+                border: '2px solid #bfdbfe', borderTopColor: '#1d4ed8',
+                animation: 'spin 0.8s linear infinite', display: 'inline-block',
+              }} />
+              Recalculating...
+            </div>
+          )}
+
+          {!hasArrived && !isCalculatingRoute && (
             <>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '13px', color: '#334155' }}>
