@@ -6,6 +6,8 @@ import Admin from './pages/Admin'
 import Profile from './pages/Profile'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 import MyBookings from './pages/MyBookings'
 import Nav from './components/Nav'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -24,6 +26,8 @@ function App() {
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/my-bookings" element={<ProtectedRoute tier="student"><MyBookings /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>

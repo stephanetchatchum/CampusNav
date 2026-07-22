@@ -70,3 +70,23 @@ export const loginUser = async (email, password) => {
   })
   return response
 }
+
+// Request a password reset email
+export const forgotPassword = async (email) => {
+  const response = await fetch(`${BASE_URL}/auth/forgot-password/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  })
+  return response
+}
+
+// Set a new password using a reset token from the emailed link
+export const resetPassword = async (token, password) => {
+  const response = await fetch(`${BASE_URL}/auth/reset-password/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token, password })
+  })
+  return response
+}

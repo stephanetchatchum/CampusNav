@@ -86,6 +86,12 @@ function Login() {
           {loading ? "Signing in..." : "Sign In"}
         </button>
 
+        <p className="text-center text-sm mb-4">
+          <a href="/forgot-password" className="text-[#003087] font-semibold hover:underline">
+            Forgot password?
+          </a>
+        </p>
+
         {/* Link to register */}
         <p className="text-center text-sm text-gray-500 mt-6">
           Don't have an account?{" "}
