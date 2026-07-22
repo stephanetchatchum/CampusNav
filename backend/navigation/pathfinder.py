@@ -169,7 +169,7 @@ def astar(start_node_id, end_node_id, nodes, adjacency):
 
     return None  # no path found
 
-def navigate(start_node_id=None, start_point=None, destination_room_code=None, destination_point=None):
+def navigate(start_node_id=None, start_point=None, destination_room_code=None, destination_point=None, destination_node_id=None):
     """
     Main entry point for pathfinding.
 
@@ -186,6 +186,12 @@ def navigate(start_node_id=None, start_point=None, destination_room_code=None, d
         a room. Pass this alone for 'navigate to wherever was tapped on the
         map'. Pass both together and destination_point is only used if the
         room_code lookup comes up empty.
+    destination_node_id: e.g. 'SC-F2-J-27' -- navigate directly to a known
+        node, no lookup needed. This is what location sharing uses: the
+        sharer's exact current node, not an approximate point near it, so
+        the recipient ends up at precisely where the link was shared from.
+        Checked first if present, since it's the most exact of the three
+        destination options.
     """
     nodes, adjacency = load_graph()
 
@@ -203,7 +209,10 @@ def navigate(start_node_id=None, start_point=None, destination_room_code=None, d
         return {'error': 'No starting point provided or found'}
 
     dest_node = None
-    if destination_room_code:
+    if destination_node_id and destination_node_id in nodes:
+        dest_node = nodes[destination_node_id]
+
+    if not dest_node and destination_room_code:
         dest_node = find_room_entrance(nodes, destination_room_code)
 
     if not dest_node and destination_point:
@@ -214,6 +223,8 @@ def navigate(start_node_id=None, start_point=None, destination_room_code=None, d
         )
 
     if not dest_node:
+        if destination_node_id:
+            return {'error': f'Shared location node {destination_node_id} no longer exists'}
         if destination_room_code:
             return {'error': f'No entrance node found for room {destination_room_code}'}
         return {'error': 'No navigable point found near that location'}

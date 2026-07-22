@@ -428,6 +428,7 @@ function CampusMap({
     const [isDragging, setIsDragging] = useState(false)
     const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
     const floorSvgRef = useRef(null)
+    const campusSvgRef = useRef(null)
 
     const { position, currentBuilding } = useGeolocation()
 
@@ -494,6 +495,13 @@ function CampusMap({
         setZoom(z => Math.min(Math.max(z * delta, 0.5), 5))
     }
 
+    useEffect(() => {
+        const el = campusSvgRef.current
+        if (!el) return
+        el.addEventListener('wheel', handleWheel, { passive: false })
+        return () => el.removeEventListener('wheel', handleWheel)
+    }, [])
+
     const handleMouseDown = (e) => {
         setIsDragging(true)
         setDragStart({ x: e.clientX - pan.x, y: e.clientY - pan.y })
@@ -534,6 +542,7 @@ function CampusMap({
 
     const renderCampusView = () => (
         <svg
+        ref={campusSvgRef}
         viewBox={`0 0 ${W} ${H}`}
         style={{
             width: '100%', height: 'auto',
@@ -541,7 +550,6 @@ function CampusMap({
             borderRadius: '12px',
             background: '#f1f5f9',
         }}
-        onWheel={handleWheel}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -756,12 +764,40 @@ function CampusMap({
                 ? '#94a3b8'
                 : (isHighlighted ? '#1d4ed8' : (isAvailable ? '#16a34a' : '#dc2626'))
 
+                // A room with a real traced shape has a `points` array
+                // (added via the editor's room-shape tracing, matching how
+                // walls are traced) -- rooms without one keep working
+                // exactly as before, as a simple box. Centre/bottom are
+                // computed either way so text and icons still position
+                // correctly regardless of which kind a room is.
+                const isPolygon = Array.isArray(room.points) && room.points.length >= 3
+                let centreX, centreY, bottomY
+                if (isPolygon) {
+                    centreX = room.points.reduce((s, p) => s + p[0], 0) / room.points.length
+                    centreY = room.points.reduce((s, p) => s + p[1], 0) / room.points.length
+                    bottomY = Math.max(...room.points.map(p => p[1])) - 6
+                } else {
+                    centreX = room.x + room.w / 2
+                    centreY = room.y + room.h / 2
+                    bottomY = room.y + room.h - 6
+                }
+
                 return (
                 <g
                     key={room.code}
                     onClick={(e) => { e.stopPropagation(); onRoomClick && onRoomClick(room.code) }}
                     style={{ cursor: 'pointer' }}
                 >
+                    {isPolygon ? (
+                    <polygon
+                    points={room.points.map(p => `${p[0]},${p[1]}`).join(' ')}
+                    fill={fillColour}
+                    stroke={strokeColour}
+                    strokeWidth={isHighlighted ? 3 : 1.5}
+                    strokeLinejoin="round"
+                    filter="url(#roomShadow)"
+                    />
+                    ) : (
                     <rect
                     x={room.x} y={room.y}
                     width={room.w} height={room.h}
@@ -771,19 +807,21 @@ function CampusMap({
                     rx={6}
                     filter="url(#roomShadow)"
                     />
+                    )}
                     {room.label === 'Elevator' && (
-                    <g transform={`translate(${room.x + room.w / 2}, ${room.y + room.h / 2 - 12})`}>
+                    <g transform={`translate(${centreX}, ${centreY - 12})`}>
                         <circle r={9} fill="white" stroke="#475569" strokeWidth={1.2} />
                         <path d="M 0,-5 L 3,-1 L -3,-1 Z" fill="#475569" />
                         <path d="M 0,5 L 3,1 L -3,1 Z" fill="#475569" />
                     </g>
                     )}
                     <text
-                    x={room.x + room.w / 2}
-                    y={room.y + room.h / 2 - (isNonBookable ? 0 : 8) + (room.label === 'Elevator' ? 14 : 0)}
+                    x={centreX}
+                    y={centreY - (isNonBookable ? 0 : 8) + (room.label === 'Elevator' ? 14 : 0)}
                     textAnchor="middle"
                     fontSize={10}
                     fontWeight="600"
+                    fontFamily="'IBM Plex Sans', sans-serif"
                     fill="#1e293b"
                     >
                     {room.label}
@@ -791,19 +829,21 @@ function CampusMap({
                     {!isNonBookable && isAvailable !== null && (
                     <>
                         <text
-                        x={room.x + room.w / 2}
-                        y={room.y + room.h / 2 + 10}
+                        x={centreX}
+                        y={centreY + 10}
                         textAnchor="middle"
                         fontSize={9}
+                        fontFamily="'IBM Plex Sans', sans-serif"
                         fill={isAvailable ? '#16a34a' : '#dc2626'}
                         >
                         {isAvailable ? 'Available' : 'Booked'}
                         </text>
                         <text
-                        x={room.x + room.w / 2}
-                        y={room.y + room.h - 6}
+                        x={centreX}
+                        y={bottomY}
                         textAnchor="middle"
                         fontSize={8}
+                        fontFamily="'IBM Plex Mono', monospace"
                         fill="#94a3b8"
                         >
                         {room.code}
