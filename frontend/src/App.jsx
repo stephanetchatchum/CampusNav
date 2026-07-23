@@ -8,6 +8,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import VerifyEmail from './pages/VerifyEmail'
 import MyBookings from './pages/MyBookings'
 import Nav from './components/Nav'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -28,6 +29,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/my-bookings" element={<ProtectedRoute tier="student"><MyBookings /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>

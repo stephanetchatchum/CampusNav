@@ -29,8 +29,15 @@ class RoomSerializer(serializers.ModelSerializer):
     
     def get_is_available(self, obj):
         """Compute availability live based on current approved bookings.
-        A room is unavailable if there is an approved booking for today
-        whose time slot overlaps with right now."""
+        When called from the room list, the view precomputes every
+        currently-active room in a single query and passes it in via
+        context, avoiding one database round trip per room. Falls back
+        to a single per-room query for the room detail view, where only
+        one room is ever serialized at a time."""
+        active_room_ids = self.context.get('active_room_ids')
+        if active_room_ids is not None:
+            return obj.id not in active_room_ids
+
         from bookings.models import Booking
         from django.utils import timezone
 

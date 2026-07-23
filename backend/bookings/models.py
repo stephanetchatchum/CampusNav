@@ -19,5 +19,14 @@ class Booking(models.Model):
     # if the booking is later cancelled. Blank if calendar sync failed.
     google_event_id = models.CharField(max_length=255, blank=True, null=True)
 
+    class Meta:
+        indexes = [
+            # Speeds up "which rooms are booked right now" across all rooms
+            models.Index(fields=['date', 'status']),
+            # Speeds up per-room checks: conflict detection, availability,
+            # the room detail page — all filter by exactly this combination
+            models.Index(fields=['room', 'date', 'status']),
+        ]
+
     def __str__(self):
         return f"{self.user.username} - {self.room.code} - {self.date}"

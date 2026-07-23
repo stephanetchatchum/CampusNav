@@ -12,6 +12,10 @@ class User(AbstractUser):
         ('admin', 'Admin'),
     ]
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
+    # Default True so every account that already existed before this
+    # feature was added keeps working. New registrations explicitly
+    # set this False until the person clicks their emailed link.
+    email_verified = models.BooleanField(default=True)
 
     groups = models.ManyToManyField(
         'auth.Group',
@@ -49,3 +53,23 @@ class PasswordResetToken(models.Model):
 
     def __str__(self):
         return f"Reset token for {self.user.email}"
+
+
+class EmailVerificationToken(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='verification_tokens')
+    token = models.CharField(max_length=64, unique=True, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    used = models.BooleanField(default=False)
+
+    @classmethod
+    def generate_for_user(cls, user):
+        cls.objects.filter(user=user, used=False).update(used=True)
+        return cls.objects.create(user=user, token=secrets.token_urlsafe(32))
+
+    def is_valid(self):
+        if self.used:
+            return False
+        return timezone.now() < self.created_at + timedelta(hours=24)
+
+    def __str__(self):
+        return f"Verification token for {self.user.email}"

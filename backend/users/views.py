@@ -2,11 +2,48 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import User, PasswordResetToken
-from .google_email import send_password_reset_email
+from .models import User, PasswordResetToken, EmailVerificationToken
+from .google_email import send_password_reset_email, send_verification_email
 
 @api_view(['POST'])
 def register(request):
+    email = request.data.get('email')
+    password = request.data.get('password')
+    role = 'student'
+    first_name = request.data.get('first_name', '')
+    last_name = request.data.get('last_name', '')
+
+    if not email or not password:
+        return Response({'error': 'Email and password are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if User.objects.filter(email=email).exists():
+        return Response({'error': 'An account with this email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+
+    username = email.split('@')[0]
+
+    user = User.objects.create_user(
+        username=username,
+        email=email,
+        password=password,
+        role=role,
+        first_name=first_name,
+        last_name=last_name
+    )
+    # New accounts must verify their email before they can log in.
+    user.email_verified = False
+    user.save()
+
+    verification_token = EmailVerificationToken.generate_for_user(user)
+    verify_link = f"http://localhost:5173/verify-email?token={verification_token.token}"
+
+    try:
+        send_verification_email(user.email, verify_link)
+    except Exception as e:
+        print(f"Verification email failed: {e}")
+
+    return Response({
+        'message': 'Account created. Check your email to verify your account before logging in.',
+    }, status=status.HTTP_201_CREATED)
     email = request.data.get('email')
     password = request.data.get('password')
     # Every public registration is a student-tier account. Admin access
@@ -62,6 +99,9 @@ def login(request):
     # Check if the password matches
     if not user.check_password(password):
         return Response({'error': 'Invalid email or password'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    if not user.email_verified:
+        return Response({'error': 'Please verify your email before logging in. Check your inbox for the verification link.'}, status=status.HTTP_403_FORBIDDEN)
 
     token = RefreshToken.for_user(user)
     return Response({
@@ -122,3 +162,53 @@ def reset_password(request):
     reset_token.save()
 
     return Response({'message': 'Password reset successful. You can now log in.'})
+
+@api_view(['POST'])
+def verify_email(request):
+    token_str = request.data.get('token')
+    if not token_str:
+        return Response({'error': 'Token is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        verification_token = EmailVerificationToken.objects.get(token=token_str)
+    except EmailVerificationToken.DoesNotExist:
+        return Response({'error': 'Invalid or expired verification link'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not verification_token.is_valid():
+        return Response({'error': 'Invalid or expired verification link'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = verification_token.user
+    user.email_verified = True
+    user.save()
+
+    verification_token.used = True
+    verification_token.save()
+
+    return Response({'message': 'Email verified successfully. You can now log in.'})
+
+
+@api_view(['POST'])
+def resend_verification(request):
+    email = request.data.get('email')
+    if not email:
+        return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    generic_response = {'message': 'If that email is registered and not yet verified, a new link has been sent.'}
+
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return Response(generic_response)
+
+    if user.email_verified:
+        return Response(generic_response)
+
+    verification_token = EmailVerificationToken.generate_for_user(user)
+    verify_link = f"http://localhost:5173/verify-email?token={verification_token.token}"
+
+    try:
+        send_verification_email(user.email, verify_link)
+    except Exception as e:
+        print(f"Verification email failed: {e}")
+
+    return Response(generic_response)
