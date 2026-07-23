@@ -1,132 +1,67 @@
-// Map2D.jsx — owned by Stephane
+function Map2d({ rooms = [], highlightedRoom = null, onRoomClick }) {
 
-import { useState } from 'react'
-import scFloor2 from '../assets/SC-F2-1-CP.jpg'
-import scFloor1 from '../assets/SC-F1-CP.jpg'
-import scFloor0 from '../assets/SC-F0-CP.jpg'
-import nodesData from '../../../campus-data/nodes.json'
+    const roomData = [
+        // ── SOCIAL COMMONS ── Floor 0
+        { code: 'SC-F0-EG', x: 25,  y: 50,  w: 120, h: 60, label: 'Egypt',            building: 'Social Commons',      floor: 0 },
+        { code: 'SC-F0-FC', x: 155, y: 50,  w: 100, h: 60, label: 'Food Court',        building: 'Social Commons',      floor: 0 },
+        { code: 'SC-F0-WR', x: 265, y: 50,  w:  50, h: 60, label: 'Washrooms',         building: 'Social Commons',      floor: 0 },
+        // ── SOCIAL COMMONS ── Floor 1
+        { code: 'SC-F1-MO', x: 25,  y: 50,  w: 100, h: 60, label: 'Morocco',           building: 'Social Commons',      floor: 1 },
+        { code: 'SC-F1-AL', x: 135, y: 50,  w: 100, h: 60, label: 'Algeria',           building: 'Social Commons',      floor: 1 },
+        { code: 'SC-F1-FC', x: 245, y: 50,  w:  80, h: 60, label: 'Food Court',        building: 'Social Commons',      floor: 1 },
+        { code: 'SC-F1-ET', x: 25,  y: 120, w: 160, h: 60, label: 'Ethiopia',          building: 'Social Commons',      floor: 1 },
+        { code: 'SC-F1-WR', x: 195, y: 120, w:  50, h: 60, label: 'Washrooms',         building: 'Social Commons',      floor: 1 },
+        // ── SOCIAL COMMONS ── Floor 2
+        { code: 'SC-F2-VD', x: 25,  y: 50,  w:  60, h: 60, label: 'Vendors',           building: 'Social Commons',      floor: 2 },
+        { code: 'SC-F2-FC', x: 95,  y: 50,  w:  80, h: 60, label: 'Food Court',        building: 'Social Commons',      floor: 2 },
+        { code: 'SC-F2-LS', x: 185, y: 50,  w:  60, h: 60, label: 'Loading/Storage',   building: 'Social Commons',      floor: 2 },
+        { code: 'SC-F2-WR', x: 255, y: 50,  w:  60, h: 60, label: 'Washrooms',         building: 'Social Commons',      floor: 2 },
+        { code: 'SC-F2-DJ', x: 25,  y: 120, w: 100, h: 60, label: 'Djibouti',          building: 'Social Commons',      floor: 2 },
+        { code: 'SC-F2-SS', x: 135, y: 120, w: 100, h: 60, label: 'South Sudan',       building: 'Social Commons',      floor: 2 },
+        { code: 'SC-F2-BT', x: 245, y: 120, w:  70, h: 60, label: 'Bibi Titi',         building: 'Social Commons',      floor: 2 },
 
-const roomData = [
-    // ── SOCIAL COMMONS ── Floor 0
-    { code: 'SC-F0-EG', x: 315,  y: 700,  w: 185, h: 190, label: 'Egypt',            building: 'Social Commons',      floor: 0 },
-    { code: 'SC-F0-FC', x: 315, y: 140,  w: 180, h: 360, label: 'Food Court',        building: 'Social Commons',      floor: 0 },
-    { code: 'SC-F0-WR', x: 150, y: 190,  w:  165, h: 130, label: 'Washrooms',         building: 'Social Commons',      floor: 0 },
-    { code: 'SC-F0-PR', x: 90, y: 220,  w:  60, h: 100, label: 'Prayer Room',         building: 'Social Commons',      floor: 0 },
-    { code: 'SC-F0-PD-1', x: 480, y: 670,  w: 65, h: 65, label: 'POD',       building: 'Social Commons', floor: 0 },
-    { code: 'SC-F0-PD-2', x: 465, y: 480,  w: 65, h: 65, label: 'POD',       building: 'Social Commons', floor: 0 },
-    { code: 'SC-F0-PD-3', x: 465, y: 290,  w: 65, h: 65, label: 'POD',       building: 'Social Commons', floor: 0 },
-    { code: 'SC-F0-PD-4', x: 465, y: 100,  w: 65, h: 65, label: 'POD',       building: 'Social Commons', floor: 0 },
-    { code: 'SC-F0-EL', x: 100, y: 100,  w: 60, h: 60, label: 'Elevator',       building: 'Social Commons', floor: 0 },
-    // ── SOCIAL COMMONS ── Floor 1
-    { code: 'SC-F1-MO', x: 260,  y: 810,  w: 140, h: 150, label: 'Morocco',           building: 'Social Commons',      floor: 1 },
-    { code: 'SC-F1-AL', x: 400, y: 810,  w: 170, h: 170, label: 'Algeria',           building: 'Social Commons',      floor: 1 },
-    { code: 'SC-F1-FC', x: 220,  y: 380,  w: 165, h: 220, label: 'Food Court', building: 'Social Commons', floor: 1 },
-    { code: 'SC-F1-ET', x: 85,  y: 40, w: 170, h: 150, label: 'Ethiopia',          building: 'Social Commons',      floor: 1 },
-    { code: 'SC-F1-WR', x: 110, y: 350, w:  95, h: 200, label: 'Washrooms',         building: 'Social Commons',      floor: 1 },
-    { code: 'SC-F1-PD-1', x: 240, y: 170,  w: 50, h: 50, label: 'POD',       building: 'Social Commons', floor: 1 },
-    { code: 'SC-F1-PD-2', x: 390, y: 630,  w: 50, h: 50, label: 'POD',       building: 'Social Commons', floor: 1 },
-    { code: 'SC-F1-PD-3', x: 540, y: 785,  w: 50, h: 50, label: 'POD',       building: 'Social Commons', floor: 1 },
-    { code: 'SC-F1-EL', x: 240, y: 320,  w: 50, h: 50, label: 'Elevator',       building: 'Social Commons', floor: 1 },
-    // ── SOCIAL COMMONS ── Floor 2
-    { code: 'SC-F2-DJ', x: 90,  y: 150,  w: 150, h: 155, label: 'Djibouti',        building: 'Social Commons', floor: 2 },
-    { code: 'SC-F2-SS', x: 240, y: 120,  w: 185, h: 185, label: 'South Sudan',     building: 'Social Commons', floor: 2 },
-    { code: 'SC-F2-BT', x: 370, y: 280,  w: 55, h: 50, label: 'Bibi Titi',       building: 'Social Commons', floor: 2 },
-    { code: 'SC-F2-PD-1', x: 220, y: 280,  w: 45, h: 45, label: 'POD',       building: 'Social Commons', floor: 2 },
-    { code: 'SC-F2-VD', x: 270,  y: 683, w:  285, h: 100, label: 'Vendors',         building: 'Social Commons', floor: 2 },
-    { code: 'SC-F2-FC', x: 320, y: 463, w: 210, h: 170, label: 'Food Court',      building: 'Social Commons', floor: 2 },
-    { code: 'SC-F2-EL', x: 370, y: 440,  w: 50, h: 50, label: 'Elevator',       building: 'Social Commons', floor: 2 },
-    { code: 'SC-F2-WR', x: 240, y: 463, w:  79, h: 170, label: 'Washrooms',       building: 'Social Commons', floor: 2 },
-    // ── ENTERPRISE COMMONS ── Floor 0
-    { code: 'EC-F0-LE', x: 25,  y: 50,  w: 120, h: 60, label: 'Lesotho',           building: 'Enterprise Commons',  floor: 0 },
-    { code: 'EC-F0-FL', x: 155, y: 50,  w: 100, h: 60, label: 'Fab Lab',           building: 'Enterprise Commons',  floor: 0 },
-    { code: 'EC-F0-WR', x: 265, y: 50,  w:  50, h: 60, label: 'Washrooms',         building: 'Enterprise Commons',  floor: 0 },
-    // ── ENTERPRISE COMMONS ── Floor 1
-    { code: 'EC-F1-AN', x: 25,  y: 50,  w: 100, h: 60, label: 'Angola',            building: 'Enterprise Commons',  floor: 1 },
-    { code: 'EC-F1-NA', x: 135, y: 50,  w: 100, h: 60, label: 'Namibia',           building: 'Enterprise Commons',  floor: 1 },
-    { code: 'EC-F1-UG', x: 245, y: 50,  w: 100, h: 60, label: 'Uganda',            building: 'Enterprise Commons',  floor: 1 },
-    { code: 'EC-F1-WR', x: 355, y: 50,  w:  50, h: 60, label: 'Washrooms',         building: 'Enterprise Commons',  floor: 1 },
-    // ── ENTERPRISE COMMONS ── Floor 2
-    { code: 'EC-F2-FG', x: 25,  y: 50,  w: 120, h: 60, label: 'Fab Lab Gallery',   building: 'Enterprise Commons',  floor: 2 },
-    { code: 'EC-F2-BU', x: 155, y: 50,  w: 100, h: 60, label: 'Burundi',           building: 'Enterprise Commons',  floor: 2 },
-    { code: 'EC-F2-KE', x: 265, y: 50,  w: 100, h: 60, label: 'Kenya',             building: 'Enterprise Commons',  floor: 2 },
-    { code: 'EC-F2-WR', x: 375, y: 50,  w:  50, h: 60, label: 'Washrooms',         building: 'Enterprise Commons',  floor: 2 },
-    // ── LEARNING COMMONS ── Floor 0
-    { code: 'LC-F0-LC', x: 25,  y: 50,  w: 130, h: 60, label: 'Leadership Center', building: 'Learning Commons',    floor: 0 },
-    { code: 'LC-F0-WC', x: 165, y: 50,  w: 100, h: 60, label: 'Wellness Center',   building: 'Learning Commons',    floor: 0 },
-    { code: 'LC-F0-BE', x: 275, y: 50,  w: 100, h: 60, label: 'Benin',             building: 'Learning Commons',    floor: 0 },
-    { code: 'LC-F0-SH', x: 25,  y: 120, w: 100, h: 60, label: 'Sahel',             building: 'Learning Commons',    floor: 0 },
-    { code: 'LC-F0-ES', x: 135, y: 120, w: 100, h: 60, label: 'Eswatini',          building: 'Learning Commons',    floor: 0 },
-    { code: 'LC-F0-WR', x: 245, y: 120, w:  50, h: 60, label: 'Washrooms',         building: 'Learning Commons',    floor: 0 },
-    // ── LEARNING COMMONS ── Floor 1
-    { code: 'LC-F1-RC', x: 25,  y: 50,  w: 120, h: 60, label: 'Resource Center',   building: 'Learning Commons',    floor: 1 },
-    { code: 'LC-F1-GN', x: 155, y: 50,  w: 100, h: 60, label: 'Guinea',            building: 'Learning Commons',    floor: 1 },
-    { code: 'LC-F1-GL', x: 25,  y: 120, w: 150, h: 60, label: 'Gambia & Liberia',  building: 'Learning Commons',    floor: 1 },
-    { code: 'LC-F1-MM', x: 185, y: 120, w: 150, h: 60, label: 'Mozambique & Malawi',building:'Learning Commons',    floor: 1 },
-    { code: 'LC-F1-WR', x: 345, y: 50,  w:  50, h: 60, label: 'Washrooms',         building: 'Learning Commons',    floor: 1 },
-    // ── LEARNING COMMONS ── Floor 2
-    { code: 'LC-F2-RE', x: 25,  y: 50,  w:  80, h: 60, label: 'Reception',         building: 'Learning Commons',    floor: 2 },
-    { code: 'LC-F2-AD', x: 115, y: 50,  w:  80, h: 60, label: 'Administration',    building: 'Learning Commons',    floor: 2 },
-    { code: 'LC-F2-SW', x: 205, y: 50,  w: 100, h: 60, label: 'Staff Work Hive',   building: 'Learning Commons',    floor: 2 },
-    { code: 'LC-F2-CO', x: 25,  y: 120, w: 100, h: 60, label: 'Congo',             building: 'Learning Commons',    floor: 2 },
-    { code: 'LC-F2-GA', x: 135, y: 120, w: 100, h: 60, label: 'Gabon',             building: 'Learning Commons',    floor: 2 },
-    { code: 'LC-F2-WR', x: 245, y: 120, w:  50, h: 60, label: 'Washrooms',         building: 'Learning Commons',    floor: 2 },
-]
+        // ── ENTERPRISE COMMONS ── Floor 0
+        { code: 'EC-F0-LE', x: 25,  y: 50,  w: 120, h: 60, label: 'Lesotho',           building: 'Enterprise Commons',  floor: 0 },
+        { code: 'EC-F0-FL', x: 155, y: 50,  w: 100, h: 60, label: 'Fab Lab',           building: 'Enterprise Commons',  floor: 0 },
+        { code: 'EC-F0-WR', x: 265, y: 50,  w:  50, h: 60, label: 'Washrooms',         building: 'Enterprise Commons',  floor: 0 },
+        // ── ENTERPRISE COMMONS ── Floor 1
+        { code: 'EC-F1-AN', x: 25,  y: 50,  w: 100, h: 60, label: 'Angola',            building: 'Enterprise Commons',  floor: 1 },
+        { code: 'EC-F1-NA', x: 135, y: 50,  w: 100, h: 60, label: 'Namibia',           building: 'Enterprise Commons',  floor: 1 },
+        { code: 'EC-F1-UG', x: 245, y: 50,  w: 100, h: 60, label: 'Uganda',            building: 'Enterprise Commons',  floor: 1 },
+        { code: 'EC-F1-WR', x: 355, y: 50,  w:  50, h: 60, label: 'Washrooms',         building: 'Enterprise Commons',  floor: 1 },
+        // ── ENTERPRISE COMMONS ── Floor 2
+        { code: 'EC-F2-FG', x: 25,  y: 50,  w: 120, h: 60, label: 'Fab Lab Gallery',   building: 'Enterprise Commons',  floor: 2 },
+        { code: 'EC-F2-BU', x: 155, y: 50,  w: 100, h: 60, label: 'Burundi',           building: 'Enterprise Commons',  floor: 2 },
+        { code: 'EC-F2-KE', x: 265, y: 50,  w: 100, h: 60, label: 'Kenya',             building: 'Enterprise Commons',  floor: 2 },
+        { code: 'EC-F2-WR', x: 375, y: 50,  w:  50, h: 60, label: 'Washrooms',         building: 'Enterprise Commons',  floor: 2 },
 
-const wallsData = {
-  'Social Commons-2': [],
-  'Social Commons-1': [],
-  'Social Commons-0': [],
-}
-const doorsData = {
-  'Social Commons-2': [],
-  'Social Commons-1': [],
-  'Social Commons-0': [],
-}
+        // ── LEARNING COMMONS ── Floor 0
+        { code: 'LC-F0-LC', x: 25,  y: 50,  w: 130, h: 60, label: 'Leadership Center', building: 'Learning Commons',    floor: 0 },
+        { code: 'LC-F0-WC', x: 165, y: 50,  w: 100, h: 60, label: 'Wellness Center',   building: 'Learning Commons',    floor: 0 },
+        { code: 'LC-F0-BE', x: 275, y: 50,  w: 100, h: 60, label: 'Benin',             building: 'Learning Commons',    floor: 0 },
+        { code: 'LC-F0-SH', x: 25,  y: 120, w: 100, h: 60, label: 'Sahel',             building: 'Learning Commons',    floor: 0 },
+        { code: 'LC-F0-ES', x: 135, y: 120, w: 100, h: 60, label: 'Eswatini',          building: 'Learning Commons',    floor: 0 },
+        { code: 'LC-F0-WR', x: 245, y: 120, w:  50, h: 60, label: 'Washrooms',         building: 'Learning Commons',    floor: 0 },
+        // ── LEARNING COMMONS ── Floor 1
+        { code: 'LC-F1-RC', x: 25,  y: 50,  w: 120, h: 60, label: 'Resource Center',   building: 'Learning Commons',    floor: 1 },
+        { code: 'LC-F1-GN', x: 155, y: 50,  w: 100, h: 60, label: 'Guinea',            building: 'Learning Commons',    floor: 1 },
+        { code: 'LC-F1-GL', x: 25,  y: 120, w: 150, h: 60, label: 'Gambia & Liberia',  building: 'Learning Commons',    floor: 1 },
+        { code: 'LC-F1-MM', x: 185, y: 120, w: 150, h: 60, label: 'Mozambique & Malawi',building:'Learning Commons',    floor: 1 },
+        { code: 'LC-F1-WR', x: 345, y: 50,  w:  50, h: 60, label: 'Washrooms',         building: 'Learning Commons',    floor: 1 },
+        // ── LEARNING COMMONS ── Floor 2
+        { code: 'LC-F2-RE', x: 25,  y: 50,  w:  80, h: 60, label: 'Reception',         building: 'Learning Commons',    floor: 2 },
+        { code: 'LC-F2-AD', x: 115, y: 50,  w:  80, h: 60, label: 'Administration',    building: 'Learning Commons',    floor: 2 },
+        { code: 'LC-F2-SW', x: 205, y: 50,  w: 100, h: 60, label: 'Staff Work Hive',   building: 'Learning Commons',    floor: 2 },
+        { code: 'LC-F2-CO', x: 25,  y: 120, w: 100, h: 60, label: 'Congo',             building: 'Learning Commons',    floor: 2 },
+        { code: 'LC-F2-GA', x: 135, y: 120, w: 100, h: 60, label: 'Gabon',             building: 'Learning Commons',    floor: 2 },
+        { code: 'LC-F2-WR', x: 245, y: 120, w:  50, h: 60, label: 'Washrooms',         building: 'Learning Commons',    floor: 2 },
+    ]
 
-const buildingColour = {
-    'Social Commons': '#8B0000',
-    'Enterprise Commons': '#1B5E20',
-    'Learning Commons':   '#003087',
-}
-
-const floorBackgrounds = {
-  'Social Commons-2': scFloor2,
-  'Social Commons-1': scFloor1,
-  'Social Commons-0': scFloor0,
-}
-
-const NON_BOOKABLE = new Set([
-  'SC-F0-WR', 'SC-F0-PR', 'SC-F0-EL',
-  'SC-F0-PD-1', 'SC-F0-PD-2', 'SC-F0-PD-3', 'SC-F0-PD-4',
-  'SC-F1-WR', 'SC-F1-EL', 'SC-F1-PD-1', 'SC-F1-PD-2', 'SC-F1-PD-3',
-  'SC-F2-PD-1', 'SC-F2-EL', 'SC-F2-WR',
-  'EC-F0-WR', 'EC-F1-WR', 'EC-F2-WR',
-  'LC-F0-WR', 'LC-F1-WR', 'LC-F2-WR',
-])
-
-function Map2D({
-    rooms = [],
-    highlightedRoom = null,
-    navigationPath = [],
-    currentNodeId = null,
-    settingPosition = false,
-    onRoomClick,
-    onNodeClick,
-}) {
-    const grouped = {}
-    roomData.forEach(room => {
-        if (!grouped[room.building]) grouped[room.building] = {}
-        if (!grouped[room.building][room.floor]) grouped[room.building][room.floor] = []
-        grouped[room.building][room.floor].push(room)
-    })
-
-    const defaultFloors = Object.fromEntries(
-        Object.entries(grouped).map(([building, floors]) => {
-            const highest = Math.max(...Object.keys(floors).map(Number))
-            return [building, highest]
-        })
-    )
-    const [activeFloors, setActiveFloors] = useState(defaultFloors)
+    const buildingColour = {
+        'Social Commons': '#8B0000',
+        'Enterprise Commons': '#1B5E20',
+        'Learning Commons':   '#003087',
+    }
 
     const getAvailability = (code) => {
         const room = rooms.find(r => r.code === code)
@@ -134,27 +69,17 @@ function Map2D({
         return room.is_available
     }
 
-    const VIEWBOX_WIDTH = 820
-    const VIEWBOX_HEIGHT = 1000
+    const grouped = {}
+    roomData.forEach(room => {
+        if (!grouped[room.building]) grouped[room.building] = {}
+        if (!grouped[room.building][room.floor]) grouped[room.building][room.floor] = []
+        grouped[room.building][room.floor].push(room)
+    })
 
-    // Photo dimensions used in the node editor — needed to scale
-    // node coordinates from photo pixels to SVG viewbox pixels
-    const PHOTO_DIMS = {
-      'Social Commons-2': { w: 1873, h: 1873 },
-      'Social Commons-1': { w: 1300, h: 1740 },
-      'Social Commons-0': { w: 1274, h: 1783 },
-    }
-
-    function scaleNode(node, bldg, floor) {
-      const key = bldg + '-' + floor
-      const dims = PHOTO_DIMS[key]
-      if (!dims) return node
-      return {
-        ...node,
-        x: Math.round((node.x / dims.w) * VIEWBOX_WIDTH),
-        y: Math.round((node.y / dims.h) * VIEWBOX_HEIGHT),
-      }
-    }
+    const FLOOR_HEIGHT = 210
+    const FLOOR_LABEL_HEIGHT = 24
+    const BUILDING_LABEL_HEIGHT = 32
+    const SECTION_PADDING = 16
 
     return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -162,283 +87,140 @@ function Map2D({
       {Object.entries(grouped).map(([building, floors]) => {
 
         const colour = buildingColour[building] || '#334155'
-        const floorNumbers = Object.keys(floors).map(Number).sort((a, b) => b - a)
-        const activeFloor = activeFloors[building]
-        const floorRooms = floors[activeFloor] || []
-        const bgKey = `${building}-${activeFloor}`
-        const bgImage = floorBackgrounds[bgKey]
-        const walls = wallsData[bgKey] || []
-        const doors = doorsData[bgKey] || []
-
-        // Tune these until nodes line up perfectly
-        const NODE_TRANSFORM = {
-        'Social Commons-2': { scaleX: 0, scaleY: 0, offsetX: 0, offsetY: 100 },
-        'Social Commons-1': { scaleX: 0.61, scaleY: 0.65, offsetX: 45, offsetY: -25 },
-        'Social Commons-0': { scaleX: 0.6, scaleY: 0.6, offsetX: 45, offsetY: 0 },
-        }
-
-        const floorNodes = nodesData
-        .filter(n => n.building === building && n.floor === activeFloor)
-        .map(n => {
-            const key = `${building}-${activeFloor}`
-            const t = NODE_TRANSFORM[key] || { scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 }
-            return {
-            ...n,
-            x: Math.round(n.x * t.scaleX + t.offsetX),
-            y: Math.round(n.y * t.scaleY + t.offsetY),
-            }
-        })
-
+        const floorCount = Object.keys(floors).length
+        const svgHeight = floorCount * FLOOR_HEIGHT + BUILDING_LABEL_HEIGHT + SECTION_PADDING
 
         return (
             <div key={building}>
 
-                {/* Building title + floor switcher */}
+                {/* Building title */}
                 <div style={{
-                    background: colour,
-                    color: 'white',
-                    padding: '8px 16px',
-                    borderRadius: '8px 8px 0 0',
-                    fontWeight: '600',
-                    fontSize: '15px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
+                background: colour,
+                color: 'white',
+                padding: '8px 16px',
+                borderRadius: '8px 8px 0 0',
+                fontWeight: '600',
+                fontSize: '15px'
                 }}>
-                    <span>{building}</span>
-                    <div style={{ display: 'flex', gap: '6px' }}>
-                        {floorNumbers.map(num => (
-                            <button
-                                key={num}
-                                onClick={() => setActiveFloors(prev => ({ ...prev, [building]: num }))}
-                                style={{
-                                    width: '32px',
-                                    height: '32px',
-                                    borderRadius: '6px',
-                                    border: 'none',
-                                    cursor: 'pointer',
-                                    fontWeight: '600',
-                                    fontSize: '13px',
-                                    background: activeFloor === num ? 'white' : 'rgba(255,255,255,0.2)',
-                                    color: activeFloor === num ? colour : 'white'
-                                }}
-                            >
-                                {num}
-                            </button>
-                        ))}
-                    </div>
+                {building}
                 </div>
 
-                {/* SVG for the ACTIVE floor only */}
+                {/* SVG for this building */}
                 <svg
-                    viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
-                    style={{
-                        width: '100%',
-                        height: 'auto',
-                        background: '#f8fafc',
-                        borderRadius: '0 0 8px 8px',
-                        border: `1px solid ${colour}`,
-                        borderTop: 'none'
-                    }}
+                viewBox={`0 0 820 ${svgHeight}`}
+                style={{
+                    width: '100%',
+                    height: 'auto',
+                    background: '#f8fafc',
+                    borderRadius: '0 0 8px 8px',
+                    border: `1px solid ${colour}`,
+                    borderTop: 'none'
+                }}
                 >
-                    {/* Floor label */}
-                    <text x={12} y={20} fontSize={12} fontWeight="600" fill={colour}>
-                        {activeFloor === 0 ? 'Ground Floor' : `Floor ${activeFloor}`}
-                    </text>
+                {Object.entries(floors)
+                    .sort((a, b) => Number(b[0]) - Number(a[0])) // floor 2 at top, 0 at bottom
+                    .map(([floor, floorRooms], floorIndex) => {
 
-                    {/* Background reference image */}
-                    {bgImage && (
-                        <image
-                            href={bgImage}
-                            x={0} y={0}
-                            width={VIEWBOX_WIDTH}
-                            height={VIEWBOX_HEIGHT}
-                            opacity={0.35}
-                            preserveAspectRatio="xMidYMid meet"
+                    // y offset for this floor section
+                    const yOffset = floorIndex * FLOOR_HEIGHT + BUILDING_LABEL_HEIGHT
+
+                    return (
+                        <g key={floor}>
+
+                        {/* Floor label background */}
+                        <rect
+                            x={0} y={yOffset}
+                            width={820} height={FLOOR_LABEL_HEIGHT}
+                            fill={colour + '22'}
                         />
-                    )}
 
-                    {/* Walls */}
-                    {walls.map((wall, i) => (
-                        <line
-                            key={`wall-${i}`}
-                            x1={wall.x1} y1={wall.y1}
-                            x2={wall.x2} y2={wall.y2}
-                            stroke="#475569"
-                            strokeWidth={3}
-                            strokeLinecap="round"
-                        />
-                    ))}
+                        {/* Floor label text */}
+                        <text
+                            x={12} y={yOffset + 16}
+                            fontSize={12}
+                            fontWeight="600"
+                            fill={colour}
+                        >
+                            {floor === '0' ? 'Ground Floor' : `Floor ${floor}`}
+                        </text>
 
-                    {/* Doors */}
-                    {doors.map((door, i) => (
-                        <circle
-                            key={`door-${i}`}
-                            cx={door.x} cy={door.y}
-                            r={4}
-                            fill="#f59e0b"
-                            opacity={0.6}
-                        />
-                    ))}
+                        {/* Rooms on this floor */}
+                        {floorRooms.map(room => {
+                            const isAvailable = getAvailability(room.code)
+                            const isHighlighted = highlightedRoom === room.code
+                            const roomY = yOffset + FLOOR_LABEL_HEIGHT + room.y
 
-                    {/* Navigation path — scaled same as nodes */}
-                    {navigationPath.length > 1 && (() => {
-                        const key = `${building}-${activeFloor}`
-                        const t = NODE_TRANSFORM[key] || { scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 }
-                        const scaledPath = navigationPath
-                            .filter(p => p.floor === activeFloor)
-                            .map(p => ({
-                            x: Math.round(p.x * t.scaleX + t.offsetX),
-                            y: Math.round(p.y * t.scaleY + t.offsetY),
-                            }))
-                        if (scaledPath.length < 2) return null
-                        return (
-                            <polyline
-                            points={scaledPath.map(p => `${p.x},${p.y}`).join(' ')}
-                            fill="none"
-                            stroke="#1d4ed8"
-                            strokeWidth={3}
-                            strokeDasharray="8 6"
-                            />
-                        )
-                    })()}
-
-                    {/* Rooms */}
-                    {floorRooms.map(room => {
-                        const isNonBookable = NON_BOOKABLE.has(room.code)
-                        const isAvailable = isNonBookable ? null : getAvailability(room.code)
-                        const isHighlighted = highlightedRoom === room.code
-
-                        const fillColour = isNonBookable
-                            ? '#e2e8f0'
-                            : (isAvailable ? '#dcfce7' : '#fee2e2')
-                        const strokeColour = isNonBookable
-                            ? '#94a3b8'
-                            : (isHighlighted ? '#1d4ed8' : (isAvailable ? '#16a34a' : '#dc2626'))
-
-                        return (
+                            return (
                             <g
                                 key={room.code}
-                                onClick={() => !isNonBookable && onRoomClick && onRoomClick(room.code)}
-                                style={{ cursor: isNonBookable ? 'default' : 'pointer' }}
-                            >
-                                <rect
-                                    x={room.x} y={room.y}
-                                    width={room.w} height={room.h}
-                                    fill={fillColour}
-                                    stroke={strokeColour}
-                                    strokeWidth={isHighlighted ? 3 : 1.5}
-                                    rx={6}
-                                />
-                                <text
-                                    x={room.x + room.w / 2}
-                                    y={room.y + room.h / 2 - (isNonBookable ? 0 : 8)}
-                                    textAnchor="middle"
-                                    fontSize={10}
-                                    fontWeight="500"
-                                    fill="#1e293b"
-                                >
-                                    {room.label}
-                                </text>
-                                {!isNonBookable && (
-                                    <>
-                                        <text
-                                            x={room.x + room.w / 2}
-                                            y={room.y + room.h / 2 + 10}
-                                            textAnchor="middle"
-                                            fontSize={9}
-                                            fill={isAvailable ? '#16a34a' : '#dc2626'}
-                                        >
-                                            {isAvailable ? 'Available' : 'Booked'}
-                                        </text>
-                                        <text
-                                            x={room.x + room.w / 2}
-                                            y={room.y + room.h - 6}
-                                            textAnchor="middle"
-                                            fontSize={8}
-                                            fill="#94a3b8"
-                                        >
-                                            {room.code}
-                                        </text>
-                                    </>
-                                )}
-                            </g>
-                        )
-                    })}
-
-                    {/* Navigation path — rendered AFTER rooms so it appears on top */}
-                    {navigationPath.length > 1 && (() => {
-                        const key = `${building}-${activeFloor}`
-                        const t = NODE_TRANSFORM[key] || { scaleX: 1, scaleY: 1, offsetX: 0, offsetY: 0 }
-                        const scaledPath = navigationPath
-                            .filter(p => p.floor === activeFloor)
-                            .map(p => ({
-                            x: Math.round(p.x * t.scaleX + t.offsetX),
-                            y: Math.round(p.y * t.scaleY + t.offsetY),
-                            }))
-                        if (scaledPath.length < 2) return null
-                        return (
-                            <polyline
-                            points={scaledPath.map(p => `${p.x},${p.y}`).join(' ')}
-                            fill="none"
-                            stroke="#1d4ed8"
-                            strokeWidth={3}
-                            strokeDasharray="8 6"
-                            />
-                        )
-                    })()}
-
-                    {/* Tappable junction nodes when setting position — rendered AFTER rooms so they appear on top */}
-                    {settingPosition && floorNodes
-                        .filter(n => ['junction','staircase','building_entry', 'entrance'].includes(n.type))
-                        .map(n => (
-                            <g
-                                key={`pos-${n.id}`}
-                                onClick={() => onNodeClick && onNodeClick(n.id)}
+                                onClick={() => onRoomClick && onRoomClick(room.code)}
                                 style={{ cursor: 'pointer' }}
                             >
-                                <circle cx={n.x} cy={n.y} r={16} fill="#7c3aed" opacity={0.15}/>
-                                <circle cx={n.x} cy={n.y} r={8} fill="#7c3aed" opacity={0.85}/>
-                                <text
-                                    x={n.x} y={n.y - 14}
-                                    textAnchor="middle"
-                                    fontSize={8}
-                                    fill="#7c3aed"
-                                >
-                                    {n.id.split('-').slice(2).join('-')}
-                                </text>
-                            </g>
-                        ))
-                    }
+                                {/* Room rectangle */}
+                                <rect
+                                x={room.x}
+                                y={roomY}
+                                width={room.w}
+                                height={room.h}
+                                fill={isAvailable ? '#dcfce7' : '#fee2e2'}
+                                stroke={
+                                    isHighlighted ? '#1d4ed8'
+                                    : isAvailable  ? '#16a34a'
+                                    : '#dc2626'
+                                }
+                                strokeWidth={isHighlighted ? 3 : 1.5}
+                                rx={6}
+                                />
 
-                    {/* Current position dot — always on top of everything */}
-                    {currentNodeId && floorNodes
-                        .filter(n => n.id === currentNodeId)
-                        .map(n => (
-                            <g key="current-pos">
-                                <circle cx={n.x} cy={n.y} r={16} fill="#1d4ed8" opacity={0.15}/>
-                                <circle cx={n.x} cy={n.y} r={9} fill="#1d4ed8"/>
-                                <circle cx={n.x} cy={n.y} r={4} fill="white"/>
+                                {/* Room name */}
                                 <text
-                                    x={n.x} y={n.y - 18}
-                                    textAnchor="middle"
-                                    fontSize={9}
-                                    fontWeight="600"
-                                    fill="#1d4ed8"
+                                x={room.x + room.w / 2}
+                                y={roomY + room.h / 2 - 8}
+                                textAnchor="middle"
+                                fontSize={10}
+                                fontWeight="500"
+                                fill="#1e293b"
                                 >
-                                    You
+                                {room.label}
                                 </text>
+
+                                {/* Availability badge */}
+                                <text
+                                x={room.x + room.w / 2}
+                                y={roomY + room.h / 2 + 10}
+                                textAnchor="middle"
+                                fontSize={9}
+                                fill={isAvailable ? '#16a34a' : '#dc2626'}
+                                >
+                                {isAvailable ? 'Available' : 'Booked'}
+                                </text>
+
+                                {/* Room code below */}
+                                <text
+                                x={room.x + room.w / 2}
+                                y={roomY + room.h - 6}
+                                textAnchor="middle"
+                                fontSize={8}
+                                fill="#94a3b8"
+                                >
+                                {room.code}
+                                </text>
+
                             </g>
-                        ))
-                    }
+                            )
+                        })}
+
+                        </g>
+                    )
+                    })}
 
                 </svg>
             </div>
-        )
-      })}
+            )
+        })}
 
-    </div>
+        </div>
     )
 }
 
-export default Map2D
+export default Map2d

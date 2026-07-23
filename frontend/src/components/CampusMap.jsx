@@ -351,7 +351,7 @@ const ROOM_DATA = [
     { code: 'SC-F0-PD-3', x: 468, y: 304, w: 65, h: 65, label: 'POD', building: 'Social Commons', floor: 0 },
     { code: 'SC-F0-PD-4', x: 467, y: 121, w: 65, h: 65, label: 'POD', building: 'Social Commons', floor: 0 },
     { code: 'SC-F0-EL', x: 103, y: 119, w: 60, h: 60, label: 'Elevator', building: 'Social Commons', floor: 0 },
-    { code: 'SC-F0-EG', x: 470, y: 853, w: 61, h: 59, label: 'Electrical Room', building: 'Social Commons', floor: 0 },
+    { code: 'SC-F0-ER', x: 470, y: 853, w: 61, h: 59, label: 'Electrical Room', building: 'Social Commons', floor: 0 },
     // ── SOCIAL COMMONS ── Floor 1
     { code: 'SC-F1-ET', x: 84, y: 61, w: 171, h: 153, label: 'Ethiopia', building: 'Social Commons', floor: 1 },
     { code: 'SC-F1-WR', x: 109, y: 351, w: 71, h: 200, label: 'Washrooms', building: 'Social Commons', floor: 1 },
@@ -431,6 +431,32 @@ function CampusMap({
     const campusSvgRef = useRef(null)
 
     const { position, currentBuilding } = useGeolocation()
+    const stablePositionRef = useRef(null)
+    const [displayPosition, setDisplayPosition] = useState(null)
+
+    // Filters raw GPS noise using the reading's own reported accuracy: a
+    // new reading only updates the displayed dot if it falls OUTSIDE the
+    // accuracy circle of the last stable reading (genuinely likely to be
+    // real movement), rather than treated as jitter around the same true
+    // spot. If a reading doesn't include accuracy for some reason, 15m is
+    // a reasonable fallback rather than breaking.
+    useEffect(() => {
+        if (!position) return
+        const accuracyMeters = position.accuracy || 15
+        if (!stablePositionRef.current) {
+            stablePositionRef.current = { ...position, accuracy: accuracyMeters }
+            setDisplayPosition(stablePositionRef.current)
+            return
+        }
+        const dLat = (position.lat - stablePositionRef.current.lat) * 111320
+        const dLng = (position.lng - stablePositionRef.current.lng) * 111320 * Math.cos(stablePositionRef.current.lat * Math.PI / 180)
+        const distMeters = Math.sqrt(dLat * dLat + dLng * dLng)
+        if (distMeters > accuracyMeters) {
+            stablePositionRef.current = { ...position, accuracy: accuracyMeters }
+            setDisplayPosition(stablePositionRef.current)
+        }
+        // else: within the accuracy circle, treat as noise, dot stays put
+    }, [position])
 
     useEffect(() => {
         if (currentBuilding && view === VIEW.CAMPUS) {
@@ -495,6 +521,13 @@ function CampusMap({
         setZoom(z => Math.min(Math.max(z * delta, 0.5), 5))
     }
 
+    // React's onWheel prop attaches the listener as passive by default, so
+    // preventDefault() inside handleWheel above gets silently ignored by
+    // the browser (logged as a console warning, not an error, but the
+    // page can still scroll underneath the map while trying to zoom it).
+    // The fix bypasses React's synthetic event system for this one
+    // listener specifically: grab the real DOM node via the ref and
+    // attach a native listener with passive explicitly set to false.
     useEffect(() => {
         const el = campusSvgRef.current
         if (!el) return
@@ -525,11 +558,18 @@ function CampusMap({
         }
     }
 
-    // Converts a click event into exact SVG viewBox coordinates (820x1000),
-    // correctly accounting for the SVG's responsive scaling. Rooms call
-    // e.stopPropagation() so this only fires for clicks on walls, floor
-    // space, or anything else without its own click handler -- exactly
-    // the "click anywhere, navigate to the nearest node" behaviour.
+    // Converts a real-world distance (metres, e.g. a GPS reading's own
+    // reported accuracy) into an equivalent radius in this map's SVG
+    // pixel space, using the same lat/lng bounding box as gpsToPixel
+    // above so the two stay consistent with each other.
+    const metersToPixels = (meters) => {
+        const LAT_SPAN_M = 0.0030 * 111320
+        const LNG_SPAN_M = 0.0040 * 111320 * Math.cos(-1.93 * Math.PI / 180)
+        const pxPerMeterVertical = H / LAT_SPAN_M
+        const pxPerMeterHorizontal = W / LNG_SPAN_M
+        return meters * (pxPerMeterVertical + pxPerMeterHorizontal) / 2
+    }
+
     const handleFloorClick = (e) => {
         if (settingPosition || !onMapClick || !floorSvgRef.current) return
         const svg = floorSvgRef.current
@@ -556,11 +596,6 @@ function CampusMap({
         onMouseLeave={handleMouseUp}
         >
         <g transform={`translate(${pan.x},${pan.y}) scale(${zoom})`}>
-            {/* Satellite overlay removed now that outlines are anchored on real
-                GPS coordinates. To spot-check alignment, temporarily add back:
-                <image href="/campus-satellite.png" x={0} y={0} width={W} height={H}
-                       opacity={0.4} preserveAspectRatio="xMidYMid meet" /> */}
-
             <defs>
                 <pattern id="groundHatch" patternUnits="userSpaceOnUse" width="14" height="14" patternTransform="rotate(45)">
                     <line x1="0" y1="0" x2="0" y2="14" stroke="#e2e8f0" strokeWidth="1" />
@@ -573,7 +608,6 @@ function CampusMap({
             </defs>
             <rect x={0} y={0} width={W} height={H} fill="url(#groundHatch)" />
 
-            {/* Green areas — trees and grass */}
             {GREEN_AREAS.map((g, i) => (
             <g key={i}>
                 <rect
@@ -652,11 +686,12 @@ function CampusMap({
             </g>
             ))}
 
-            {position && (() => {
-            const { x, y } = gpsToPixel(position.lat, position.lng)
+            {displayPosition && (() => {
+            const { x, y } = gpsToPixel(displayPosition.lat, displayPosition.lng)
+            const accuracyRadiusPx = metersToPixels(displayPosition.accuracy)
             return (
                 <g>
-                <circle cx={x} cy={y} r={18} fill="#1d4ed8" opacity={0.12}/>
+                <circle cx={x} cy={y} r={accuracyRadiusPx} fill="#1d4ed8" opacity={0.12} stroke="#1d4ed8" strokeWidth={1} strokeOpacity={0.25}/>
                 <circle cx={x} cy={y} r={9}  fill="#1d4ed8"/>
                 <circle cx={x} cy={y} r={4}  fill="white"/>
                 </g>
@@ -764,12 +799,6 @@ function CampusMap({
                 ? '#94a3b8'
                 : (isHighlighted ? '#1d4ed8' : (isAvailable ? '#16a34a' : '#dc2626'))
 
-                // A room with a real traced shape has a `points` array
-                // (added via the editor's room-shape tracing, matching how
-                // walls are traced) -- rooms without one keep working
-                // exactly as before, as a simple box. Centre/bottom are
-                // computed either way so text and icons still position
-                // correctly regardless of which kind a room is.
                 const isPolygon = Array.isArray(room.points) && room.points.length >= 3
                 let centreX, centreY, bottomY
                 if (isPolygon) {
@@ -968,27 +997,57 @@ function CampusMap({
 
             {currentNodeId && floorNodes
                 .filter(n => n.id === currentNodeId)
-                .map(n => (
-                <g
-                    key="current-pos"
-                    transform={`translate(${n.x}, ${n.y})`}
-                    style={{ transition: 'transform 0.8s ease-in-out' }}
-                >
-                    <circle r={16} fill="#1d4ed8" opacity={0.15}/>
-                    <circle r={9}  fill="#1d4ed8"/>
-                    <circle r={4}  fill="white"/>
-                    <text
-                    y={-18}
-                    textAnchor="middle"
-                    fontSize={9}
-                    fontWeight="600"
-                    fill="#1d4ed8"
+                .map(n => {
+                    const stepIdx = navigationPath.findIndex(p => p.id === n.id)
+                    const nextStep = stepIdx >= 0 ? navigationPath[stepIdx + 1] : null
+                    const showArrow = nextStep && nextStep.floor === activeFloor
+                    const angleDeg = showArrow
+                        ? Math.atan2(nextStep.y - n.y, nextStep.x - n.x) * 180 / Math.PI
+                        : 0
+
+                    return (
+                    <g
+                        key="current-pos"
+                        transform={`translate(${n.x}, ${n.y})`}
+                        style={{ transition: 'transform 0.8s ease-in-out' }}
                     >
-                    You
-                    </text>
-                </g>
-                ))
+                        <circle r={16} fill="#1d4ed8" opacity={0.15}/>
+                        {showArrow && (
+                        <g transform={`rotate(${angleDeg})`} style={{ transition: 'transform 0.4s ease-in-out' }}>
+                            <path d="M 14,0 L 3,-6 L 6,0 L 3,6 Z" fill="#1d4ed8" />
+                        </g>
+                        )}
+                        <circle r={9}  fill="#1d4ed8"/>
+                        <circle r={4}  fill="white"/>
+                        <text
+                        y={-18}
+                        textAnchor="middle"
+                        fontSize={9}
+                        fontWeight="600"
+                        fill="#1d4ed8"
+                        >
+                        You
+                        </text>
+                    </g>
+                    )
+                })
             }
+
+            {navigationPath.length > 0 && (() => {
+                const dest = navigationPath[navigationPath.length - 1]
+                if (dest.floor !== activeFloor) return null
+                return (
+                    <g key="destination-pin" transform={`translate(${dest.x}, ${dest.y - 26})`}>
+                        <path
+                            d="M 0,26 C 0,26 -12,14 -12,4 A 12,12 0 1 1 12,4 C 12,14 0,26 0,26 Z"
+                            fill="#dc2626"
+                            stroke="white"
+                            strokeWidth={1.5}
+                        />
+                        <circle cy={4} r={4.5} fill="white" />
+                    </g>
+                )
+            })()}
 
             </svg>
 

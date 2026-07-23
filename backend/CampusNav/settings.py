@@ -66,17 +66,10 @@ INSTALLED_APPS = [
     'users',
 ]
 
-# Local dev origins always allowed, plus anything supplied via
-# CORS_EXTRA_ORIGINS (comma-separated) -- set this on Render once the
-# frontend has a real deployed URL, e.g.
-# CORS_EXTRA_ORIGINS=https://campusnav.vercel.app
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
-_extra_origins = os.environ.get('CORS_EXTRA_ORIGINS')
-if _extra_origins:
-    CORS_ALLOWED_ORIGINS += _extra_origins.split(',')
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

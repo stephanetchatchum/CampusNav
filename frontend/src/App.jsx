@@ -18,6 +18,7 @@ function App() {
     <BrowserRouter>
       <Nav />
       <Routes>
+<<<<<<< HEAD
         {/* Stephane owns this route - map and navigation */}
         <Route path="/" element={<Home />} />
         {/* Dorcase owns these routes */}
@@ -31,6 +32,14 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/my-bookings" element={<ProtectedRoute tier="student"><MyBookings /></ProtectedRoute>} />
+=======
+
+        <Route path="/" element={<Home />}/>
+
+        <Route path="/book" element={<Book />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/profile" element={<Profile />} />
+>>>>>>> origin/main
       </Routes>
     </BrowserRouter>
   )
