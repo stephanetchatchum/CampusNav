@@ -17,18 +17,12 @@ function App() {
     <BrowserRouter>
       <Nav />
       <Routes>
-        {/* Stephane owns this route - map and navigation */}
-        <Route path="/" element={<Home />} />
-        {/* Dorcase owns these routes */}
-        <Route path="/book" element={<ProtectedRoute tier="student"><Book /></ProtectedRoute>} />
-        <Route path="/book/:code" element={<ProtectedRoute tier="student"><BookRoom /></ProtectedRoute>} />
-        <Route path="/admin" element={<ProtectedRoute tier="admin"><Admin /></ProtectedRoute>} />
-        <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/my-bookings" element={<ProtectedRoute tier="student"><MyBookings /></ProtectedRoute>} />
+
+        <Route path="/" element={<Home />}/>
+
+        <Route path="/book" element={<Book />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </BrowserRouter>
   )
