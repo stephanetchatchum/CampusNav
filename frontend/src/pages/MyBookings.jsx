@@ -1,18 +1,15 @@
 import { useState, useEffect } from "react"
-import { authHeaders } from "../api"
+import { authFetch } from "../api"
 
 function MyBookings() {
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [cancellingId, setCancellingId] = useState(null)
 
   useEffect(() => {
-    // Fetch the logged-in user's bookings when the page loads
     const fetchBookings = async () => {
-      const response = await fetch("http://127.0.0.1:8000/api/bookings/mine/", {
-        headers: authHeaders()
-      })
-
+      const response = await authFetch("http://127.0.0.1:8000/api/bookings/mine/")
       if (response.ok) {
         const data = await response.json()
         setBookings(data)
@@ -21,15 +18,28 @@ function MyBookings() {
       }
       setLoading(false)
     }
-
     fetchBookings()
   }, [])
 
-  // Show a colour badge depending on booking status
   const statusColor = (status) => {
     if (status === "approved") return "text-[#00A86B] bg-green-50 border-green-200"
     if (status === "cancelled") return "text-[#DC2626] bg-red-50 border-red-200"
-    return "text-[#F5821F] bg-orange-50 border-orange-200"  // pending
+    return "text-[#F5821F] bg-orange-50 border-orange-200"
+  }
+
+  const isPast = (booking) => new Date(`${booking.date}T${booking.end_time}`) < new Date()
+
+  const handleCancel = async (id) => {
+    setCancellingId(id)
+    const response = await authFetch(`http://127.0.0.1:8000/api/bookings/${id}/status/`, {
+      method: "PATCH",
+      body: JSON.stringify({ status: "cancelled" })
+    })
+    if (response.ok) {
+      const updated = await response.json()
+      setBookings(prev => prev.map(b => b.id === id ? updated : b))
+    }
+    setCancellingId(null)
   }
 
   return (
@@ -42,9 +52,7 @@ function MyBookings() {
       {!loading && bookings.length === 0 && (
         <div className="bg-white rounded-xl shadow p-8 text-center text-gray-500">
           You have no bookings yet.{" "}
-          <a href="/book" className="text-[#003087] font-semibold hover:underline">
-            Book a room
-          </a>
+          <a href="/book" className="text-[#003087] font-semibold hover:underline">Book a room</a>
         </div>
       )}
 
@@ -52,14 +60,23 @@ function MyBookings() {
         {bookings.map(booking => (
           <div key={booking.id} className="bg-white rounded-xl shadow p-6 flex justify-between items-center">
             <div>
-              {/* Room and date info */}
               <p className="text-lg font-semibold text-[#003087]">{booking.room_name}</p>
               <p className="text-gray-500 text-sm">{booking.date} · {booking.start_time} – {booking.end_time}</p>
             </div>
-            {/* Status badge */}
-            <span className={`text-sm font-semibold border rounded-full px-4 py-1 ${statusColor(booking.status)}`}>
-              {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-            </span>
+            <div className="flex items-center gap-3">
+              <span className={`text-sm font-semibold border rounded-full px-4 py-1 ${statusColor(booking.status)}`}>
+                {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+              </span>
+              {booking.status !== "cancelled" && !isPast(booking) && (
+                <button
+                  onClick={() => handleCancel(booking.id)}
+                  disabled={cancellingId === booking.id}
+                  className="text-sm font-semibold text-red-600 hover:text-red-700 disabled:opacity-50"
+                >
+                  {cancellingId === booking.id ? "Cancelling..." : "Cancel"}
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>

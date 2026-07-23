@@ -1,17 +1,16 @@
 import { useState, useEffect } from "react"
-import { authHeaders } from "../api"
+import { authFetch } from "../api"
 
 function Admin() {
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [actionError, setActionError] = useState("")
 
   // Fetch all bookings when the page loads
   useEffect(() => {
     const fetchBookings = async () => {
-      const response = await fetch("http://127.0.0.1:8000/api/bookings/all/", {
-        headers: authHeaders()
-      })
+      const response = await authFetch("http://127.0.0.1:8000/api/bookings/all/")
       if (response.ok) {
         const data = await response.json()
         setBookings(data)
@@ -25,15 +24,17 @@ function Admin() {
 
   // Approve or cancel a booking and update the list immediately
   const updateStatus = async (id, newStatus) => {
-    const response = await fetch(`http://127.0.0.1:8000/api/bookings/${id}/status/`, {
+    setActionError("")
+    const response = await authFetch(`http://127.0.0.1:8000/api/bookings/${id}/status/`, {
       method: "PATCH",
-      headers: authHeaders(),
       body: JSON.stringify({ status: newStatus })
     })
     if (response.ok) {
       const updated = await response.json()
-      // Replace the old booking with the updated one in the list
       setBookings(prev => prev.map(b => b.id === id ? updated : b))
+    } else {
+      const data = await response.json()
+      setActionError(data.error || "Could not update this booking.")
     }
   }
 
@@ -51,7 +52,11 @@ function Admin() {
 
       {loading && <p className="text-gray-500">Loading bookings...</p>}
       {error && <p className="text-red-500">{error}</p>}
-
+      {actionError && (
+        <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg p-3 mb-4 text-sm">
+          {actionError}
+        </div>
+      )}
       {!loading && bookings.length === 0 && (
         <div className="bg-white rounded-xl shadow p-8 text-center text-gray-500">
           No bookings yet.

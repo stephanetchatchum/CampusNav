@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { loginUser, saveToken, saveUser } from "../api"
+import { loginUser, saveToken, saveRefreshToken, saveUser } from "../api"
 
 function Login() {
   const [email, setEmail] = useState("")
@@ -21,6 +21,7 @@ function Login() {
     if (response.ok) {
       // Save the token and user info, then send user to the home page
       saveToken(data.access)
+      saveRefreshToken(data.refresh)
       saveUser(data.email, data.role)
       window.location.href = "/"
     } else {

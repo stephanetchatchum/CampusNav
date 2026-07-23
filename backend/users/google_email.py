@@ -39,3 +39,26 @@ def send_password_reset_email(to_email, reset_link):
     raw = base64.urlsafe_b64encode(message.as_bytes()).decode()
 
     service.users().messages().send(userId="me", body={"raw": raw}).execute()
+
+def send_verification_email(to_email, verify_link):
+    """
+    Sends an email verification link via Gmail, using the same
+    Google account already authorized for Calendar and password reset.
+    """
+    service = _get_gmail_service()
+
+    body = (
+        "Hello,\n\n"
+        "Thanks for creating a CampusNav account. Click the link below "
+        "to verify your email and activate your account:\n\n"
+        f"{verify_link}\n\n"
+        "This link expires in 24 hours.\n\n"
+        "- CampusNav"
+    )
+
+    message = MIMEText(body)
+    message["to"] = to_email
+    message["subject"] = "Verify your CampusNav account"
+
+    raw = base64.urlsafe_b64encode(message.as_bytes()).decode()
+    service.users().messages().send(userId="me", body={"raw": raw}).execute()

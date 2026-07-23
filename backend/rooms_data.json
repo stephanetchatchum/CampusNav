@@ -1,0 +1,791 @@
+[
+{
+  "model": "rooms.building",
+  "pk": 1,
+  "fields": {
+    "name": "Social Commons"
+  }
+},
+{
+  "model": "rooms.building",
+  "pk": 2,
+  "fields": {
+    "name": "Enterprise Commons"
+  }
+},
+{
+  "model": "rooms.building",
+  "pk": 3,
+  "fields": {
+    "name": "Learning Commons"
+  }
+},
+{
+  "model": "rooms.floor",
+  "pk": 1,
+  "fields": {
+    "building": 1,
+    "number": 0
+  }
+},
+{
+  "model": "rooms.floor",
+  "pk": 2,
+  "fields": {
+    "building": 1,
+    "number": 1
+  }
+},
+{
+  "model": "rooms.floor",
+  "pk": 3,
+  "fields": {
+    "building": 1,
+    "number": 2
+  }
+},
+{
+  "model": "rooms.floor",
+  "pk": 4,
+  "fields": {
+    "building": 2,
+    "number": 0
+  }
+},
+{
+  "model": "rooms.floor",
+  "pk": 5,
+  "fields": {
+    "building": 2,
+    "number": 1
+  }
+},
+{
+  "model": "rooms.floor",
+  "pk": 6,
+  "fields": {
+    "building": 2,
+    "number": 2
+  }
+},
+{
+  "model": "rooms.floor",
+  "pk": 7,
+  "fields": {
+    "building": 3,
+    "number": 0
+  }
+},
+{
+  "model": "rooms.floor",
+  "pk": 8,
+  "fields": {
+    "building": 3,
+    "number": 1
+  }
+},
+{
+  "model": "rooms.floor",
+  "pk": 9,
+  "fields": {
+    "building": 3,
+    "number": 2
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 1,
+  "fields": {
+    "floor": 1,
+    "name": "Egypt",
+    "code": "SC-F0-EG",
+    "capacity": 40,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 2,
+  "fields": {
+    "floor": 1,
+    "name": "Food Court",
+    "code": "SC-F0-FC",
+    "capacity": 100,
+    "room_type": "common",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 3,
+  "fields": {
+    "floor": 1,
+    "name": "Washrooms",
+    "code": "SC-F0-WR",
+    "capacity": 0,
+    "room_type": "bathroom",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 4,
+  "fields": {
+    "floor": 1,
+    "name": "Prayer Room",
+    "code": "SC-F0-PR",
+    "capacity": 20,
+    "room_type": "other",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 5,
+  "fields": {
+    "floor": 1,
+    "name": "POD",
+    "code": "SC-F0-PD-1",
+    "capacity": 4,
+    "room_type": "other",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 6,
+  "fields": {
+    "floor": 1,
+    "name": "POD",
+    "code": "SC-F0-PD-2",
+    "capacity": 4,
+    "room_type": "other",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 7,
+  "fields": {
+    "floor": 1,
+    "name": "POD",
+    "code": "SC-F0-PD-3",
+    "capacity": 4,
+    "room_type": "other",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 8,
+  "fields": {
+    "floor": 1,
+    "name": "POD",
+    "code": "SC-F0-PD-4",
+    "capacity": 4,
+    "room_type": "other",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 9,
+  "fields": {
+    "floor": 1,
+    "name": "Elevator",
+    "code": "SC-F0-EL",
+    "capacity": 0,
+    "room_type": "corridor",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 10,
+  "fields": {
+    "floor": 2,
+    "name": "Morocco",
+    "code": "SC-F1-MO",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 11,
+  "fields": {
+    "floor": 2,
+    "name": "Algeria",
+    "code": "SC-F1-AL",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 12,
+  "fields": {
+    "floor": 2,
+    "name": "Food Court",
+    "code": "SC-F1-FC",
+    "capacity": 50,
+    "room_type": "common",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 13,
+  "fields": {
+    "floor": 2,
+    "name": "Ethiopia",
+    "code": "SC-F1-ET",
+    "capacity": 40,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 14,
+  "fields": {
+    "floor": 2,
+    "name": "Washrooms",
+    "code": "SC-F1-WR",
+    "capacity": 0,
+    "room_type": "bathroom",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 15,
+  "fields": {
+    "floor": 2,
+    "name": "POD",
+    "code": "SC-F1-PD-1",
+    "capacity": 4,
+    "room_type": "other",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 16,
+  "fields": {
+    "floor": 2,
+    "name": "POD",
+    "code": "SC-F1-PD-2",
+    "capacity": 4,
+    "room_type": "other",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 17,
+  "fields": {
+    "floor": 2,
+    "name": "POD",
+    "code": "SC-F1-PD-3",
+    "capacity": 4,
+    "room_type": "other",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 18,
+  "fields": {
+    "floor": 2,
+    "name": "Elevator",
+    "code": "SC-F1-EL",
+    "capacity": 0,
+    "room_type": "corridor",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 19,
+  "fields": {
+    "floor": 3,
+    "name": "Djibouti",
+    "code": "SC-F2-DJ",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 20,
+  "fields": {
+    "floor": 3,
+    "name": "South Sudan",
+    "code": "SC-F2-SS",
+    "capacity": 40,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 21,
+  "fields": {
+    "floor": 3,
+    "name": "Bibi Titi",
+    "code": "SC-F2-BT",
+    "capacity": 20,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 22,
+  "fields": {
+    "floor": 3,
+    "name": "POD",
+    "code": "SC-F2-PD-1",
+    "capacity": 4,
+    "room_type": "other",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 23,
+  "fields": {
+    "floor": 3,
+    "name": "Vendors",
+    "code": "SC-F2-VD",
+    "capacity": 0,
+    "room_type": "common",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 24,
+  "fields": {
+    "floor": 3,
+    "name": "Food Court",
+    "code": "SC-F2-FC",
+    "capacity": 80,
+    "room_type": "common",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 25,
+  "fields": {
+    "floor": 3,
+    "name": "Elevator",
+    "code": "SC-F2-EL",
+    "capacity": 0,
+    "room_type": "corridor",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 26,
+  "fields": {
+    "floor": 3,
+    "name": "Washrooms",
+    "code": "SC-F2-WR",
+    "capacity": 0,
+    "room_type": "bathroom",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 27,
+  "fields": {
+    "floor": 4,
+    "name": "Lesotho",
+    "code": "EC-F0-LE",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 28,
+  "fields": {
+    "floor": 4,
+    "name": "Fab Lab",
+    "code": "EC-F0-FL",
+    "capacity": 20,
+    "room_type": "lab",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 29,
+  "fields": {
+    "floor": 4,
+    "name": "Washrooms",
+    "code": "EC-F0-WR",
+    "capacity": 0,
+    "room_type": "bathroom",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 30,
+  "fields": {
+    "floor": 5,
+    "name": "Angola",
+    "code": "EC-F1-AN",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 31,
+  "fields": {
+    "floor": 5,
+    "name": "Namibia",
+    "code": "EC-F1-NA",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 32,
+  "fields": {
+    "floor": 5,
+    "name": "Uganda",
+    "code": "EC-F1-UG",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 33,
+  "fields": {
+    "floor": 5,
+    "name": "Washrooms",
+    "code": "EC-F1-WR",
+    "capacity": 0,
+    "room_type": "bathroom",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 34,
+  "fields": {
+    "floor": 6,
+    "name": "Fab Lab Gallery",
+    "code": "EC-F2-FG",
+    "capacity": 20,
+    "room_type": "lab",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 35,
+  "fields": {
+    "floor": 6,
+    "name": "Burundi",
+    "code": "EC-F2-BU",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 36,
+  "fields": {
+    "floor": 6,
+    "name": "Kenya",
+    "code": "EC-F2-KE",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 37,
+  "fields": {
+    "floor": 6,
+    "name": "Washrooms",
+    "code": "EC-F2-WR",
+    "capacity": 0,
+    "room_type": "bathroom",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 38,
+  "fields": {
+    "floor": 7,
+    "name": "Leadership Center",
+    "code": "LC-F0-LC",
+    "capacity": 20,
+    "room_type": "office",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 39,
+  "fields": {
+    "floor": 7,
+    "name": "Wellness Center",
+    "code": "LC-F0-WC",
+    "capacity": 10,
+    "room_type": "office",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 40,
+  "fields": {
+    "floor": 7,
+    "name": "Benin",
+    "code": "LC-F0-BE",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 41,
+  "fields": {
+    "floor": 7,
+    "name": "Sahel",
+    "code": "LC-F0-SH",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 42,
+  "fields": {
+    "floor": 7,
+    "name": "Eswatini",
+    "code": "LC-F0-ES",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 43,
+  "fields": {
+    "floor": 7,
+    "name": "Washrooms",
+    "code": "LC-F0-WR",
+    "capacity": 0,
+    "room_type": "bathroom",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 44,
+  "fields": {
+    "floor": 8,
+    "name": "Resource Center",
+    "code": "LC-F1-RC",
+    "capacity": 15,
+    "room_type": "office",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 45,
+  "fields": {
+    "floor": 8,
+    "name": "Guinea",
+    "code": "LC-F1-GN",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 46,
+  "fields": {
+    "floor": 8,
+    "name": "Gambia & Liberia",
+    "code": "LC-F1-GL",
+    "capacity": 40,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 47,
+  "fields": {
+    "floor": 8,
+    "name": "Mozambique & Malawi",
+    "code": "LC-F1-MM",
+    "capacity": 40,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 48,
+  "fields": {
+    "floor": 8,
+    "name": "Washrooms",
+    "code": "LC-F1-WR",
+    "capacity": 0,
+    "room_type": "bathroom",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 49,
+  "fields": {
+    "floor": 9,
+    "name": "Reception",
+    "code": "LC-F2-RE",
+    "capacity": 5,
+    "room_type": "office",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 50,
+  "fields": {
+    "floor": 9,
+    "name": "Administration",
+    "code": "LC-F2-AD",
+    "capacity": 10,
+    "room_type": "office",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 51,
+  "fields": {
+    "floor": 9,
+    "name": "Staff Work Hive",
+    "code": "LC-F2-SW",
+    "capacity": 20,
+    "room_type": "office",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 52,
+  "fields": {
+    "floor": 9,
+    "name": "Congo",
+    "code": "LC-F2-CO",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 53,
+  "fields": {
+    "floor": 9,
+    "name": "Gabon",
+    "code": "LC-F2-GA",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 54,
+  "fields": {
+    "floor": 9,
+    "name": "Washrooms",
+    "code": "LC-F2-WR",
+    "capacity": 0,
+    "room_type": "bathroom",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 55,
+  "fields": {
+    "floor": 8,
+    "name": "Gambia",
+    "code": "LC-F1-GM",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 56,
+  "fields": {
+    "floor": 8,
+    "name": "Liberia",
+    "code": "LC-F1-LI",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 57,
+  "fields": {
+    "floor": 8,
+    "name": "Mozambique",
+    "code": "LC-F1-MZ",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 58,
+  "fields": {
+    "floor": 8,
+    "name": "Malawi",
+    "code": "LC-F1-MW",
+    "capacity": 30,
+    "room_type": "lecture",
+    "is_available": true
+  }
+}
+]

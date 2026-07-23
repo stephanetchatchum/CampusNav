@@ -28,7 +28,7 @@ def booking_list_create(request):
     
     if request.method == 'GET':
         # Get only the bookings that belong to the logged in user
-        bookings = Booking.objects.filter(user=request.user)
+        bookings = Booking.objects.select_related('room', 'user').filter(user=request.user)
         serializer = BookingSerializer(bookings, many=True)
         return Response(serializer.data)
 
@@ -97,7 +97,7 @@ def booking_list_create(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def my_bookings(request):
-    bookings = Booking.objects.filter(user=request.user).order_by('-created_at')
+    bookings = Booking.objects.select_related('room', 'user').filter(user=request.user).order_by('-created_at')
     serializer = BookingSerializer(bookings, many=True)
     return Response(serializer.data)
 
@@ -124,17 +124,42 @@ def booking_update_status(request, pk):
     else:
         return Response({'error': 'You do not have permission to update this booking'}, status=status.HTTP_403_FORBIDDEN)
 
-    booking.status = new_status
-    booking.save()
+    # Re-approving (e.g. after a cancellation) must re-check for conflicts,
+    # someone else may have booked this exact time slot in the meantime.
+    if new_status == 'approved':
+        conflicting = Booking.objects.filter(
+            room=booking.room,
+            date=booking.date,
+            status='approved',
+        ).exclude(pk=booking.pk).filter(
+            start_time__lt=booking.end_time,
+            end_time__gt=booking.start_time,
+        )
+        if conflicting.exists():
+            return Response(
+                {'error': 'This time slot is now booked by someone else and cannot be re-approved.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
-    # If this booking is being cancelled and it has a Google Calendar
-    # event, remove it too. Best-effort, same as creation — a cancel
-    # still succeeds in our system even if the calendar delete fails.
+    booking.status = new_status
+
     if new_status == 'cancelled' and booking.google_event_id:
         try:
             delete_calendar_event(booking.google_event_id)
         except Exception as e:
             print(f"Calendar delete failed: {e}")
+        # Clear it, so a later reapproval knows it needs a new event.
+        booking.google_event_id = None
+
+    elif new_status == 'approved' and not booking.google_event_id:
+        # Covers a fresh approval and a reapproval after cancellation.
+        try:
+            event_id = create_calendar_event(booking)
+            booking.google_event_id = event_id
+        except Exception as e:
+            print(f"Calendar sync failed: {e}")
+
+    booking.save()
 
     return Response(BookingSerializer(booking).data)
 
@@ -147,7 +172,7 @@ def all_bookings(request):
     if request.user.role != 'admin':
         return Response({'error': 'Admin access required'}, status=status.HTTP_403_FORBIDDEN)
 
-    bookings = Booking.objects.all().order_by('-created_at')
+    bookings = Booking.objects.select_related('room', 'user').all().order_by('-created_at')
     serializer = BookingSerializer(bookings, many=True)
     return Response(serializer.data)
 
