@@ -1,236 +1,1472 @@
 [
-  {"id":"e158","from":"SC-F2-DOOR-1","to":"SC-F2-J-27","distance":9},
-  {"id":"e159","from":"SC-F2-J-27","to":"SC-F2-DOOR-2","distance":9},
-  {"id":"e160","from":"SC-F2-DOOR-2","to":"SC-F2-DOOR-6","distance":3},
-  {"id":"e161","from":"SC-F2-DOOR-6","to":"SC-F2-J-27","distance":9},
-  {"id":"e162","from":"SC-F2-J-27","to":"SC-F2-J-26","distance":19},
-  {"id":"e163","from":"SC-F2-J-27","to":"SC-F2-DOOR-3","distance":14},
-  {"id":"e164","from":"SC-F2-J-27","to":"SC-F2-DOOR-4","distance":21},
-  {"id":"e165","from":"SC-F2-DOOR-3","to":"SC-F2-J-26","distance":9},
-  {"id":"e166","from":"SC-F2-J-26","to":"SC-F2-DOOR-4","distance":6},
-  {"id":"e167","from":"SC-F2-J-26","to":"SC-F2-DOOR-5","distance":5},
-  {"id":"e168","from":"SC-F2-DOOR-4","to":"SC-F2-DOOR-5","distance":3},
-  {"id":"e169","from":"SC-F2-DOOR-5","to":"SC-F2-DOOR-3","distance":11},
-  {"id":"e170","from":"SC-F2-DOOR-1","to":"SC-F2-DOOR-6","distance":10},
-  {"id":"e171","from":"SC-F2-J-26","to":"SC-F2-J-23","distance":30},
-  {"id":"e172","from":"SC-F2-J-23","to":"SC-F2-DOOR-10","distance":11},
-  {"id":"e173","from":"SC-F2-DOOR-9","to":"SC-F2-J-26","distance":18},
-  {"id":"e174","from":"SC-F2-DOOR-9","to":"SC-F2-J-39","distance":4},
-  {"id":"e175","from":"SC-F2-DOOR-10","to":"SC-F2-J-39","distance":5},
-  {"id":"e176","from":"SC-F2-J-39","to":"SC-F2-J-25","distance":7},
-  {"id":"e177","from":"SC-F2-J-25","to":"SC-F2-EL-34","distance":7},
-  {"id":"e178","from":"SC-F2-J-25","to":"SC-F2-DOOR-7","distance":13},
-  {"id":"e179","from":"SC-F2-J-25","to":"SC-F2-STAIRS-33","distance":14},
-  {"id":"e180","from":"SC-F2-STAIRS-33","to":"SC-F2-J-20","distance":5},
-  {"id":"e181","from":"SC-F2-STAIRS-33","to":"SC-F2-J-21","distance":8},
-  {"id":"e182","from":"SC-F2-STAIRS-33","to":"SC-F2-J-22","distance":12},
-  {"id":"e183","from":"SC-F2-J-22","to":"SC-F2-J-25","distance":12},
-  {"id":"e184","from":"SC-F2-J-25","to":"SC-F2-J-21","distance":13},
-  {"id":"e185","from":"SC-F2-J-21","to":"SC-F2-J-22","distance":5},
-  {"id":"e186","from":"SC-F2-J-21","to":"SC-F2-J-20","distance":5},
-  {"id":"e187","from":"SC-F2-J-22","to":"SC-F2-J-23","distance":6},
-  {"id":"e188","from":"SC-F2-J-23","to":"SC-F2-J-24","distance":6},
-  {"id":"e189","from":"SC-F2-J-24","to":"SC-F2-DOOR-11","distance":6},
-  {"id":"e190","from":"SC-F2-J-24","to":"SC-F2-J-39","distance":12},
-  {"id":"e191","from":"SC-F2-DOOR-11","to":"SC-F2-DOOR-36","distance":4},
-  {"id":"e192","from":"SC-F2-DOOR-36","to":"SC-F2-DOOR-13","distance":7},
-  {"id":"e193","from":"SC-F2-DOOR-13","to":"SC-F2-DOOR-11","distance":9},
-  {"id":"e194","from":"SC-F2-DOOR-13","to":"SC-F2-ENTRY-35","distance":17},
-  {"id":"e195","from":"SC-F2-DOOR-36","to":"SC-F2-ENTRY-35","distance":19},
-  {"id":"e196","from":"SC-F2-DOOR-11","to":"SC-F2-ENTRY-35","distance":15},
-  {"id":"e197","from":"SC-F2-DOOR-11","to":"SC-F2-DOOR-19","distance":11},
-  {"id":"e198","from":"SC-F2-DOOR-19","to":"SC-F2-DOOR-18","distance":4},
-  {"id":"e199","from":"SC-F2-DOOR-19","to":"SC-F2-DOOR-28","distance":6},
-  {"id":"e200","from":"SC-F2-DOOR-28","to":"SC-F2-DOOR-29","distance":7},
-  {"id":"e201","from":"SC-F2-DOOR-30","to":"SC-F2-DOOR-31","distance":4},
-  {"id":"e202","from":"SC-F2-DOOR-31","to":"SC-F2-DOOR-32","distance":4},
-  {"id":"e203","from":"SC-F2-ENTRY-35","to":"SC-F2-J-40","distance":9},
-  {"id":"e204","from":"SC-F2-DOOR-18","to":"SC-F2-J-40","distance":8},
-  {"id":"e205","from":"SC-F2-DOOR-19","to":"SC-F2-J-40","distance":11},
-  {"id":"e206","from":"SC-F2-DOOR-28","to":"SC-F2-J-40","distance":14},
-  {"id":"e207","from":"SC-F2-DOOR-29","to":"SC-F2-J-40","distance":20},
-  {"id":"e208","from":"SC-F2-DOOR-30","to":"SC-F2-J-40","distance":24},
-  {"id":"e209","from":"SC-F2-DOOR-13","to":"SC-F2-J-41","distance":7},
-  {"id":"e210","from":"SC-F2-J-41","to":"SC-F2-DOOR-14","distance":8},
-  {"id":"e211","from":"SC-F2-DOOR-14","to":"SC-F2-DOOR-15","distance":4},
-  {"id":"e212","from":"SC-F2-DOOR-15","to":"SC-F2-J-41","distance":11},
-  {"id":"e213","from":"SC-F2-DOOR-38","to":"SC-F2-J-27","distance":9},
-  {"id":"e214","from":"SC-F2-DOOR-6","to":"SC-F2-DOOR-38","distance":12},
-  {"id":"e215","from":"SC-F2-DOOR-2","to":"SC-F2-DOOR-38","distance":14},
-  {"id":"e216","from":"SC-F2-DOOR-38","to":"SC-F2-DOOR-1","distance":17},
-  {"id":"e217","from":"SC-F2-DOOR-38","to":"SC-F2-DOOR-3","distance":14},
-  {"id":"e218","from":"SC-F2-J-39","to":"SC-F2-EL-34","distance":9},
-  {"id":"e219","from":"SC-F2-J-39","to":"SC-F2-DOOR-7","distance":19},
-  {"id":"e220","from":"SC-F2-DOOR-7","to":"SC-F2-EL-34","distance":13},
-  {"id":"e221","from":"SC-F2-DOOR-7","to":"SC-F2-J-21","distance":19},
-  {"id":"e222","from":"SC-F2-EL-34","to":"SC-F2-J-20","distance":22},
-  {"id":"e223","from":"SC-F2-STAIRS-33","to":"SC-F2-EL-34","distance":19},
-  {"id":"e224","from":"SC-F2-J-24","to":"SC-F2-J-25","distance":17},
-  {"id":"e225","from":"SC-F2-STAIRS-33","to":"SC-F1-STAIRS-8","distance":15},
-  {"id":"e1","from":"SC-F1-J-26","to":"SC-F1-J-25","distance":17},
-  {"id":"e2","from":"SC-F1-J-25","to":"SC-F1-J-24","distance":27},
-  {"id":"e3","from":"SC-F1-J-24","to":"SC-F1-J-21","distance":14},
-  {"id":"e4","from":"SC-F1-J-21","to":"SC-F1-DOOR-6","distance":5},
-  {"id":"e5","from":"SC-F1-DOOR-16","to":"SC-F1-J-22","distance":13},
-  {"id":"e6","from":"SC-F1-J-22","to":"SC-F1-DOOR-17","distance":5},
-  {"id":"e7","from":"SC-F1-J-22","to":"SC-F1-DOOR-19","distance":14},
-  {"id":"e8","from":"SC-F1-J-22","to":"SC-F1-J-23","distance":19},
-  {"id":"e9","from":"SC-F1-J-23","to":"SC-F1-DOOR-18","distance":9},
-  {"id":"e10","from":"SC-F1-J-23","to":"SC-F1-DOOR-7","distance":10},
-  {"id":"e11","from":"SC-F1-DOOR-7","to":"SC-F1-DOOR-18","distance":4},
-  {"id":"e12","from":"SC-F1-J-23","to":"SC-F1-DOOR-19","distance":8},
-  {"id":"e13","from":"SC-F1-DOOR-19","to":"SC-F1-DOOR-18","distance":13},
-  {"id":"e14","from":"SC-F1-DOOR-17","to":"SC-F1-DOOR-16","distance":13},
-  {"id":"e15","from":"SC-F1-J-22","to":"SC-F1-J-20","distance":8},
-  {"id":"e16","from":"SC-F1-J-20","to":"SC-F1-STAIRS-15","distance":7},
-  {"id":"e17","from":"SC-F1-J-20","to":"SC-F1-DOOR-6","distance":9},
-  {"id":"e18","from":"SC-F1-J-21","to":"SC-F1-J-20","distance":10},
-  {"id":"e19","from":"SC-F1-J-24","to":"SC-F1-J-27","distance":13},
-  {"id":"e20","from":"SC-F1-J-25","to":"SC-F1-J-32","distance":21},
-  {"id":"e21","from":"SC-F1-J-32","to":"SC-F1-DOOR-4","distance":7},
-  {"id":"e22","from":"SC-F1-J-32","to":"SC-F1-DOOR-5","distance":6},
-  {"id":"e23","from":"SC-F1-DOOR-4","to":"SC-F1-J-25","distance":19},
-  {"id":"e24","from":"SC-F1-J-32","to":"SC-F1-EL-10","distance":16},
-  {"id":"e25","from":"SC-F1-J-32","to":"SC-F1-J-27","distance":23},
-  {"id":"e26","from":"SC-F1-J-32","to":"SC-F1-J-28","distance":25},
-  {"id":"e27","from":"SC-F1-J-28","to":"SC-F1-ENTRY-13","distance":6},
-  {"id":"e28","from":"SC-F1-EL-10","to":"SC-F1-ENTRY-13","distance":10},
-  {"id":"e29","from":"SC-F1-J-28","to":"SC-F1-J-29","distance":10},
-  {"id":"e30","from":"SC-F1-J-28","to":"SC-F1-STAIRS-8","distance":7},
-  {"id":"e31","from":"SC-F1-J-29","to":"SC-F1-STAIRS-9","distance":4},
-  {"id":"e32","from":"SC-F1-J-29","to":"SC-F1-STAIRS-8","distance":4},
-  {"id":"e33","from":"SC-F1-STAIRS-8","to":"SC-F1-STAIRS-9","distance":5},
-  {"id":"e34","from":"SC-F1-J-30","to":"SC-F1-ENTRY-12","distance":15},
-  {"id":"e35","from":"SC-F1-J-30","to":"SC-F1-ENTRY-11","distance":14},
-  {"id":"e36","from":"SC-F1-ENTRY-11","to":"SC-F1-DOOR-3","distance":5},
-  {"id":"e37","from":"SC-F1-DOOR-2","to":"SC-F1-J-30","distance":13},
-  {"id":"e38","from":"SC-F1-J-30","to":"SC-F1-DOOR-3","distance":14},
-  {"id":"e39","from":"SC-F1-DOOR-2","to":"SC-F1-DOOR-3","distance":4},
-  {"id":"e40","from":"SC-F1-J-30","to":"SC-F1-DOOR-1","distance":12},
-  {"id":"e41","from":"SC-F1-DOOR-1","to":"SC-F1-DOOR-2","distance":13},
-  {"id":"e42","from":"SC-F1-J-30","to":"SC-F1-J-32","distance":31},
-  {"id":"e43","from":"SC-F1-DOOR-5","to":"SC-F1-ENTRY-12","distance":25},
-  {"id":"e44","from":"SC-F1-DOOR-5","to":"SC-F1-J-30","distance":29},
-  {"id":"e45","from":"SC-F1-DOOR-5","to":"SC-F1-DOOR-3","distance":38},
-  {"id":"e46","from":"SC-F1-DOOR-5","to":"SC-F1-DOOR-2","distance":40},
-  {"id":"e47","from":"SC-F1-DOOR-1","to":"SC-F1-DOOR-3","distance":17},
-  {"id":"e48","from":"SC-F1-DOOR-1","to":"SC-F1-ENTRY-11","distance":20},
-  {"id":"e49","from":"SC-F1-DOOR-1","to":"SC-F1-ENTRY-12","distance":27},
-  {"id":"e50","from":"SC-F1-DOOR-2","to":"SC-F1-ENTRY-12","distance":19},
-  {"id":"e51","from":"SC-F1-DOOR-3","to":"SC-F1-ENTRY-12","distance":16},
-  {"id":"e52","from":"SC-F1-J-28","to":"SC-F1-J-27","distance":18},
-  {"id":"e53","from":"SC-F1-J-23","to":"SC-F1-STAIRS-15","distance":14},
-  {"id":"e54","from":"SC-F1-DOOR-6","to":"SC-F1-STAIRS-15","distance":8},
-  {"id":"e55","from":"SC-F1-J-22","to":"SC-F1-STAIRS-15","distance":10},
-  {"id":"e56","from":"SC-F1-J-20","to":"SC-F1-J-23","distance":20},
-  {"id":"e57","from":"SC-F1-J-20","to":"SC-F1-DOOR-19","distance":18},
-  {"id":"e58","from":"SC-F1-STAIRS-15","to":"SC-F1-DOOR-19","distance":15},
-  {"id":"e59","from":"SC-F1-J-20","to":"SC-F1-DOOR-16","distance":18},
-  {"id":"e60","from":"SC-F1-DOOR-16","to":"SC-F1-J-21","distance":27},
-  {"id":"e61","from":"SC-F1-J-32","to":"SC-F1-J-24","distance":30},
-  {"id":"e62","from":"SC-F1-J-25","to":"SC-F1-J-27","distance":29},
-  {"id":"e63","from":"SC-F1-DOOR-4","to":"SC-F1-J-24","distance":35},
-  {"id":"e64","from":"SC-F1-ENTRY-11","to":"SC-F1-ENTRY-12","distance":12},
-  {"id":"e65","from":"SC-F1-DOOR-5","to":"SC-F1-ENTRY-11","distance":36},
-  {"id":"e226","from":"SC-F1-STAIRS-9","to":"SC-F0-STAIRS-4","distance":15},
-  {"id":"e227","from":"SC-F1-STAIRS-15","to":"SC-F0-STAIRS-3","distance":15},
-  {"id":"e229","from":"SC-F1-EL-10","to":"SC-F2-EL-34","distance":10},
-  {"id":"e230","from":"SC-F1-ENTRY-13","to":"SC-F1-J-29","distance":8},
-  {"id":"e231","from":"SC-F1-EL-10","to":"SC-F1-J-27","distance":12},
-  {"id":"e232","from":"SC-F1-J-28","to":"SC-F1-EL-10","distance":8},
-  {"id":"e233","from":"SC-F1-ENTRY-13","to":"SC-F1-J-32","distance":16},
-  {"id":"e234","from":"SC-F1-ENTRY-13","to":"SC-F1-J-27","distance":12},
-  {"id":"e66","from":"SC-F0-EL-1","to":"SC-F0-DOOR-5","distance":13},
-  {"id":"e67","from":"SC-F0-DOOR-5","to":"SC-F0-J-25","distance":20},
-  {"id":"e68","from":"SC-F0-J-25","to":"SC-F0-DOOR-6","distance":9},
-  {"id":"e69","from":"SC-F0-J-25","to":"SC-F0-DOOR-7","distance":10},
-  {"id":"e70","from":"SC-F0-DOOR-6","to":"SC-F0-EL-1","distance":16},
-  {"id":"e71","from":"SC-F0-EL-1","to":"SC-F0-J-25","distance":15},
-  {"id":"e72","from":"SC-F0-DOOR-6","to":"SC-F0-DOOR-5","distance":14},
-  {"id":"e73","from":"SC-F0-DOOR-7","to":"SC-F0-J-26","distance":16},
-  {"id":"e74","from":"SC-F0-J-25","to":"SC-F0-J-26","distance":14},
-  {"id":"e75","from":"SC-F0-J-26","to":"SC-F0-STAIRS-4","distance":27},
-  {"id":"e76","from":"SC-F0-J-26","to":"SC-F0-ENTRY-24","distance":23},
-  {"id":"e77","from":"SC-F0-ENTRY-24","to":"SC-F0-J-27","distance":19},
-  {"id":"e78","from":"SC-F0-J-27","to":"SC-F0-DOOR-14","distance":17},
-  {"id":"e79","from":"SC-F0-DOOR-14","to":"SC-F0-ENTRY-24","distance":6},
-  {"id":"e80","from":"SC-F0-DOOR-14","to":"SC-F0-ENTRY-23","distance":7},
-  {"id":"e81","from":"SC-F0-DOOR-14","to":"SC-F0-ENTRY-22","distance":13},
-  {"id":"e82","from":"SC-F0-ENTRY-22","to":"SC-F0-ENTRY-23","distance":6},
-  {"id":"e83","from":"SC-F0-ENTRY-21","to":"SC-F0-ENTRY-22","distance":6},
-  {"id":"e84","from":"SC-F0-DOOR-13","to":"SC-F0-ENTRY-21","distance":7},
-  {"id":"e85","from":"SC-F0-ENTRY-21","to":"SC-F0-J-27","distance":17},
-  {"id":"e86","from":"SC-F0-J-27","to":"SC-F0-J-29","distance":14},
-  {"id":"e87","from":"SC-F0-J-27","to":"SC-F0-J-26","distance":20},
-  {"id":"e88","from":"SC-F0-J-26","to":"SC-F0-J-29","distance":31},
-  {"id":"e89","from":"SC-F0-J-29","to":"SC-F0-STAIRS-4","distance":13},
-  {"id":"e90","from":"SC-F0-STAIRS-4","to":"SC-F0-J-27","distance":20},
-  {"id":"e91","from":"SC-F0-DOOR-13","to":"SC-F0-J-29","distance":13},
-  {"id":"e92","from":"SC-F0-J-29","to":"SC-F0-DOOR-14","distance":30},
-  {"id":"e93","from":"SC-F0-ENTRY-22","to":"SC-F0-DOOR-13","distance":13},
-  {"id":"e94","from":"SC-F0-ENTRY-21","to":"SC-F0-ENTRY-24","distance":24},
-  {"id":"e95","from":"SC-F0-ENTRY-23","to":"SC-F0-J-29","distance":26},
-  {"id":"e96","from":"SC-F0-J-27","to":"SC-F0-DOOR-13","distance":17},
-  {"id":"e97","from":"SC-F0-DOOR-14","to":"SC-F0-DOOR-13","distance":24},
-  {"id":"e98","from":"SC-F0-ENTRY-22","to":"SC-F0-J-27","distance":15},
-  {"id":"e99","from":"SC-F0-DOOR-14","to":"SC-F0-ENTRY-21","distance":19},
-  {"id":"e100","from":"SC-F0-ENTRY-22","to":"SC-F0-ENTRY-24","distance":19},
-  {"id":"e101","from":"SC-F0-ENTRY-23","to":"SC-F0-ENTRY-24","distance":13},
-  {"id":"e102","from":"SC-F0-ENTRY-23","to":"SC-F0-J-27","distance":17},
-  {"id":"e103","from":"SC-F0-ENTRY-23","to":"SC-F0-J-26","distance":31},
-  {"id":"e104","from":"SC-F0-DOOR-14","to":"SC-F0-J-26","distance":27},
-  {"id":"e105","from":"SC-F0-ENTRY-24","to":"SC-F0-STAIRS-4","distance":38},
-  {"id":"e106","from":"SC-F0-ENTRY-24","to":"SC-F0-J-29","distance":32},
-  {"id":"e107","from":"SC-F0-J-29","to":"SC-F0-J-28","distance":16},
-  {"id":"e108","from":"SC-F0-STAIRS-4","to":"SC-F0-J-28","distance":20},
-  {"id":"e109","from":"SC-F0-J-28","to":"SC-F0-DOOR-13","distance":22},
-  {"id":"e110","from":"SC-F0-J-28","to":"SC-F0-ENTRY-19","distance":17},
-  {"id":"e111","from":"SC-F0-J-28","to":"SC-F0-ENTRY-18","distance":15},
-  {"id":"e112","from":"SC-F0-J-28","to":"SC-F0-ENTRY-20","distance":17},
-  {"id":"e113","from":"SC-F0-ENTRY-20","to":"SC-F0-ENTRY-18","distance":7},
-  {"id":"e114","from":"SC-F0-ENTRY-18","to":"SC-F0-ENTRY-19","distance":7},
-  {"id":"e115","from":"SC-F0-ENTRY-18","to":"SC-F0-J-29","distance":22},
-  {"id":"e116","from":"SC-F0-J-29","to":"SC-F0-ENTRY-19","distance":18},
-  {"id":"e117","from":"SC-F0-ENTRY-19","to":"SC-F0-STAIRS-4","distance":30},
-  {"id":"e118","from":"SC-F0-STAIRS-4","to":"SC-F0-ENTRY-18","distance":33},
-  {"id":"e119","from":"SC-F0-ENTRY-20","to":"SC-F0-J-29","distance":28},
-  {"id":"e120","from":"SC-F0-ENTRY-20","to":"SC-F0-DOOR-12","distance":11},
-  {"id":"e121","from":"SC-F0-DOOR-15","to":"SC-F0-J-28","distance":18},
-  {"id":"e122","from":"SC-F0-J-28","to":"SC-F0-DOOR-12","distance":17},
-  {"id":"e123","from":"SC-F0-DOOR-12","to":"SC-F0-ENTRY-18","distance":17},
-  {"id":"e124","from":"SC-F0-DOOR-12","to":"SC-F0-ENTRY-19","distance":23},
-  {"id":"e125","from":"SC-F0-DOOR-12","to":"SC-F0-J-29","distance":32},
-  {"id":"e126","from":"SC-F0-DOOR-12","to":"SC-F0-DOOR-13","distance":34},
-  {"id":"e127","from":"SC-F0-STAIRS-4","to":"SC-F0-DOOR-15","distance":31},
-  {"id":"e128","from":"SC-F0-DOOR-15","to":"SC-F0-DOOR-12","distance":16},
-  {"id":"e129","from":"SC-F0-DOOR-15","to":"SC-F0-J-29","distance":33},
-  {"id":"e130","from":"SC-F0-DOOR-15","to":"SC-F0-J-31","distance":13},
-  {"id":"e131","from":"SC-F0-J-31","to":"SC-F0-DOOR-12","distance":11},
-  {"id":"e132","from":"SC-F0-DOOR-12","to":"SC-F0-DOOR-30","distance":7},
-  {"id":"e133","from":"SC-F0-DOOR-30","to":"SC-F0-J-31","distance":12},
-  {"id":"e134","from":"SC-F0-DOOR-15","to":"SC-F0-DOOR-30","distance":21},
-  {"id":"e135","from":"SC-F0-DOOR-30","to":"SC-F0-STAIRS-3","distance":10},
-  {"id":"e136","from":"SC-F0-STAIRS-3","to":"SC-F0-ENTRY-17","distance":7},
-  {"id":"e137","from":"SC-F0-ENTRY-17","to":"SC-F0-J-31","distance":15},
-  {"id":"e138","from":"SC-F0-J-31","to":"SC-F0-STAIRS-3","distance":11},
-  {"id":"e139","from":"SC-F0-DOOR-30","to":"SC-F0-ENTRY-17","distance":6},
-  {"id":"e140","from":"SC-F0-STAIRS-3","to":"SC-F0-J-32","distance":14},
-  {"id":"e141","from":"SC-F0-J-32","to":"SC-F0-DOOR-9","distance":11},
-  {"id":"e142","from":"SC-F0-DOOR-9","to":"SC-F0-DOOR-10","distance":6},
-  {"id":"e143","from":"SC-F0-DOOR-10","to":"SC-F0-ENTRY-16","distance":6},
-  {"id":"e144","from":"SC-F0-ENTRY-16","to":"SC-F0-STAIRS-3","distance":12},
-  {"id":"e145","from":"SC-F0-STAIRS-3","to":"SC-F0-DOOR-9","distance":19},
-  {"id":"e146","from":"SC-F0-DOOR-10","to":"SC-F0-STAIRS-3","distance":15},
-  {"id":"e147","from":"SC-F0-J-32","to":"SC-F0-DOOR-10","distance":12},
-  {"id":"e148","from":"SC-F0-ENTRY-16","to":"SC-F0-J-32","distance":15},
-  {"id":"e149","from":"SC-F0-J-32","to":"SC-F0-DOOR-8","distance":12},
-  {"id":"e150","from":"SC-F0-DOOR-8","to":"SC-F0-DOOR-9","distance":16},
-  {"id":"e151","from":"SC-F0-DOOR-8","to":"SC-F0-DOOR-15","distance":32},
-  {"id":"e152","from":"SC-F0-J-31","to":"SC-F0-DOOR-8","distance":25},
-  {"id":"e153","from":"SC-F0-J-32","to":"SC-F0-J-31","distance":16},
-  {"id":"e154","from":"SC-F0-DOOR-12","to":"SC-F0-STAIRS-3","distance":14},
-  {"id":"e155","from":"SC-F0-J-32","to":"SC-F0-DOOR-15","distance":26},
-  {"id":"e156","from":"SC-F0-ENTRY-17","to":"SC-F0-ENTRY-16","distance":15},
-  {"id":"e157","from":"SC-F0-DOOR-6","to":"SC-F0-DOOR-7","distance":5},
-  {"id":"e228","from":"SC-F0-EL-1","to":"SC-F1-EL-10","distance":10}
+  {
+    "from": "SC-F1-ENT-1",
+    "to": "SC-F1-J-6",
+    "distance": 86.8
+  },
+  {
+    "from": "SC-F1-J-6",
+    "to": "SC-F1-ENT-2",
+    "distance": 87.3
+  },
+  {
+    "from": "SC-F1-J-6",
+    "to": "SC-F1-ENT-3",
+    "distance": 85
+  },
+  {
+    "from": "SC-F1-J-6",
+    "to": "SC-F1-ENT-4",
+    "distance": 82.4
+  },
+  {
+    "from": "SC-F1-ENT-2",
+    "to": "SC-F1-ENT-3",
+    "distance": 50.8
+  },
+  {
+    "from": "SC-F1-ENT-1",
+    "to": "SC-F1-ENT-3",
+    "distance": 119.3
+  },
+  {
+    "from": "SC-F1-ENT-2",
+    "to": "SC-F1-ENT-4",
+    "distance": 114
+  },
+  {
+    "from": "SC-F1-ENT-1",
+    "to": "SC-F1-ENT-4",
+    "distance": 158.1
+  },
+  {
+    "from": "SC-F1-ENT-7",
+    "to": "SC-F1-J-6",
+    "distance": 81.9
+  },
+  {
+    "from": "SC-F1-ENT-7",
+    "to": "SC-F1-ENT-1",
+    "distance": 23.2
+  },
+  {
+    "from": "SC-F1-ENT-7",
+    "to": "SC-F1-ENT-2",
+    "distance": 96.6
+  },
+  {
+    "from": "SC-F1-ENT-7",
+    "to": "SC-F1-ENT-8",
+    "distance": 111.8
+  },
+  {
+    "from": "SC-F1-ENT-7",
+    "to": "SC-F1-ENT-3",
+    "distance": 131.4
+  },
+  {
+    "from": "SC-F1-ENT-7",
+    "to": "SC-F1-ENT-4",
+    "distance": 160.3
+  },
+  {
+    "from": "SC-F1-ENT-8",
+    "to": "SC-F1-ENT-4",
+    "distance": 96.6
+  },
+  {
+    "from": "SC-F1-ENT-8",
+    "to": "SC-F1-ENT-3",
+    "distance": 29.4
+  },
+  {
+    "from": "SC-F1-ENT-8",
+    "to": "SC-F1-J-6",
+    "distance": 85.5
+  },
+  {
+    "from": "SC-F1-ENT-8",
+    "to": "SC-F1-ENT-1",
+    "distance": 96.6
+  },
+  {
+    "from": "SC-F1-ENT-8",
+    "to": "SC-F1-ENT-2",
+    "distance": 21.4
+  },
+  {
+    "from": "SC-F1-ENT-22",
+    "to": "SC-F1-J-13",
+    "distance": 63.7
+  },
+  {
+    "from": "SC-F1-J-13",
+    "to": "SC-F1-J-15",
+    "distance": 192.4
+  },
+  {
+    "from": "SC-F1-J-15",
+    "to": "SC-F1-J-14",
+    "distance": 133.1
+  },
+  {
+    "from": "SC-F1-J-14",
+    "to": "SC-F1-ENT-5",
+    "distance": 103.3
+  },
+  {
+    "from": "SC-F1-J-14",
+    "to": "SC-F1-J-11",
+    "distance": 122.5
+  },
+  {
+    "from": "SC-F1-J-14",
+    "to": "SC-F1-J-9",
+    "distance": 112.2
+  },
+  {
+    "from": "SC-F1-J-9",
+    "to": "SC-F1-J-10",
+    "distance": 79.7
+  },
+  {
+    "from": "SC-F1-J-10",
+    "to": "SC-F1-J-6",
+    "distance": 98.9
+  },
+  {
+    "from": "SC-F1-ENT-4",
+    "to": "SC-F1-J-12",
+    "distance": 70.4
+  },
+  {
+    "from": "SC-F1-J-12",
+    "to": "SC-F1-ENT-5",
+    "distance": 74.4
+  },
+  {
+    "from": "SC-F1-J-12",
+    "to": "SC-F1-ENT-3",
+    "distance": 70.8
+  },
+  {
+    "from": "SC-F1-ENT-5",
+    "to": "SC-F1-J-11",
+    "distance": 70.8
+  },
+  {
+    "from": "SC-F1-J-11",
+    "to": "SC-F1-J-9",
+    "distance": 207.9
+  },
+  {
+    "from": "SC-F1-J-10",
+    "to": "SC-F1-J-14",
+    "distance": 139.4
+  },
+  {
+    "from": "SC-F1-ENT-5",
+    "to": "SC-F1-J-9",
+    "distance": 151.4
+  },
+  {
+    "from": "SC-F1-J-13",
+    "to": "SC-F1-J-25",
+    "distance": 88.6
+  },
+  {
+    "from": "SC-F1-J-9",
+    "to": "SC-F1-J-25",
+    "distance": 97.1
+  },
+  {
+    "from": "SC-F1-J-25",
+    "to": "SC-F1-J-15",
+    "distance": 118
+  },
+  {
+    "from": "SC-F1-ENT-22",
+    "to": "SC-F1-J-25",
+    "distance": 124.7
+  },
+  {
+    "from": "SC-F1-ENT-22",
+    "to": "SC-F1-J-15",
+    "distance": 240.5
+  },
+  {
+    "from": "SC-F1-ENT-23",
+    "to": "SC-F1-J-25",
+    "distance": 95.7
+  },
+  {
+    "from": "SC-F1-ENT-24",
+    "to": "SC-F1-J-10",
+    "distance": 79.7
+  },
+  {
+    "from": "SC-F1-ENT-24",
+    "to": "SC-F1-J-9",
+    "distance": 41
+  },
+  {
+    "from": "SC-F1-ENT-23",
+    "to": "SC-F1-J-9",
+    "distance": 40.5
+  },
+  {
+    "from": "SC-F1-J-31",
+    "to": "SC-F1-ENT-16",
+    "distance": 87.3
+  },
+  {
+    "from": "SC-F1-J-31",
+    "to": "SC-F1-ENT-17",
+    "distance": 89.1
+  },
+  {
+    "from": "SC-F1-J-31",
+    "to": "SC-F1-ENT-18",
+    "distance": 134.5
+  },
+  {
+    "from": "SC-F1-J-31",
+    "to": "SC-F1-J-32",
+    "distance": 159
+  },
+  {
+    "from": "SC-F1-J-32",
+    "to": "SC-F1-ENT-18",
+    "distance": 61
+  },
+  {
+    "from": "SC-F1-J-32",
+    "to": "SC-F1-ENT-19",
+    "distance": 52.1
+  },
+  {
+    "from": "SC-F1-J-32",
+    "to": "SC-F1-ENT-21",
+    "distance": 55.7
+  },
+  {
+    "from": "SC-F1-ENT-21",
+    "to": "SC-F1-ENT-19",
+    "distance": 31.2
+  },
+  {
+    "from": "SC-F1-ENT-16",
+    "to": "SC-F1-ST-29",
+    "distance": 137.6
+  },
+  {
+    "from": "SC-F1-J-31",
+    "to": "SC-F1-ENT-20",
+    "distance": 75.3
+  },
+  {
+    "from": "SC-F1-J-31",
+    "to": "SC-F1-ST-29",
+    "distance": 70.8
+  },
+  {
+    "from": "SC-F1-ST-29",
+    "to": "SC-F1-ENT-17",
+    "distance": 90.4
+  },
+  {
+    "from": "SC-F1-J-31",
+    "to": "SC-F1-ENT-30",
+    "distance": 81
+  },
+  {
+    "from": "SC-F1-ENT-30",
+    "to": "SC-F1-ENT-20",
+    "distance": 25.8
+  },
+  {
+    "from": "SC-F1-ST-29",
+    "to": "SC-F1-ENT-20",
+    "distance": 45
+  },
+  {
+    "from": "SC-F1-ENT-30",
+    "to": "SC-F1-ST-29",
+    "distance": 69.9
+  },
+  {
+    "from": "SC-F1-ENT-30",
+    "to": "SC-F1-ENT-17",
+    "distance": 148.7
+  },
+  {
+    "from": "SC-F1-ENT-30",
+    "to": "SC-F1-ENT-18",
+    "distance": 163.4
+  },
+  {
+    "from": "SC-F1-ST-29",
+    "to": "SC-F1-ENT-18",
+    "distance": 93.5
+  },
+  {
+    "from": "SC-F1-ENT-20",
+    "to": "SC-F1-ENT-16",
+    "distance": 159.4
+  },
+  {
+    "from": "SC-F1-ENT-20",
+    "to": "SC-F1-ENT-17",
+    "distance": 129.6
+  },
+  {
+    "from": "SC-F1-ENT-21",
+    "to": "SC-F1-ENT-18",
+    "distance": 98.4
+  },
+  {
+    "from": "SC-F1-J-15",
+    "to": "SC-F1-ENT-30",
+    "distance": 70.8
+  },
+  {
+    "from": "SC-F1-ENT-30",
+    "to": "SC-F1-J-14",
+    "distance": 196.4
+  },
+  {
+    "from": "SC-F1-ENT-30",
+    "to": "SC-F1-ENT-5",
+    "distance": 298.3
+  },
+  {
+    "from": "SC-F1-J-14",
+    "to": "SC-F1-EL-26",
+    "distance": 105.5
+  },
+  {
+    "from": "SC-F1-EL-26",
+    "to": "SC-F1-J-9",
+    "distance": 101.5
+  },
+  {
+    "from": "SC-F1-EL-26",
+    "to": "SC-F1-ENT-5",
+    "distance": 61
+  },
+  {
+    "from": "SC-F1-EL-26",
+    "to": "SC-F1-J-11",
+    "distance": 130.5
+  },
+  {
+    "from": "SC-F1-J-11",
+    "to": "SC-F1-ST-27",
+    "distance": 21.8
+  },
+  {
+    "from": "SC-F1-J-11",
+    "to": "SC-F1-ST-28",
+    "distance": 21.4
+  },
+  {
+    "from": "SC-F1-ST-27",
+    "to": "SC-F1-ENT-5",
+    "distance": 66.3
+  },
+  {
+    "from": "SC-F1-ST-28",
+    "to": "SC-F1-ENT-5",
+    "distance": 83.7
+  },
+  {
+    "from": "SC-F1-ST-27",
+    "to": "SC-F1-EL-26",
+    "distance": 121.1
+  },
+  {
+    "from": "SC-F1-ST-28",
+    "to": "SC-F1-EL-26",
+    "distance": 139.4
+  },
+  {
+    "from": "SC-F1-ST-27",
+    "to": "SC-F1-J-14",
+    "distance": 101.5
+  },
+  {
+    "from": "SC-F1-J-25",
+    "to": "SC-F1-J-33",
+    "distance": 77.5
+  },
+  {
+    "from": "SC-F1-J-33",
+    "to": "SC-F1-J-14",
+    "distance": 89.5
+  },
+  {
+    "from": "SC-F1-J-33",
+    "to": "SC-F1-J-15",
+    "distance": 63.7
+  },
+  {
+    "from": "SC-F1-J-13",
+    "to": "SC-F1-J-33",
+    "distance": 164.8
+  },
+  {
+    "from": "SC-F1-J-10",
+    "to": "SC-F1-EL-26",
+    "distance": 54.8
+  },
+  {
+    "from": "SC-F0-ENT-39",
+    "to": "SC-F0-EL-48",
+    "distance": 56.1
+  },
+  {
+    "from": "SC-F0-ENT-39",
+    "to": "SC-F0-J-34",
+    "distance": 78.4
+  },
+  {
+    "from": "SC-F0-ENT-39",
+    "to": "SC-F0-J-38",
+    "distance": 149.2
+  },
+  {
+    "from": "SC-F0-J-34",
+    "to": "SC-F0-J-38",
+    "distance": 71.2
+  },
+  {
+    "from": "SC-F0-J-34",
+    "to": "SC-F0-ENT-40",
+    "distance": 37.8
+  },
+  {
+    "from": "SC-F0-J-34",
+    "to": "SC-F0-ENT-41",
+    "distance": 40.5
+  },
+  {
+    "from": "SC-F0-J-34",
+    "to": "SC-F0-EL-48",
+    "distance": 72.1
+  },
+  {
+    "from": "SC-F0-EL-48",
+    "to": "SC-F0-J-38",
+    "distance": 135.8
+  },
+  {
+    "from": "SC-F0-J-38",
+    "to": "SC-F0-J-36",
+    "distance": 107.3
+  },
+  {
+    "from": "SC-F0-J-36",
+    "to": "SC-F0-ENT-47",
+    "distance": 79.3
+  },
+  {
+    "from": "SC-F0-ENT-47",
+    "to": "SC-F0-ENT-42",
+    "distance": 24.9
+  },
+  {
+    "from": "SC-F0-ENT-42",
+    "to": "SC-F0-J-38",
+    "distance": 131.8
+  },
+  {
+    "from": "SC-F0-J-38",
+    "to": "SC-F0-ENT-47",
+    "distance": 110.9
+  },
+  {
+    "from": "SC-F0-ENT-47",
+    "to": "SC-F0-ENT-46",
+    "distance": 61.4
+  },
+  {
+    "from": "SC-F0-ENT-46",
+    "to": "SC-F0-ENT-42",
+    "distance": 37.4
+  },
+  {
+    "from": "SC-F0-ENT-42",
+    "to": "SC-F0-J-36",
+    "distance": 77.5
+  },
+  {
+    "from": "SC-F0-J-36",
+    "to": "SC-F0-ENT-46",
+    "distance": 75.7
+  },
+  {
+    "from": "SC-F0-ENT-46",
+    "to": "SC-F0-J-38",
+    "distance": 157.6
+  },
+  {
+    "from": "SC-F0-J-38",
+    "to": "SC-F0-ENT-45",
+    "distance": 167
+  },
+  {
+    "from": "SC-F0-ENT-45",
+    "to": "SC-F0-J-36",
+    "distance": 70.4
+  },
+  {
+    "from": "SC-F0-J-36",
+    "to": "SC-F0-ENT-44",
+    "distance": 77.5
+  },
+  {
+    "from": "SC-F0-ENT-44",
+    "to": "SC-F0-J-38",
+    "distance": 183.9
+  },
+  {
+    "from": "SC-F0-J-38",
+    "to": "SC-F0-J-35",
+    "distance": 179.9
+  },
+  {
+    "from": "SC-F0-J-35",
+    "to": "SC-F0-J-36",
+    "distance": 91.7
+  },
+  {
+    "from": "SC-F0-J-36",
+    "to": "SC-F0-ENT-43",
+    "distance": 77.5
+  },
+  {
+    "from": "SC-F0-ENT-43",
+    "to": "SC-F0-ENT-44",
+    "distance": 25.4
+  },
+  {
+    "from": "SC-F0-ENT-43",
+    "to": "SC-F0-ENT-45",
+    "distance": 57.9
+  },
+  {
+    "from": "SC-F0-ENT-43",
+    "to": "SC-F0-ENT-46",
+    "distance": 85
+  },
+  {
+    "from": "SC-F0-ENT-43",
+    "to": "SC-F0-ENT-42",
+    "distance": 114.9
+  },
+  {
+    "from": "SC-F0-ENT-43",
+    "to": "SC-F0-ENT-47",
+    "distance": 131.8
+  },
+  {
+    "from": "SC-F0-J-35",
+    "to": "SC-F0-ENT-43",
+    "distance": 66.8
+  },
+  {
+    "from": "SC-F0-J-35",
+    "to": "SC-F0-ENT-45",
+    "distance": 117.1
+  },
+  {
+    "from": "SC-F0-J-35",
+    "to": "SC-F0-ENT-44",
+    "distance": 91.3
+  },
+  {
+    "from": "SC-F0-J-35",
+    "to": "SC-F0-ENT-46",
+    "distance": 140.3
+  },
+  {
+    "from": "SC-F0-J-35",
+    "to": "SC-F0-ENT-42",
+    "distance": 159.9
+  },
+  {
+    "from": "SC-F0-ENT-47",
+    "to": "SC-F0-J-35",
+    "distance": 168.3
+  },
+  {
+    "from": "SC-F0-ST-49",
+    "to": "SC-F0-J-36",
+    "distance": 104.2
+  },
+  {
+    "from": "SC-F0-ST-49",
+    "to": "SC-F0-J-35",
+    "distance": 68.6
+  },
+  {
+    "from": "SC-F0-ST-49",
+    "to": "SC-F0-ENT-43",
+    "distance": 125.6
+  },
+  {
+    "from": "SC-F0-ST-49",
+    "to": "SC-F0-ENT-44",
+    "distance": 145.2
+  },
+  {
+    "from": "SC-F0-ST-49",
+    "to": "SC-F0-ENT-45",
+    "distance": 159.9
+  },
+  {
+    "from": "SC-F0-ST-49",
+    "to": "SC-F0-ENT-46",
+    "distance": 175.4
+  },
+  {
+    "from": "SC-F0-ST-49",
+    "to": "SC-F0-J-37",
+    "distance": 114.4
+  },
+  {
+    "from": "SC-F0-J-37",
+    "to": "SC-F0-J-35",
+    "distance": 76.6
+  },
+  {
+    "from": "SC-F0-J-37",
+    "to": "SC-F0-ENT-43",
+    "distance": 124.7
+  },
+  {
+    "from": "SC-F0-J-37",
+    "to": "SC-F0-ENT-54",
+    "distance": 72.6
+  },
+  {
+    "from": "SC-F0-ENT-54",
+    "to": "SC-F0-J-35",
+    "distance": 139.4
+  },
+  {
+    "from": "SC-F0-J-35",
+    "to": "SC-F0-ENT-50",
+    "distance": 74.8
+  },
+  {
+    "from": "SC-F0-ENT-50",
+    "to": "SC-F0-J-37",
+    "distance": 85.5
+  },
+  {
+    "from": "SC-F0-J-37",
+    "to": "SC-F0-ENT-53",
+    "distance": 64.1
+  },
+  {
+    "from": "SC-F0-ENT-53",
+    "to": "SC-F0-ENT-52",
+    "distance": 54.3
+  },
+  {
+    "from": "SC-F0-ENT-52",
+    "to": "SC-F0-J-37",
+    "distance": 69.9
+  },
+  {
+    "from": "SC-F0-J-37",
+    "to": "SC-F0-ENT-51",
+    "distance": 69.5
+  },
+  {
+    "from": "SC-F0-ENT-51",
+    "to": "SC-F0-ST-49",
+    "distance": 156.7
+  },
+  {
+    "from": "SC-F0-ST-49",
+    "to": "SC-F0-ENT-50",
+    "distance": 142.9
+  },
+  {
+    "from": "SC-F0-ENT-50",
+    "to": "SC-F0-ENT-53",
+    "distance": 112.7
+  },
+  {
+    "from": "SC-F0-ENT-53",
+    "to": "SC-F0-ENT-51",
+    "distance": 79.3
+  },
+  {
+    "from": "SC-F0-ENT-51",
+    "to": "SC-F0-ENT-54",
+    "distance": 134.9
+  },
+  {
+    "from": "SC-F0-ENT-54",
+    "to": "SC-F0-ST-49",
+    "distance": 148.7
+  },
+  {
+    "from": "SC-F0-ST-49",
+    "to": "SC-F0-ENT-52",
+    "distance": 173.7
+  },
+  {
+    "from": "SC-F0-ENT-50",
+    "to": "SC-F0-ENT-54",
+    "distance": 157.2
+  },
+  {
+    "from": "SC-F0-ENT-43",
+    "to": "SC-F0-ENT-54",
+    "distance": 195.9
+  },
+  {
+    "from": "SC-F0-ENT-57",
+    "to": "SC-F0-J-62",
+    "distance": 65
+  },
+  {
+    "from": "SC-F0-J-62",
+    "to": "SC-F0-ENT-58",
+    "distance": 53.9
+  },
+  {
+    "from": "SC-F0-ENT-58",
+    "to": "SC-F0-ENT-59",
+    "distance": 29.4
+  },
+  {
+    "from": "SC-F0-ENT-59",
+    "to": "SC-F0-ENT-60",
+    "distance": 27.2
+  },
+  {
+    "from": "SC-F0-ENT-60",
+    "to": "SC-F0-J-62",
+    "distance": 68.6
+  },
+  {
+    "from": "SC-F0-J-62",
+    "to": "SC-F0-ENT-59",
+    "distance": 55.2
+  },
+  {
+    "from": "SC-F0-ENT-59",
+    "to": "SC-F0-ENT-57",
+    "distance": 99.7
+  },
+  {
+    "from": "SC-F0-ENT-57",
+    "to": "SC-F0-ENT-60",
+    "distance": 122.9
+  },
+  {
+    "from": "SC-F0-J-62",
+    "to": "SC-F0-ST-62",
+    "distance": 59.2
+  },
+  {
+    "from": "SC-F0-ST-62",
+    "to": "SC-F0-ENT-60",
+    "distance": 55.2
+  },
+  {
+    "from": "SC-F0-ENT-59",
+    "to": "SC-F0-ST-62",
+    "distance": 67.7
+  },
+  {
+    "from": "SC-F0-ENT-58",
+    "to": "SC-F0-ST-62",
+    "distance": 89.1
+  },
+  {
+    "from": "SC-F0-ST-62",
+    "to": "SC-F0-ENT-61",
+    "distance": 35.6
+  },
+  {
+    "from": "SC-F0-ST-62",
+    "to": "SC-F0-ENT-55",
+    "distance": 45.9
+  },
+  {
+    "from": "SC-F0-ST-62",
+    "to": "SC-F0-ENT-54",
+    "distance": 107.8
+  },
+  {
+    "from": "SC-F0-ST-62",
+    "to": "SC-F0-ENT-53",
+    "distance": 65
+  },
+  {
+    "from": "SC-F0-ENT-55",
+    "to": "SC-F0-ENT-61",
+    "distance": 29.8
+  },
+  {
+    "from": "SC-F0-ENT-61",
+    "to": "SC-F0-ENT-53",
+    "distance": 54.8
+  },
+  {
+    "from": "SC-F0-ENT-55",
+    "to": "SC-F0-ENT-53",
+    "distance": 24.5
+  },
+  {
+    "from": "SC-F0-ENT-53",
+    "to": "SC-F0-ENT-54",
+    "distance": 78.8
+  },
+  {
+    "from": "SC-F0-ENT-54",
+    "to": "SC-F0-ENT-55",
+    "distance": 96.2
+  },
+  {
+    "from": "SC-F0-ENT-55",
+    "to": "SC-F0-ENT-60",
+    "distance": 95.3
+  },
+  {
+    "from": "SC-F0-ENT-54",
+    "to": "SC-F0-J-63",
+    "distance": 49
+  },
+  {
+    "from": "SC-F0-J-63",
+    "to": "SC-F0-ST-62",
+    "distance": 64.6
+  },
+  {
+    "from": "SC-F0-J-63",
+    "to": "SC-F0-ENT-53",
+    "distance": 67.2
+  },
+  {
+    "from": "SC-F0-J-63",
+    "to": "SC-F0-J-62",
+    "distance": 68.6
+  },
+  {
+    "from": "SC-F0-J-62",
+    "to": "SC-F0-ENT-53",
+    "distance": 112.2
+  },
+  {
+    "from": "SC-F0-J-63",
+    "to": "SC-F0-ENT-55",
+    "distance": 71.7
+  },
+  {
+    "from": "SC-F0-J-63",
+    "to": "SC-F0-ENT-61",
+    "distance": 87.7
+  },
+  {
+    "from": "SC-F0-J-63",
+    "to": "SC-F0-ENT-60",
+    "distance": 112.7
+  },
+  {
+    "from": "SC-F0-J-63",
+    "to": "SC-F0-ENT-59",
+    "distance": 113.5
+  },
+  {
+    "from": "SC-F0-J-63",
+    "to": "SC-F0-ENT-57",
+    "distance": 112.7
+  },
+  {
+    "from": "SC-F0-ENT-57",
+    "to": "SC-F0-ENT-54",
+    "distance": 150.1
+  },
+  {
+    "from": "SC-F0-J-62",
+    "to": "SC-F0-ENT-54",
+    "distance": 116.2
+  },
+  {
+    "from": "SC-F0-ST-62",
+    "to": "SC-F1-ST-29",
+    "distance": 126.9
+  },
+  {
+    "from": "SC-F0-ST-49",
+    "to": "SC-F1-ST-28",
+    "distance": 126.5
+  },
+  {
+    "from": "SC-F0-EL-48",
+    "to": "SC-F1-EL-26",
+    "distance": 11.6
+  },
+  {
+    "from": "SC-F0-ENT-41",
+    "to": "SC-F0-J-38",
+    "distance": 84.6
+  },
+  {
+    "from": "SC-F0-ENT-40",
+    "to": "SC-F0-EL-48",
+    "distance": 81.5
+  },
+  {
+    "from": "SC-F0-ENT-61",
+    "to": "SC-F0-J-66",
+    "distance": 72.6
+  },
+  {
+    "from": "SC-F0-ENT-60",
+    "to": "SC-F0-J-66",
+    "distance": 67.7
+  },
+  {
+    "from": "SC-F0-J-66",
+    "to": "SC-F0-J-65",
+    "distance": 155.4
+  },
+  {
+    "from": "SC-F0-J-65",
+    "to": "SC-F0-J-64",
+    "distance": 146.9
+  },
+  {
+    "from": "SC-F0-J-64",
+    "to": "SC-F0-ENT-44",
+    "distance": 71.2
+  },
+  {
+    "from": "SC-F0-ENT-45",
+    "to": "SC-F0-J-64",
+    "distance": 62.3
+  },
+  {
+    "from": "SC-F0-J-64",
+    "to": "SC-F0-ENT-46",
+    "distance": 69.5
+  },
+  {
+    "from": "SC-F0-J-64",
+    "to": "SC-F0-ENT-50",
+    "distance": 130.5
+  },
+  {
+    "from": "SC-F0-J-64",
+    "to": "SC-F0-ENT-51",
+    "distance": 163
+  },
+  {
+    "from": "SC-F0-ENT-51",
+    "to": "SC-F0-J-65",
+    "distance": 61.9
+  },
+  {
+    "from": "SC-F0-J-65",
+    "to": "SC-F0-ENT-50",
+    "distance": 69.9
+  },
+  {
+    "from": "SC-F0-J-65",
+    "to": "SC-F0-ENT-52",
+    "distance": 69.5
+  },
+  {
+    "from": "SC-F0-ENT-52",
+    "to": "SC-F0-J-64",
+    "distance": 191
+  },
+  {
+    "from": "SC-F0-ENT-52",
+    "to": "SC-F0-J-66",
+    "distance": 136.3
+  },
+  {
+    "from": "SC-F2-ENT-71",
+    "to": "SC-F2-J-67",
+    "distance": 73.5
+  },
+  {
+    "from": "SC-F2-ENT-76",
+    "to": "SC-F2-J-67",
+    "distance": 90.8
+  },
+  {
+    "from": "SC-F2-J-67",
+    "to": "SC-F2-ENT-72",
+    "distance": 68.6
+  },
+  {
+    "from": "SC-F2-ENT-72",
+    "to": "SC-F2-J-69",
+    "distance": 73
+  },
+  {
+    "from": "SC-F2-J-69",
+    "to": "SC-F2-ENT-73",
+    "distance": 57.4
+  },
+  {
+    "from": "SC-F2-ENT-73",
+    "to": "SC-F2-J-68",
+    "distance": 87.7
+  },
+  {
+    "from": "SC-F2-J-68",
+    "to": "SC-F2-ENT-75",
+    "distance": 45.9
+  },
+  {
+    "from": "SC-F2-ENT-75",
+    "to": "SC-F2-ENT-74",
+    "distance": 25.4
+  },
+  {
+    "from": "SC-F2-ENT-74",
+    "to": "SC-F2-J-69",
+    "distance": 114.4
+  },
+  {
+    "from": "SC-F2-J-69",
+    "to": "SC-F2-J-68",
+    "distance": 93.1
+  },
+  {
+    "from": "SC-F2-J-68",
+    "to": "SC-F2-J-70",
+    "distance": 174.1
+  },
+  {
+    "from": "SC-F2-J-67",
+    "to": "SC-F2-J-69",
+    "distance": 80.6
+  },
+  {
+    "from": "SC-F2-J-69",
+    "to": "SC-F2-ENT-76",
+    "distance": 78.4
+  },
+  {
+    "from": "SC-F2-ENT-72",
+    "to": "SC-F2-ENT-76",
+    "distance": 132.7
+  },
+  {
+    "from": "SC-F2-J-69",
+    "to": "SC-F2-ENT-71",
+    "distance": 136.3
+  },
+  {
+    "from": "SC-F2-ENT-72",
+    "to": "SC-F2-ENT-77",
+    "distance": 25.8
+  },
+  {
+    "from": "SC-F2-ENT-77",
+    "to": "SC-F2-J-69",
+    "distance": 47.6
+  },
+  {
+    "from": "SC-F2-ENT-77",
+    "to": "SC-F2-ENT-71",
+    "distance": 97.5
+  },
+  {
+    "from": "SC-F2-J-67",
+    "to": "SC-F2-ENT-77",
+    "distance": 67.7
+  },
+  {
+    "from": "SC-F2-ENT-73",
+    "to": "SC-F2-ENT-75",
+    "distance": 97.1
+  },
+  {
+    "from": "SC-F2-ENT-74",
+    "to": "SC-F2-J-68",
+    "distance": 55.7
+  },
+  {
+    "from": "SC-F2-ENT-75",
+    "to": "SC-F2-J-69",
+    "distance": 124.7
+  },
+  {
+    "from": "SC-F2-EL-78",
+    "to": "SC-F0-EL-48",
+    "distance": 12
+  },
+  {
+    "from": "SC-F2-EL-78",
+    "to": "SC-F1-EL-26",
+    "distance": 6.7
+  },
+  {
+    "from": "SC-F2-ST-79",
+    "to": "SC-F1-ST-27",
+    "distance": 130.9
+  },
+  {
+    "from": "SC-F2-J-97",
+    "to": "SC-F2-ENT-87",
+    "distance": 51.7
+  },
+  {
+    "from": "SC-F2-J-97",
+    "to": "SC-F2-ENT-88",
+    "distance": 54.3
+  },
+  {
+    "from": "SC-F2-ENT-87",
+    "to": "SC-F2-ENT-89",
+    "distance": 18.7
+  },
+  {
+    "from": "SC-F2-J-97",
+    "to": "SC-F2-J-98",
+    "distance": 104.6
+  },
+  {
+    "from": "SC-F2-J-98",
+    "to": "SC-F2-ENT-90",
+    "distance": 63.7
+  },
+  {
+    "from": "SC-F2-J-98",
+    "to": "SC-F2-ENT-88",
+    "distance": 73
+  },
+  {
+    "from": "SC-F2-J-98",
+    "to": "SC-F2-ENT-91",
+    "distance": 56.6
+  },
+  {
+    "from": "SC-F2-ENT-92",
+    "to": "SC-F2-J-98",
+    "distance": 101.5
+  },
+  {
+    "from": "SC-F2-J-98",
+    "to": "SC-F2-ENT-93",
+    "distance": 148.3
+  },
+  {
+    "from": "SC-F2-ENT-94",
+    "to": "SC-F2-J-98",
+    "distance": 183.5
+  },
+  {
+    "from": "SC-F2-ENT-91",
+    "to": "SC-F2-J-97",
+    "distance": 150.1
+  },
+  {
+    "from": "SC-F2-ENT-89",
+    "to": "SC-F2-J-99",
+    "distance": 122.9
+  },
+  {
+    "from": "SC-F2-J-99",
+    "to": "SC-F2-ENT-87",
+    "distance": 132.2
+  },
+  {
+    "from": "SC-F2-ENT-87",
+    "to": "SC-F2-ENT-82",
+    "distance": 149.2
+  },
+  {
+    "from": "SC-F2-ENT-82",
+    "to": "SC-F2-J-99",
+    "distance": 40.5
+  },
+  {
+    "from": "SC-F2-J-99",
+    "to": "SC-F2-ENT-84",
+    "distance": 55.2
+  },
+  {
+    "from": "SC-F2-J-99",
+    "to": "SC-F2-ENT-83",
+    "distance": 59.2
+  },
+  {
+    "from": "SC-F2-ENT-83",
+    "to": "SC-F2-ENT-84",
+    "distance": 77.5
+  },
+  {
+    "from": "SC-F2-ENT-83",
+    "to": "SC-F2-ENT-82",
+    "distance": 46.8
+  },
+  {
+    "from": "SC-F2-ENT-87",
+    "to": "SC-F2-ENT-83",
+    "distance": 188.8
+  },
+  {
+    "from": "SC-F2-ENT-84",
+    "to": "SC-F2-ENT-82",
+    "distance": 89.5
+  },
+  {
+    "from": "SC-F2-ENT-84",
+    "to": "SC-F2-ENT-87",
+    "distance": 164.8
+  },
+  {
+    "from": "SC-F2-ENT-82",
+    "to": "SC-F2-J-100",
+    "distance": 32.1
+  },
+  {
+    "from": "SC-F2-J-100",
+    "to": "SC-F2-ENT-90",
+    "distance": 107.8
+  },
+  {
+    "from": "SC-F2-ENT-82",
+    "to": "SC-F2-ENT-90",
+    "distance": 96.6
+  },
+  {
+    "from": "SC-F2-J-100",
+    "to": "SC-F2-J-104",
+    "distance": 65
+  },
+  {
+    "from": "SC-F2-J-104",
+    "to": "SC-F2-J-101",
+    "distance": 67.7
+  },
+  {
+    "from": "SC-F2-J-101",
+    "to": "SC-F2-J-105",
+    "distance": 73.9
+  },
+  {
+    "from": "SC-F2-J-105",
+    "to": "SC-F2-J-102",
+    "distance": 57.4
+  },
+  {
+    "from": "SC-F2-J-102",
+    "to": "SC-F2-ST-79",
+    "distance": 35.6
+  },
+  {
+    "from": "SC-F2-ST-79",
+    "to": "SC-F2-J-105",
+    "distance": 65.9
+  },
+  {
+    "from": "SC-F2-ST-79",
+    "to": "SC-F2-J-101",
+    "distance": 134.5
+  },
+  {
+    "from": "SC-F2-ST-79",
+    "to": "SC-F2-J-104",
+    "distance": 200.4
+  },
+  {
+    "from": "SC-F2-J-104",
+    "to": "SC-F2-ENT-81",
+    "distance": 91.3
+  },
+  {
+    "from": "SC-F2-ENT-81",
+    "to": "SC-F2-J-70",
+    "distance": 42.7
+  },
+  {
+    "from": "SC-F2-J-70",
+    "to": "SC-F2-J-104",
+    "distance": 107.3
+  },
+  {
+    "from": "SC-F2-J-101",
+    "to": "SC-F2-J-103",
+    "distance": 115.3
+  },
+  {
+    "from": "SC-F2-J-103",
+    "to": "SC-F2-J-105",
+    "distance": 97.5
+  },
+  {
+    "from": "SC-F2-J-103",
+    "to": "SC-F2-J-102",
+    "distance": 119.8
+  },
+  {
+    "from": "SC-F2-ST-79",
+    "to": "SC-F2-J-103",
+    "distance": 91.7
+  },
+  {
+    "from": "SC-F2-ENT-80",
+    "to": "SC-F2-J-70",
+    "distance": 38.3
+  },
+  {
+    "from": "SC-F2-J-70",
+    "to": "SC-F2-EL-78",
+    "distance": 81.5
+  },
+  {
+    "from": "SC-F2-EL-78",
+    "to": "SC-F2-J-103",
+    "distance": 95.3
+  },
+  {
+    "from": "SC-F2-J-103",
+    "to": "SC-F2-J-70",
+    "distance": 112.2
+  },
+  {
+    "from": "SC-F2-ENT-80",
+    "to": "SC-F2-J-68",
+    "distance": 172.8
+  },
+  {
+    "from": "SC-F2-J-107",
+    "to": "SC-F2-ENT-84",
+    "distance": 73.9
+  },
+  {
+    "from": "SC-F2-J-107",
+    "to": "SC-F2-ENT-85",
+    "distance": 71.7
+  },
+  {
+    "from": "SC-F2-J-107",
+    "to": "SC-F2-ENT-86",
+    "distance": 101.1
+  },
+  {
+    "from": "SC-F2-ENT-86",
+    "to": "SC-F2-ENT-85",
+    "distance": 32.1
+  },
+  {
+    "from": "SC-F2-J-70",
+    "to": "SC-F2-J-106",
+    "distance": 187.5
+  },
+  {
+    "from": "SC-F2-J-106",
+    "to": "SC-F2-J-103",
+    "distance": 100.6
+  },
+  {
+    "from": "SC-F2-J-106",
+    "to": "SC-F2-EL-78",
+    "distance": 123.3
+  },
+  {
+    "from": "SC-F2-J-108",
+    "to": "SC-F2-J-70",
+    "distance": 37.4
+  },
+  {
+    "from": "SC-F2-J-108",
+    "to": "SC-F2-EL-78",
+    "distance": 48.5
+  },
+  {
+    "from": "SC-F2-J-108",
+    "to": "SC-F2-J-68",
+    "distance": 138.9
+  },
+  {
+    "from": "SC-F2-J-108",
+    "to": "SC-F2-J-106",
+    "distance": 166.5
+  },
+  {
+    "from": "SC-F2-J-108",
+    "to": "SC-F2-J-103",
+    "distance": 110.9
+  },
+  {
+    "from": "SC-F2-J-108",
+    "to": "SC-F2-ENT-80",
+    "distance": 57.9
+  },
+  {
+    "from": "SC-F2-J-105",
+    "to": "SC-F2-J-70",
+    "distance": 163.4
+  },
+  {
+    "from": "SC-F2-J-102",
+    "to": "SC-F2-J-70",
+    "distance": 210.6
+  },
+  {
+    "from": "SC-F2-J-101",
+    "to": "SC-F2-ENT-81",
+    "distance": 126.9
+  },
+  {
+    "from": "SC-F0-J-109",
+    "to": "SC-F0-ENT-47",
+    "distance": 48.1
+  },
+  {
+    "from": "SC-F0-J-109",
+    "to": "SC-F0-J-110",
+    "distance": 98.9
+  },
+  {
+    "from": "SC-F0-J-64",
+    "to": "SC-F0-J-110",
+    "distance": 115.8
+  },
+  {
+    "from": "SC-F0-ENT-46",
+    "to": "SC-F0-J-110",
+    "distance": 103.3
+  },
+  {
+    "from": "SC-F0-J-110",
+    "to": "SC-F0-ENT-45",
+    "distance": 127.4
+  },
+  {
+    "from": "SC-F0-ENT-44",
+    "to": "SC-F0-J-110",
+    "distance": 159.9
+  },
+  {
+    "from": "SC-F2-ENT-95",
+    "to": "SC-F2-J-98",
+    "distance": 217.7
+  },
+  {
+    "from": "SC-F2-ENT-95",
+    "to": "SC-F2-ENT-96",
+    "distance": 18.7
+  },
+  {
+    "from": "SC-F0-ER-DOOR",
+    "to": "SC-F0-ENT-57",
+    "distance": 0
+  }
 ]
