@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import CampusMap, { FLOOR_SYMBOLS, ROOM_DATA } from '../components/CampusMap'
 import { useGeolocation } from '../hooks/useGeolocation'
 import { NOT_STUDENT_BOOKABLE } from '../data/nonBookableRooms'
+import { getUserEmail, getUserRole, isLoggedIn } from '../api'
 
 const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
 
@@ -57,6 +58,24 @@ const PHRASES = {
     around: 'faites demi-tour',
     stepLandmark: (dist, mark, turn) => `Dans ${dist} mètres, en arrivant à ${mark}, ${turn}.`,
   },
+}
+
+// Booking eligibility. Guests are anyone not signed in, or signed in with
+// an address outside the university domains. Deliberately a whitelist, so
+// an unrecognised domain reads as guest rather than being assumed staff.
+const BOOKING_DOMAINS = ['@alustudent.com', '@alueducation.com']
+
+function canBook() {
+  if (!isLoggedIn()) return false
+  if ((getUserRole() || '').toLowerCase() === 'guest') return false
+  const email = (getUserEmail() || '').toLowerCase()
+  return BOOKING_DOMAINS.some(d => email.endsWith(d))
+}
+
+function canBook(user) {
+  const email = user && (user.email || user.username)
+  if (!email || typeof email !== 'string') return false
+  return BOOKING_DOMAINS.some(d => email.toLowerCase().endsWith(d))
 }
 
 // Turn direction from three consecutive path points. SVG's y axis grows
@@ -230,8 +249,15 @@ function Home() {
   const [motionPermissionGranted, setMotionPermissionGranted] = useState(false)
   const [motionSupported, setMotionSupported] = useState(true)
 
-  const [voiceOn, setVoiceOn] = useState(false)
-  const [voiceLang, setVoiceLang] = useState('en')
+  // Remembered across visits, like Maps. iOS still needs a gesture before
+  // it will actually speak, so a remembered "on" is re-primed by the first
+  // navigation tap rather than assumed to be live.
+  const [voiceOn, setVoiceOn] = useState(() => localStorage.getItem('cn_voice') === '1')
+  const [bookingAllowed] = useState(canBook)
+  const [voiceLang, setVoiceLang] = useState(() => localStorage.getItem('cn_voice_lang') || 'en')
+
+  useEffect(() => { localStorage.setItem('cn_voice', voiceOn ? '1' : '0') }, [voiceOn])
+  useEffect(() => { localStorage.setItem('cn_voice_lang', voiceLang) }, [voiceLang])
   const lastSpokenRef = useRef(-1)
 
   const speak = (text) => {
@@ -1187,6 +1213,7 @@ function Home() {
       <CampusMap
         rooms={rooms}
         highlightedRoom={selectedRoom}
+        bookingAllowed={bookingAllowed}
         navigationPath={navigationPath}
         currentNodeId={currentNode}
         settingPosition={settingPosition}

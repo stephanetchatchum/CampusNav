@@ -519,6 +519,7 @@ function CampusMap({
     currentNodeId = null,
     settingPosition = false,
     onRoomClick,
+    bookingAllowed,
     onNavigateToRoom,
     onBookRoom,
     onNodeClick,
@@ -584,6 +585,22 @@ function CampusMap({
         setActiveFloor(currentBuilding.floor)
         }
     }, [currentBuilding])
+
+    // Jumping to a searched room. The room may be in another building or
+    // on another floor, so the map has to follow it there, otherwise
+    // picking a search result silently appears to do nothing.
+    useEffect(() => {
+        if (!highlightedRoom) return
+        const target = ROOM_DATA.find(r => r.code === highlightedRoom)
+        if (!target) return
+        if (activeBuilding !== target.building) {
+            setActiveBuilding(target.building)
+            setZoom(1)
+            setPan({ x: 0, y: 0 })
+        }
+        if (view !== VIEW.BUILDING) setView(VIEW.BUILDING)
+        if (activeFloor !== target.floor) setActiveFloor(target.floor)
+    }, [highlightedRoom])
 
     useEffect(() => {
         if (!currentNodeId || !navigationPath.length || view !== VIEW.BUILDING) return
@@ -1420,7 +1437,7 @@ function CampusMap({
                     style={{ padding: '6px 10px', borderRadius: 7, border: 'none', cursor: 'pointer',
                              background: '#1d4ed8', color: 'white', fontWeight: 600, fontSize: 12 }}
                   >Navigate to this room</button>
-                  {!panelBlocked && panelAvail && (
+                  {bookingAllowed && !panelBlocked && panelAvail && (
                     <button
                       onClick={(e) => { e.stopPropagation(); onBookRoom && onBookRoom(panelRoom.code) }}
                       style={{ padding: '6px 10px', borderRadius: 7, border: 'none', cursor: 'pointer',
