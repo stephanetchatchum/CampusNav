@@ -537,6 +537,7 @@ function CampusMap({
     const [floorDragging, setFloorDragging] = useState(false)
     const floorZoomRef = useRef(1)
     const floorPanRef = useRef({ x: 0, y: 0 })
+    const touchRef = useRef(null)
     const floorDragStart = useRef({ x: 0, y: 0 })
     const campusSvgRef = useRef(null)
 
@@ -733,6 +734,69 @@ function CampusMap({
         setFloorPan(np)
     }
     const handleFloorUp = () => setFloorDragging(false)
+
+    // Touch gestures. Mouse events never fire on a phone, so without
+    // these the map is completely static there. One finger pans (only
+    // once zoomed in, so the page can still scroll at 1x), two fingers
+    // pinch to zoom around their midpoint.
+    const touchDist = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY)
+    const touchMid = (t, r) => ({
+        x: ((t[0].clientX + t[1].clientX) / 2 - r.left) / r.width * 820,
+        y: ((t[0].clientY + t[1].clientY) / 2 - r.top) / r.height * 1000,
+    })
+    const handleFloorTouchStart = (e) => {
+        const el = floorSvgRef.current
+        if (!el) return
+        const t = Array.from(e.touches)
+        const r = el.getBoundingClientRect()
+        if (t.length === 2) {
+            touchRef.current = {
+                mode: 'pinch', d0: touchDist(t), z0: floorZoomRef.current,
+                p0: { ...floorPanRef.current }, mid: touchMid(t, r),
+            }
+        } else if (t.length === 1 && floorZoomRef.current > 1) {
+            touchRef.current = {
+                mode: 'pan', x0: t[0].clientX, y0: t[0].clientY,
+                p0: { ...floorPanRef.current }, moved: false,
+            }
+        } else {
+            touchRef.current = null
+        }
+    }
+    const handleFloorTouchMove = (e) => {
+        const g = touchRef.current
+        const el = floorSvgRef.current
+        if (!g || !el) return
+        const t = Array.from(e.touches)
+        const r = el.getBoundingClientRect()
+        if (g.mode === 'pinch' && t.length === 2) {
+            e.preventDefault()
+            const nz = Math.min(Math.max(g.z0 * (touchDist(t) / g.d0), 1), 6)
+            const np = clampPan({
+                x: g.mid.x - (g.mid.x - g.p0.x) * (nz / g.z0),
+                y: g.mid.y - (g.mid.y - g.p0.y) * (nz / g.z0),
+            }, nz)
+            floorZoomRef.current = nz
+            floorPanRef.current = np
+            setFloorZoom(nz)
+            setFloorPan(np)
+        } else if (g.mode === 'pan' && t.length === 1) {
+            e.preventDefault()
+            const dx = (t[0].clientX - g.x0) / r.width * 820
+            const dy = (t[0].clientY - g.y0) / r.height * 1000
+            if (Math.abs(dx) > 2 || Math.abs(dy) > 2) g.moved = true
+            const np = clampPan({ x: g.p0.x + dx, y: g.p0.y + dy }, floorZoomRef.current)
+            floorPanRef.current = np
+            setFloorPan(np)
+        }
+    }
+    const handleFloorTouchEnd = () => {
+        const g = touchRef.current
+        // a pan that actually moved must not also register as a tap
+        if (g && g.mode === 'pan' && g.moved) setFloorDragging(true)
+        touchRef.current = null
+        setTimeout(() => setFloorDragging(false), 0)
+    }
 
     const handleFloorClick = (e) => {
         // a pan gesture ends in a click; ignore it so dragging the map
@@ -960,6 +1024,10 @@ function CampusMap({
             onMouseMove={handleFloorMove}
             onMouseUp={handleFloorUp}
             onMouseLeave={handleFloorUp}
+            onTouchStart={handleFloorTouchStart}
+            onTouchMove={handleFloorTouchMove}
+            onTouchEnd={handleFloorTouchEnd}
+            onTouchCancel={handleFloorTouchEnd}
             viewBox="0 0 820 1000"
             style={{
                 width: '100%', height: 'auto',
@@ -967,7 +1035,7 @@ function CampusMap({
                 borderLeft: `1px solid ${colour}`,
                 borderRight: `1px solid ${colour}`,
                 cursor: floorDragging ? 'grabbing' : (floorZoom > 1 ? 'grab' : (onMapClick ? 'crosshair' : 'default')),
-                touchAction: 'none',
+                touchAction: floorZoom > 1 ? 'none' : 'pan-y',
                 display: 'block',
             }}
             >
