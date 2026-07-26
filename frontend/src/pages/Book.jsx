@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { NOT_STUDENT_BOOKABLE } from "../data/nonBookableRooms"
+import { BASE_URL } from "../api"
 
 function Book() {
   const [rooms, setRooms] = useState([])
@@ -9,7 +10,7 @@ function Book() {
 
   useEffect(() => {
     const fetchRooms = async () => {
-      const response = await fetch("http://127.0.0.1:8000/api/rooms/")
+      const response = await fetch(`${BASE_URL}/rooms/`)
       const data = await response.json()
       setRooms(data.filter(r => !NOT_STUDENT_BOOKABLE.has(r.name)))
       setLoading(false)

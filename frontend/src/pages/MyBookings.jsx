@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { authFetch } from "../api"
+import { authFetch, BASE_URL } from "../api"
 
 function MyBookings() {
   const [bookings, setBookings] = useState([])
@@ -9,7 +9,7 @@ function MyBookings() {
 
   useEffect(() => {
     const fetchBookings = async () => {
-      const response = await authFetch("http://127.0.0.1:8000/api/bookings/mine/")
+      const response = await authFetch(`${BASE_URL}/bookings/mine/`)
       if (response.ok) {
         const data = await response.json()
         setBookings(data)
@@ -31,7 +31,7 @@ function MyBookings() {
 
   const handleCancel = async (id) => {
     setCancellingId(id)
-    const response = await authFetch(`http://127.0.0.1:8000/api/bookings/${id}/status/`, {
+    const response = await authFetch(`${BASE_URL}/bookings/${id}/status/`, {
       method: "PATCH",
       body: JSON.stringify({ status: "cancelled" })
     })
