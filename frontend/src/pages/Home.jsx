@@ -24,7 +24,7 @@ const MIN_STEP_MS = 600
 // platform doesn't expose, so it isn't attempted here.
 const MOTION_CHECK_INTERVAL_MS = 200
 const MOTION_WINDOW_MS = 2000
-const MOTION_WALKING_STD_DEV_THRESHOLD = 0.3
+const MOTION_WALKING_STD_DEV_THRESHOLD = 0.6
 const MOTION_MIN_SAMPLES = 5
 
 // Formats remaining distance/time for the navigation status bar, matching
@@ -272,7 +272,12 @@ function Home() {
     if (!motionPermissionGranted) return
 
     const handleMotion = (event) => {
-      const acc = event.acceleration
+      // accelerationIncludingGravity, deliberately. With gravity removed,
+      // walking at a steady pace is nearly zero acceleration, so straight
+      // lines never register. Keeping gravity gives a ~9.8 baseline that
+      // dips and spikes with each footfall, which is what step detection
+      // actually keys on. It's also more reliably populated on Android.
+      const acc = event.accelerationIncludingGravity || event.acceleration
       if (!acc || acc.x === null || acc.x === undefined) return
       const magnitude = Math.sqrt((acc.x || 0) ** 2 + (acc.y || 0) ** 2 + (acc.z || 0) ** 2)
       const now = Date.now()
