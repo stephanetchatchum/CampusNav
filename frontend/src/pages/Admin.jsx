@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { authFetch } from "../api"
+import { authFetch, BASE_URL } from "../api"
 
 function Admin() {
   const [bookings, setBookings] = useState([])
@@ -10,7 +10,7 @@ function Admin() {
   // Fetch all bookings when the page loads
   useEffect(() => {
     const fetchBookings = async () => {
-      const response = await authFetch("http://127.0.0.1:8000/api/bookings/all/")
+      const response = await authFetch(`${BASE_URL}/bookings/all/`)
       if (response.ok) {
         const data = await response.json()
         setBookings(data)
@@ -25,7 +25,7 @@ function Admin() {
   // Approve or cancel a booking and update the list immediately
   const updateStatus = async (id, newStatus) => {
     setActionError("")
-    const response = await authFetch(`http://127.0.0.1:8000/api/bookings/${id}/status/`, {
+    const response = await authFetch(`${BASE_URL}/bookings/${id}/status/`, {
       method: "PATCH",
       body: JSON.stringify({ status: newStatus })
     })

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { authFetch } from "../api"
+import { authFetch, BASE_URL } from "../api"
 import { NOT_STUDENT_BOOKABLE } from "../data/nonBookableRooms"
 
 function pad(n) {
@@ -78,7 +78,7 @@ function BookRoom() {
 
   useEffect(() => {
     const fetchRoom = async () => {
-      const response = await fetch("http://127.0.0.1:8000/api/rooms/")
+      const response = await fetch(`${BASE_URL}/rooms/`)
       const data = await response.json()
       setRoom(data.find(r => r.code === code) || null)
       setLoading(false)
@@ -90,7 +90,7 @@ function BookRoom() {
     setLoadingSlots(true)
     setErrorMsg("")
     const response = await authFetch(
-      `http://127.0.0.1:8000/api/bookings/room/${code}/?date=${date}`
+      `${BASE_URL}/bookings/room/${code}/?date=${date}`
     )
     if (response.ok) {
       const data = await response.json()
@@ -140,7 +140,7 @@ function BookRoom() {
 
     setSubmitting(true)
 
-    const response = await authFetch("http://127.0.0.1:8000/api/bookings/", {
+    const response = await authFetch(`${BASE_URL}/bookings/`, {
       method: "POST",
       body: JSON.stringify({ room: room.id, date, start_time: startTime, end_time: endTime })
     })
@@ -160,7 +160,7 @@ function BookRoom() {
 
   const handleCancelSlot = async (bookingId) => {
     setCancellingId(bookingId)
-    const response = await authFetch(`http://127.0.0.1:8000/api/bookings/${bookingId}/status/`, {
+    const response = await authFetch(`${BASE_URL}/bookings/${bookingId}/status/`, {
       method: "PATCH",
       body: JSON.stringify({ status: "cancelled" })
     })
