@@ -65,13 +65,6 @@ const PHRASES = {
 // an unrecognised domain reads as guest rather than being assumed staff.
 const BOOKING_DOMAINS = ['@alustudent.com', '@alueducation.com']
 
-function canBook() {
-  if (!isLoggedIn()) return false
-  if ((getUserRole() || '').toLowerCase() === 'guest') return false
-  const email = (getUserEmail() || '').toLowerCase()
-  return BOOKING_DOMAINS.some(d => email.endsWith(d))
-}
-
 function canBook(user) {
   const email = user && (user.email || user.username)
   if (!email || typeof email !== 'string') return false
