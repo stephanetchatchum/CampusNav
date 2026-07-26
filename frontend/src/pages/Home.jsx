@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CampusMap from '../components/CampusMap'
 import { useGeolocation } from '../hooks/useGeolocation'
+import { NOT_STUDENT_BOOKABLE } from '../data/nonBookableRooms'
 
 const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
 
@@ -588,6 +589,9 @@ function Home() {
   }
 
   const selectedRoomData = rooms.find(r => r.code === selectedRoom)
+  const notBookable = selectedRoomData
+    ? NOT_STUDENT_BOOKABLE.has(selectedRoomData.name)
+    : false
   const nextStepNode = isNavigating ? navigationPath[currentStepIndex + 1] : null
   const remainingMeters = isNavigating
     ? navigationPath.slice(currentStepIndex).reduce((sum, step) => sum + (step.distance_to_next || 0), 0)
@@ -960,10 +964,10 @@ function Home() {
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             <span style={{
               padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '500',
-              background: selectedRoomData.is_available ? '#dcfce7' : '#fee2e2',
-              color: selectedRoomData.is_available ? '#16a34a' : '#dc2626'
+              background: notBookable ? '#e2e8f0' : (selectedRoomData.is_available ? '#dcfce7' : '#fee2e2'),
+              color: notBookable ? '#475569' : (selectedRoomData.is_available ? '#16a34a' : '#dc2626')
             }}>
-              {selectedRoomData.is_available ? 'Available now' : 'Currently booked'}
+              {notBookable ? 'Not bookable' : (selectedRoomData.is_available ? 'Available now' : 'Currently booked')}
             </span>
             {currentNode && (
               <button
@@ -977,9 +981,9 @@ function Home() {
                 Navigate here
               </button>
             )}
-            {selectedRoomData.is_available && (
+            {!notBookable && selectedRoomData.is_available && (
               <button
-                onClick={() => navigate(`/book?room=${selectedRoomData.code}`)}
+                onClick={() => navigate(`/book/${selectedRoomData.code}`)}
                 style={{
                   padding: '4px 12px', borderRadius: '20px', fontSize: '12px',
                   fontWeight: '500', border: 'none', cursor: 'pointer',
