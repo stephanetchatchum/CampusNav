@@ -45,6 +45,8 @@ _allowed_hosts_env = os.environ.get('ALLOWED_HOSTS')
 ALLOWED_HOSTS = _allowed_hosts_env.split(',') if _allowed_hosts_env else ['*']
 
 
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
+
 # Application definition
 
 INSTALLED_APPS = [
