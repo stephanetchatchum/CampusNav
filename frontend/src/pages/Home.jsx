@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import CampusMap from '../components/CampusMap'
 import { useGeolocation } from '../hooks/useGeolocation'
+import { NOT_STUDENT_BOOKABLE } from '../data/nonBookableRooms'
 
 const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
 
@@ -127,6 +128,11 @@ function Home() {
   // in the UI by whether isNavigating was already true when the request
   // started (captured per-call below, not read from state mid-flight).
   const [isCalculatingRoute, setIsCalculatingRoute] = useState(false)
+  // Walking distance to the currently selected room, shown in its detail
+  // card before committing to navigate -- null while nothing's selected
+  // or no position is set yet, so the UI can tell "no distance available"
+  // apart from "distance is exactly 0".
+  const [roomDistance, setRoomDistance] = useState(null)
   const { position, currentBuilding, error: gpsError } = useGeolocation()
 
   useEffect(() => {
@@ -299,11 +305,46 @@ function Home() {
       )
     : []
 
+  // Selecting a room now only shows its info (and fetches a distance
+  // preview) rather than immediately starting navigation -- navigation
+  // only begins when the person explicitly taps "Navigate here" below.
+  // This matters for anyone who just wants to check a room's status or
+  // book it without committing to a route right away.
   const handleRoomSelect = async (roomCode) => {
     setSelectedRoom(roomCode)
     setSearchQuery('')
     setError(null)
+    setRoomDistance(null)
 
+    if (!currentNode) {
+      return
+    }
+
+    // Fetches distance for the preview card only -- does not touch
+    // navigationPath or isNavigating. A separate, deliberately duplicate
+    // call happens in handleNavigateToRoom when actually navigating,
+    // rather than caching this response, so that's always correct even
+    // if currentNode changes between selecting and navigating.
+    try {
+      const res = await fetch(`${API}/navigate/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ from_node: currentNode, to_room: roomCode })
+      })
+      const data = await res.json()
+      if (!data.error) {
+        setRoomDistance(data.total_distance)
+      }
+    } catch (err) {
+      // Silent here -- this is just a preview number, not worth
+      // surfacing an error for; the real navigate attempt (below) still
+      // shows its own error normally if something's actually wrong.
+      console.error('Failed to fetch room distance preview:', err)
+    }
+  }
+
+  const handleNavigateToRoom = async (roomCode) => {
+    setError(null)
     if (!currentNode) {
       return
     }
@@ -548,6 +589,9 @@ function Home() {
   }
 
   const selectedRoomData = rooms.find(r => r.code === selectedRoom)
+  const notBookable = selectedRoomData
+    ? NOT_STUDENT_BOOKABLE.has(selectedRoomData.name)
+    : false
   const nextStepNode = isNavigating ? navigationPath[currentStepIndex + 1] : null
   const remainingMeters = isNavigating
     ? navigationPath.slice(currentStepIndex).reduce((sum, step) => sum + (step.distance_to_next || 0), 0)
@@ -913,18 +957,21 @@ function Home() {
           </h2>
           <p style={{ color: '#64748b', fontSize: '13px', marginBottom: '10px' }}>
             <span style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{selectedRoomData.code}</span> · Floor {selectedRoomData.floor} · Capacity {selectedRoomData.capacity}
+            {roomDistance !== null && (
+              <> · {formatDistance(roomDistance)} ({formatDuration(roomDistance / WALKING_SPEED_MPS)} walk)</>
+            )}
           </p>
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             <span style={{
               padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: '500',
-              background: selectedRoomData.is_available ? '#dcfce7' : '#fee2e2',
-              color: selectedRoomData.is_available ? '#16a34a' : '#dc2626'
+              background: notBookable ? '#e2e8f0' : (selectedRoomData.is_available ? '#dcfce7' : '#fee2e2'),
+              color: notBookable ? '#475569' : (selectedRoomData.is_available ? '#16a34a' : '#dc2626')
             }}>
-              {selectedRoomData.is_available ? 'Available now' : 'Currently booked'}
+              {notBookable ? 'Not bookable' : (selectedRoomData.is_available ? 'Available now' : 'Currently booked')}
             </span>
             {currentNode && (
               <button
-                onClick={() => handleRoomSelect(selectedRoomData.code)}
+                onClick={() => handleNavigateToRoom(selectedRoomData.code)}
                 style={{
                   padding: '4px 12px', borderRadius: '20px', fontSize: '12px',
                   fontWeight: '500', border: 'none', cursor: 'pointer',
@@ -934,9 +981,9 @@ function Home() {
                 Navigate here
               </button>
             )}
-            {selectedRoomData.is_available && (
+            {!notBookable && selectedRoomData.is_available && (
               <button
-                onClick={() => navigate(`/book?room=${selectedRoomData.code}`)}
+                onClick={() => navigate(`/book/${selectedRoomData.code}`)}
                 style={{
                   padding: '4px 12px', borderRadius: '20px', fontSize: '12px',
                   fontWeight: '500', border: 'none', cursor: 'pointer',
@@ -947,6 +994,11 @@ function Home() {
               </button>
             )}
           </div>
+          {!currentNode && (
+            <p style={{ fontSize: '11px', color: '#94a3b8', marginTop: '8px' }}>
+              Set your position to see walking distance and get directions here.
+            </p>
+          )}
         </div>
       )}
 

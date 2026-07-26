@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useGeolocation } from "../hooks/useGeolocation";
 import nodesData from '../../../campus-data/nodes.json'
+import { NOT_STUDENT_BOOKABLE } from '../data/nonBookableRooms'
 
 const VIEW = { CAMPUS: 'campus', BUILDING: 'building' }
 
@@ -331,7 +332,7 @@ function doorPaths(d) {
     }
 }
 
-const NON_BOOKABLE = new Set([
+const STRUCTURAL_NON_BOOKABLE = new Set([
     'SC-F0-WR', 'SC-F0-PR', 'SC-F0-EL', 'SC-F0-ER',
     'SC-F0-PD-1', 'SC-F0-PD-2', 'SC-F0-PD-3', 'SC-F0-PD-4',
     'SC-F2-PD-1', 'SC-F2-EL', 'SC-F2-WR',
@@ -339,6 +340,14 @@ const NON_BOOKABLE = new Set([
     'LC-F0-WR', 'LC-F1-WR', 'LC-F2-WR',
     'SC-F1-WR', 'SC-F1-EL', 'SC-F1-PD-1', 'SC-F1-PD-2', 'SC-F1-PD-3', 'SC-F1-MR',
 ])
+
+// Two different reasons a room can't be booked, so two checks:
+// structural ones (washrooms, lift shafts) are identified by code and
+// live above; policy ones come from the shared data file and are keyed
+// by room NAME, which is why this matches on label rather than code.
+function isNonBookableRoom(room) {
+    return STRUCTURAL_NON_BOOKABLE.has(room.code) || NOT_STUDENT_BOOKABLE.has(room.label)
+}
 
 const ROOM_DATA = [
     // ── SOCIAL COMMONS ── Floor 0
@@ -789,7 +798,7 @@ function CampusMap({
             <rect x={0} y={0} width={820} height={1000} fill="url(#blueprintGrid)" />
 
             {floorRooms.map(room => {
-                const isNonBookable = NON_BOOKABLE.has(room.code)
+                const isNonBookable = isNonBookableRoom(room)
                 const isAvailable = isNonBookable ? null : getAvailability(room.code)
                 const isHighlighted = highlightedRoom === room.code
                 const fillColour = isNonBookable
