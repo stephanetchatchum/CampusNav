@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -34,7 +35,7 @@ def register(request):
     user.save()
 
     verification_token = EmailVerificationToken.generate_for_user(user)
-    verify_link = f"http://localhost:5173/verify-email?token={verification_token.token}"
+    verify_link = f"{settings.FRONTEND_URL}/verify-email?token={verification_token.token}"
 
     try:
         send_verification_email(user.email, verify_link)
@@ -128,7 +129,7 @@ def forgot_password(request):
         return Response(generic_response)
 
     reset_token = PasswordResetToken.generate_for_user(user)
-    reset_link = f"http://localhost:5173/reset-password?token={reset_token.token}"
+    reset_link = f"{settings.FRONTEND_URL}/reset-password?token={reset_token.token}"
 
     try:
         send_password_reset_email(user.email, reset_link)
@@ -204,7 +205,7 @@ def resend_verification(request):
         return Response(generic_response)
 
     verification_token = EmailVerificationToken.generate_for_user(user)
-    verify_link = f"http://localhost:5173/verify-email?token={verification_token.token}"
+    verify_link = f"{settings.FRONTEND_URL}/verify-email?token={verification_token.token}"
 
     try:
         send_verification_email(user.email, verify_link)
