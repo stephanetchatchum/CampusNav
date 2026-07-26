@@ -121,6 +121,10 @@ function Home() {
   // only the actual step advancing (further below) does.
   const [motionPermissionGranted, setMotionPermissionGranted] = useState(false)
   const [motionSupported, setMotionSupported] = useState(true)
+  // Temporary diagnostic. Motion detection is invisible by design (it only
+  // pauses a countdown), so there's no way to tell a working sensor from a
+  // dead one without surfacing the raw numbers.
+  const [motionDebug, setMotionDebug] = useState(null)
   const isMovingRef = useRef(true)
   const motionSamplesRef = useRef([])
   // True while any navigate() request is in flight -- covers both "finding
@@ -290,6 +294,11 @@ function Home() {
       const mean = mags.reduce((a, b) => a + b, 0) / mags.length
       const variance = mags.reduce((a, b) => a + (b - mean) ** 2, 0) / mags.length
       isMovingRef.current = Math.sqrt(variance) > MOTION_WALKING_STD_DEV_THRESHOLD
+      setMotionDebug({
+        stdDev: Math.sqrt(variance),
+        samples: samples.length,
+        moving: Math.sqrt(variance) > MOTION_WALKING_STD_DEV_THRESHOLD,
+      })
     }, MOTION_CHECK_INTERVAL_MS)
 
     return () => {
@@ -727,7 +736,20 @@ function Home() {
           </button>
         )}
       </div>
-
+      
+      {motionPermissionGranted && motionDebug && (
+        <div style={{
+          padding: '8px 12px', borderRadius: '8px', marginBottom: '10px',
+          background: motionDebug.moving ? '#dcfce7' : '#f1f5f9',
+          border: `1px solid ${motionDebug.moving ? '#86efac' : '#e2e8f0'}`,
+          fontSize: '12px', fontFamily: "'IBM Plex Mono', monospace",
+          color: motionDebug.moving ? '#15803d' : '#475569',
+        }}>
+          {motionDebug.moving ? 'MOVING' : 'STILL'} · dev {motionDebug.stdDev.toFixed(2)}
+          {' '}· thr {MOTION_WALKING_STD_DEV_THRESHOLD} · n {motionDebug.samples}
+        </div>
+      )}
+      
       {settingPosition && (
         <div style={{
           padding: '10px 14px', borderRadius: '8px', marginBottom: '12px',
