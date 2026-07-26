@@ -24,7 +24,7 @@ const MIN_STEP_MS = 600
 // platform doesn't expose, so it isn't attempted here.
 const MOTION_CHECK_INTERVAL_MS = 200
 const MOTION_WINDOW_MS = 2000
-const MOTION_WALKING_STD_DEV_THRESHOLD = 1.0
+const MOTION_WALKING_STD_DEV_THRESHOLD = 0.3
 const MOTION_MIN_SAMPLES = 5
 
 // Formats remaining distance/time for the navigation status bar, matching
@@ -294,11 +294,13 @@ function Home() {
       const mean = mags.reduce((a, b) => a + b, 0) / mags.length
       const variance = mags.reduce((a, b) => a + (b - mean) ** 2, 0) / mags.length
       isMovingRef.current = Math.sqrt(variance) > MOTION_WALKING_STD_DEV_THRESHOLD
-      setMotionDebug({
-        stdDev: Math.sqrt(variance),
+      const sd = Math.sqrt(variance)
+      setMotionDebug(prev => ({
+        stdDev: sd,
         samples: samples.length,
-        moving: Math.sqrt(variance) > MOTION_WALKING_STD_DEV_THRESHOLD,
-      })
+        moving: sd > MOTION_WALKING_STD_DEV_THRESHOLD,
+        peak: Math.max(sd, (prev && prev.peak) || 0),
+      }))
     }, MOTION_CHECK_INTERVAL_MS)
 
     return () => {
@@ -747,9 +749,10 @@ function Home() {
         }}>
           {motionDebug.moving ? 'MOVING' : 'STILL'} · dev {motionDebug.stdDev.toFixed(2)}
           {' '}· thr {MOTION_WALKING_STD_DEV_THRESHOLD} · n {motionDebug.samples}
+          {' '}· peak {motionDebug.peak.toFixed(2)}
         </div>
       )}
-      
+
       {settingPosition && (
         <div style={{
           padding: '10px 14px', borderRadius: '8px', marginBottom: '12px',
