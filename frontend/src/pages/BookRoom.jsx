@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { authFetch, BASE_URL } from "../api"
+import { authFetch, BASE_URL, getUserTier } from "../api"
 import { NOT_STUDENT_BOOKABLE } from "../data/nonBookableRooms"
 
 function pad(n) {
@@ -178,6 +178,15 @@ function BookRoom() {
     return (
       <div className="p-8">
         <p className="text-red-500">Room not found.</p>
+        <button onClick={() => navigate("/book")} className="text-[#003087] font-semibold hover:underline mt-2">← Back to all rooms</button>
+      </div>
+    )
+  }
+
+  if (getUserTier() === "guest") {
+    return (
+      <div className="p-8">
+        <p className="text-red-500">Guest accounts can't book rooms. Please sign in with your ALU email.</p>
         <button onClick={() => navigate("/book")} className="text-[#003087] font-semibold hover:underline mt-2">← Back to all rooms</button>
       </div>
     )
