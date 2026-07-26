@@ -945,9 +945,11 @@ function Home() {
         onRoomClick={handleRoomSelect}
         onNodeClick={handleNodeClick}
         onMapClick={handleMapClick}
+        onNavigateToRoom={handleNavigateToRoom}
+        onBookRoom={(code) => navigate(`/book/${code}`)}
       />
 
-      {selectedRoom && selectedRoomData && !isNavigating && (
+      {false && selectedRoom && selectedRoomData && !isNavigating && (
         <div style={{
           marginTop: '12px', padding: '16px', background: 'white',
           borderRadius: '8px', border: '1px solid #e2e8f0'

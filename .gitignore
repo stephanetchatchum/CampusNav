@@ -20,3 +20,7 @@ dist/
 # OS
 .DS_Store
 Thumbs.db
+
+# other
+ALU.sh3d
+map
