@@ -902,17 +902,17 @@
   {
     "from": "SC-F0-ST-62",
     "to": "SC-F1-ST-29",
-    "distance": 126.9
+    "distance": 207
   },
   {
     "from": "SC-F0-ST-49",
     "to": "SC-F1-ST-28",
-    "distance": 126.5
+    "distance": 207
   },
   {
     "from": "SC-F0-EL-48",
     "to": "SC-F1-EL-26",
-    "distance": 11.6
+    "distance": 190
   },
   {
     "from": "SC-F0-ENT-41",
@@ -1107,17 +1107,17 @@
   {
     "from": "SC-F2-EL-78",
     "to": "SC-F0-EL-48",
-    "distance": 12
+    "distance": 190
   },
   {
     "from": "SC-F2-EL-78",
     "to": "SC-F1-EL-26",
-    "distance": 6.7
+    "distance": 190
   },
   {
     "from": "SC-F2-ST-79",
     "to": "SC-F1-ST-27",
-    "distance": 130.9
+    "distance": 211
   },
   {
     "from": "SC-F2-J-97",
