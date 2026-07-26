@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import CampusMap from '../components/CampusMap'
+import CampusMap, { FLOOR_SYMBOLS, ROOM_DATA } from '../components/CampusMap'
 import { useGeolocation } from '../hooks/useGeolocation'
 import { NOT_STUDENT_BOOKABLE } from '../data/nonBookableRooms'
 
@@ -14,6 +14,114 @@ const WALKING_SPEED_MPS = 1.2
 // a door right at a junction) still gets a moment on screen rather than
 // flashing past instantly.
 const MIN_STEP_MS = 600
+
+// Spoken guidance. Web Speech works on iOS Safari and Android Chrome.
+const VOICE_LANGS = { en: 'en-GB', fr: 'fr-FR' }
+
+const PHRASES = {
+  en: {
+    start: (dest) => `Starting navigation to ${dest}.`,
+    step: (what, dist) => `In ${dist} metres, ${what}.`,
+    stepNear: (what) => `${what}.`,
+    stairsUp: 'Take the stairs up',
+    stairsDown: 'Take the stairs down',
+    liftUp: 'Take the lift up',
+    liftDown: 'Take the lift down',
+    continueTo: (what) => `Continue to ${what}`,
+    arrived: (dest) => `You have arrived at ${dest}.`,
+    floor: (n) => `You are now on floor ${n}.`,
+    turnLeft: 'turn left',
+    turnRight: 'turn right',
+    sharpLeft: 'turn sharply left',
+    sharpRight: 'turn sharply right',
+    straight: 'carry straight on',
+    around: 'turn around',
+    stepLandmark: (dist, mark, turn) => `In ${dist} metres, when you reach ${mark}, ${turn}.`,
+  },
+  fr: {
+    start: (dest) => `Navigation vers ${dest}.`,
+    step: (what, dist) => `Dans ${dist} mètres, ${what}.`,
+    stepNear: (what) => `${what}.`,
+    stairsUp: 'Prenez les escaliers pour monter',
+    stairsDown: 'Prenez les escaliers pour descendre',
+    liftUp: "Prenez l'ascenseur pour monter",
+    liftDown: "Prenez l'ascenseur pour descendre",
+    continueTo: (what) => `Continuez vers ${what}`,
+    arrived: (dest) => `Vous êtes arrivé à ${dest}.`,
+    floor: (n) => `Vous êtes maintenant à l'étage ${n}.`,
+    turnLeft: 'tournez à gauche',
+    turnRight: 'tournez à droite',
+    sharpLeft: 'tournez fortement à gauche',
+    sharpRight: 'tournez fortement à droite',
+    straight: 'continuez tout droit',
+    around: 'faites demi-tour',
+    stepLandmark: (dist, mark, turn) => `Dans ${dist} mètres, en arrivant à ${mark}, ${turn}.`,
+  },
+}
+
+// Turn direction from three consecutive path points. SVG's y axis grows
+// downward, so a positive cross product is clockwise on screen, which is
+// a RIGHT turn for the person actually walking it.
+function turnFrom(prev, here, next) {
+  if (!prev || !here || !next) return null
+  const v1x = here.x - prev.x, v1y = here.y - prev.y
+  const v2x = next.x - here.x, v2y = next.y - here.y
+  if ((!v1x && !v1y) || (!v2x && !v2y)) return null
+  const cross = v1x * v2y - v1y * v2x
+  const dot = v1x * v2x + v1y * v2y
+  const deg = Math.atan2(cross, dot) * 180 / Math.PI
+  const a = Math.abs(deg)
+  if (a < 25) return 'straight'
+  if (a > 150) return 'around'
+  if (a > 110) return deg > 0 ? 'sharpRight' : 'sharpLeft'
+  return deg > 0 ? 'right' : 'left'
+}
+
+// Fixtures worth naming out loud. Toilets and sinks are left out on
+// purpose: they sit inside washrooms, so they are not visible landmarks
+// and would be a strange thing to hear.
+const LANDMARK_NAMES = {
+  en: { elevator: 'the lift', vending_machine: 'the vending machine' },
+  fr: { elevator: "l'ascenseur", vending_machine: 'le distributeur' },
+}
+// Roughly 16 canvas units per real metre, so 90 units is about 5 metres:
+// close enough that the thing is genuinely in view.
+const LANDMARK_RADIUS = 90
+
+function distToPolygon(x, y, pts) {
+  let min = Infinity
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const ax = pts[j][0], ay = pts[j][1], bx = pts[i][0], by = pts[i][1]
+    const dx = bx - ax, dy = by - ay
+    const len = dx * dx + dy * dy || 1
+    let t = ((x - ax) * dx + (y - ay) * dy) / len
+    t = Math.max(0, Math.min(1, t))
+    min = Math.min(min, Math.hypot(x - (ax + t * dx), y - (ay + t * dy)))
+  }
+  return min
+}
+
+// Nearest thing a person could actually see from a step. Named rooms beat
+// fixtures, since "Vendors" is a far stronger cue than "the lift".
+function nearestLandmark(step, building, lang) {
+  if (!step) return null
+  const key = `${building}-${step.floor}`
+  let best = null, bestD = LANDMARK_RADIUS
+  ROOM_DATA.forEach(r => {
+    if (r.building !== building || r.floor !== step.floor) return
+    if (!Array.isArray(r.points) || r.points.length < 3) return
+    const d = distToPolygon(step.x, step.y, r.points)
+    if (d < bestD) { bestD = d; best = r.label }
+  })
+  const syms = (FLOOR_SYMBOLS && FLOOR_SYMBOLS[key]) || []
+  syms.forEach(sy => {
+    const name = LANDMARK_NAMES[lang][sy.type]
+    if (!name) return
+    const d = Math.hypot(step.x - sy.x, step.y - sy.y)
+    if (d < bestD) { bestD = d; best = name }
+  })
+  return best
+}
 
 // Motion detection: how often the countdown re-checks whether the phone
 // is currently showing walking-like motion, how much recent accelerometer
@@ -121,6 +229,34 @@ function Home() {
   // only the actual step advancing (further below) does.
   const [motionPermissionGranted, setMotionPermissionGranted] = useState(false)
   const [motionSupported, setMotionSupported] = useState(true)
+
+  const [voiceOn, setVoiceOn] = useState(false)
+  const [voiceLang, setVoiceLang] = useState('en')
+  const lastSpokenRef = useRef(-1)
+
+  const speak = (text) => {
+    if (!voiceOn || !text || !window.speechSynthesis) return
+    const u = new SpeechSynthesisUtterance(text)
+    u.lang = VOICE_LANGS[voiceLang]
+    u.rate = 0.95
+    window.speechSynthesis.cancel()
+    window.speechSynthesis.speak(u)
+  }
+
+  const enableVoice = () => {
+    if (voiceOn) {
+      window.speechSynthesis && window.speechSynthesis.cancel()
+      setVoiceOn(false)
+      return
+    }
+    if (!window.speechSynthesis) return
+    // iOS stays silent unless the engine is first triggered from inside a
+    // real tap, so fire a blank utterance here rather than just setting state
+    const u = new SpeechSynthesisUtterance(' ')
+    u.lang = VOICE_LANGS[voiceLang]
+    window.speechSynthesis.speak(u)
+    setVoiceOn(true)
+  }
   // Temporary diagnostic. Motion detection is invisible by design (it only
   // pauses a countdown), so there's no way to tell a working sensor from a
   // dead one without surfacing the raw numbers.
@@ -593,6 +729,58 @@ function Home() {
     return () => clearInterval(tick)
   }, [isNavigating, currentStepIndex, navigationPath, hasArrived, motionPermissionGranted])
 
+  // Speaks each step as it becomes current. Keyed on the step index so a
+  // re-render can't repeat itself, and it reads the step AHEAD, since being
+  // told what you're already standing on is useless.
+  useEffect(() => {
+    if (!voiceOn || !isNavigating) return
+    if (lastSpokenRef.current === currentStepIndex) return
+    lastSpokenRef.current = currentStepIndex
+
+    const activeBuildingName = navigationPath[0] && navigationPath[0].building ? navigationPath[0].building : 'Social Commons'
+    const P = PHRASES[voiceLang]
+    const destName = selectedRoomData ? selectedRoomData.name : 'your destination'
+
+    if (hasArrived) { speak(P.arrived(destName)); return }
+
+    const here = navigationPath[currentStepIndex]
+    const next = navigationPath[currentStepIndex + 1]
+    if (!here || !next) return
+
+    const prev = navigationPath[currentStepIndex - 1]
+    const turn = turnFrom(prev, here, next)
+    const buildingName = (navigationPath[0] && navigationPath[0].building) || 'Social Commons'
+
+    let what
+    if (next.type === 'staircase') {
+      what = next.floor > here.floor ? P.stairsUp : P.stairsDown
+    } else if (next.type === 'elevator') {
+      what = next.floor > here.floor ? P.liftUp : P.liftDown
+    } else if (turn === 'left') { what = P.turnLeft }
+    else if (turn === 'right') { what = P.turnRight }
+    else if (turn === 'sharpLeft') { what = P.sharpLeft }
+    else if (turn === 'sharpRight') { what = P.sharpRight }
+    else if (turn === 'around') { what = P.around }
+    else if (turn === 'straight') { what = P.straight }
+    else { what = P.continueTo(describeStep(next)) }
+
+    const d = Math.round(here.distance_to_next || 0)
+    const mark = nearestLandmark(next, buildingName, voiceLang)
+
+    let line
+    if (mark && d > 3) line = P.stepLandmark(d, mark, what)
+    else if (d > 3) line = P.step(what, d)
+    else line = P.stepNear(what)
+
+    if (currentStepIndex === 0) {
+      speak(`${P.start(destName)} ${line}`)
+    } else if (next.floor !== here.floor) {
+      speak(`${P.stepNear(what)} ${P.floor(next.floor)}`)
+    } else {
+      speak(line)
+    }
+  }, [currentStepIndex, isNavigating, hasArrived, voiceOn, voiceLang])
+
   const stopNavigation = () => {
     setIsNavigating(false)
     setNavigationPath([])
@@ -602,6 +790,8 @@ function Home() {
     setCurrentStepIndex(0)
     setDestination(null)
     setCorrectingPosition(false)
+    window.speechSynthesis && window.speechSynthesis.cancel()
+    lastSpokenRef.current = -1
   }
 
   const selectedRoomData = rooms.find(r => r.code === selectedRoom)
@@ -740,6 +930,34 @@ function Home() {
             }}
           >
             Enable motion tracking
+          </button>
+        )}
+
+        {window.speechSynthesis && (
+          <button
+            onClick={enableVoice}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '7px',
+              padding: '10px 16px', borderRadius: '10px', border: 'none',
+              background: voiceOn ? '#7c3aed' : '#f1f5f9',
+              color: voiceOn ? 'white' : '#475569',
+              fontWeight: '600', cursor: 'pointer', fontSize: '14px',
+              flex: '1', justifyContent: 'center', minWidth: '140px',
+            }}
+          >
+            {voiceOn ? 'Voice on' : 'Enable voice'}
+          </button>
+        )}
+        {voiceOn && (
+          <button
+            onClick={() => setVoiceLang(l => (l === 'en' ? 'fr' : 'en'))}
+            style={{
+              padding: '10px 14px', borderRadius: '10px', border: 'none',
+              background: '#ede9fe', color: '#6d28d9',
+              fontWeight: '700', cursor: 'pointer', fontSize: '13px',
+            }}
+          >
+            {voiceLang === 'en' ? 'EN' : 'FR'}
           </button>
         )}
       </div>
