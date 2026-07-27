@@ -616,6 +616,20 @@ function CampusMap({
         if (activeFloor !== target.floor) setActiveFloor(target.floor)
     }, [highlightedRoom])
 
+    // A scanned code should land you looking at where you're standing, not
+    // at the whole floor with a dot somewhere on it.
+    useEffect(() => {
+        if (!currentNodeId || view !== VIEW.BUILDING) return
+        const n = getFloorNodes(activeBuilding, activeFloor).find(x => x.id === currentNodeId)
+        if (!n) return
+        const z = 2.6
+        floorZoomRef.current = z
+        const p = clampPan({ x: 410 - n.x * z, y: 500 - n.y * z }, z)
+        floorPanRef.current = p
+        setFloorZoom(z)
+        setFloorPan(p)
+    }, [currentNodeId, activeFloor, activeBuilding, view])
+
     useEffect(() => {
         if (!currentNodeId || !navigationPath.length || view !== VIEW.BUILDING) return
         const stepNode = navigationPath.find(p => p.id === currentNodeId)
