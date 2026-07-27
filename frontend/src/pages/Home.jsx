@@ -60,15 +60,13 @@ const PHRASES = {
   },
 }
 
-// Booking eligibility. Guests are anyone not signed in, or signed in with
-// an address outside the university domains. Deliberately a whitelist, so
-// an unrecognised domain reads as guest rather than being assumed staff.
-const BOOKING_DOMAINS = ['@alustudent.com', '@alueducation.com']
- 
-function canBook(user) {
-  const email = user && (user.email || user.username)
-  if (!email || typeof email !== 'string') return false
-  return BOOKING_DOMAINS.some(d => email.toLowerCase().endsWith(d))
+// The backend already enforces who may book, so this only stops us
+// showing a button that leads to a rejection. It deliberately does not
+// re-implement the email rule, because two copies of the same rule
+// drifting apart is exactly what caused the Food Court bug.
+function canBook() {
+  if (!isLoggedIn()) return false
+  return (getUserRole() || '').toLowerCase().trim() !== 'guest'
 }
 
 // Turn direction from three consecutive path points. SVG's y axis grows
@@ -469,11 +467,26 @@ function Home() {
     }
   }, [motionPermissionGranted])
 
+  // Search the map's own room list, not the API's. The map knows every
+  // traced room; the backend only knows the bookable ones, so searching
+  // the API silently misses anything not yet in the database.
   const filteredRooms = searchQuery
-    ? rooms.filter(r =>
-        r.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        r.code.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+    ? ROOM_DATA
+        .filter(r =>
+          r.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          r.code.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+        .map(r => {
+          const apiRoom = rooms.find(x => x.code === r.code)
+          return {
+            code: r.code,
+            name: r.label,
+            floor: r.floor,
+            building: r.building,
+            is_available: apiRoom ? apiRoom.is_available : null,
+          }
+        })
+        .slice(0, 12)
     : []
 
   // Selecting a room now only shows its info (and fetches a distance
