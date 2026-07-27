@@ -4,6 +4,7 @@ import CampusMap, { FLOOR_SYMBOLS, ROOM_DATA } from '../components/CampusMap'
 import { useGeolocation } from '../hooks/useGeolocation'
 import { NOT_STUDENT_BOOKABLE } from '../data/nonBookableRooms'
 import { getUserEmail, getUserRole, isLoggedIn } from '../api'
+import Tutorial, { tutorialSeen } from '../components/Tutorial'
 
 const API = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api'
 
@@ -251,6 +252,7 @@ function Home() {
   // navigation tap rather than assumed to be live.
   const [voiceOn, setVoiceOn] = useState(() => localStorage.getItem('cn_voice') === '1')
   const [bookingAllowed] = useState(canBook)
+  const [showTutorial, setShowTutorial] = useState(() => !tutorialSeen())
   const [voiceLang, setVoiceLang] = useState(() => localStorage.getItem('cn_voice_lang') || 'en')
 
   useEffect(() => { localStorage.setItem('cn_voice', voiceOn ? '1' : '0') }, [voiceOn])
@@ -1303,6 +1305,14 @@ function Home() {
             </p>
           )}
         </div>
+      )}
+
+      {showTutorial && (
+        <Tutorial
+          voiceLang={voiceLang}
+          speakEnabled={true}
+          onClose={() => setShowTutorial(false)}
+        />
       )}
 
     </div>
