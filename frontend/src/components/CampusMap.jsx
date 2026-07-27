@@ -1042,7 +1042,7 @@ function CampusMap({
                 {activeBuilding}
                 </span>
             </div>
-            <div style={{ display: 'flex', gap: '6px' }}>
+            <div data-tut="floors" style={{ display: 'flex', gap: '6px' }}>
                 {bldData.floors.map(f => (
                 <button
                     key={f}
