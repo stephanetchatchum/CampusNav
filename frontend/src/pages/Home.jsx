@@ -60,13 +60,19 @@ const PHRASES = {
   },
 }
 
-// The backend already enforces who may book, so this only stops us
-// showing a button that leads to a rejection. It deliberately does not
-// re-implement the email rule, because two copies of the same rule
-// drifting apart is exactly what caused the Food Court bug.
+// Backend is still the real gate. This just avoids showing a button that
+// leads to a rejection. Checks the cached email when we have one, and
+// falls back to role when we don't, so a non-ALU account is filtered out
+// here rather than at submit time.
+const BOOKING_DOMAINS = ['@alustudent.com', '@alueducation.com']
+
 function canBook() {
   if (!isLoggedIn()) return false
-  return (getUserRole() || '').toLowerCase().trim() !== 'guest'
+  const role = (getUserRole() || '').toLowerCase().trim()
+  if (role === 'guest') return false
+  const email = (getUserEmail() || '').toLowerCase().trim()
+  if (email) return BOOKING_DOMAINS.some(d => email.endsWith(d))
+  return role === 'student' || role === 'staff' || role === 'admin'
 }
 
 // Turn direction from three consecutive path points. SVG's y axis grows
