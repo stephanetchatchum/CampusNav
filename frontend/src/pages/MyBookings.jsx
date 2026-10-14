@@ -43,7 +43,7 @@ function MyBookings() {
   }
 
   return (
-    <div className="p-8 bg-[#EFF4FA] min-h-screen">
+    <div className="p-4 sm:p-8 min-h-screen bg-gradient-to-b from-[#C9D8F2] via-[#E6EDF9] to-[#F4F7FB]">
       <h1 className="text-3xl font-bold text-[#003087] mb-6">My Bookings</h1>
 
       {loading && <p className="text-gray-500">Loading your bookings...</p>}
@@ -58,7 +58,7 @@ function MyBookings() {
 
       <div className="flex flex-col gap-4">
         {bookings.map(booking => (
-          <div key={booking.id} className="bg-white rounded-xl shadow p-6 flex justify-between items-center">
+          <div key={booking.id} className="bg-white rounded-2xl shadow-sm ring-1 ring-slate-200 p-4 sm:p-6 flex flex-wrap gap-3 justify-between items-center">
             <div>
               <p className="text-lg font-semibold text-[#003087]">{booking.room_name}</p>
               <p className="text-gray-500 text-sm">{booking.date} · {booking.start_time} – {booking.end_time}</p>

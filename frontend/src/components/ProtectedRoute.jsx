@@ -16,6 +16,10 @@ function ProtectedRoute({ children, tier }) {
     return <Navigate to="/" replace />
   }
 
+  if (tier === "viewer" && !["student", "admin", "alumni"].includes(userTier)) {
+    return <Navigate to="/" replace />
+  }
+
   if (tier === "student" && userTier !== "student" && userTier !== "admin") {
     return <Navigate to="/" replace />
   }

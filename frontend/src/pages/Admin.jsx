@@ -46,7 +46,7 @@ function Admin() {
   }
 
   return (
-    <div className="min-h-screen bg-[#EFF4FA] p-6">
+    <div className="min-h-screen bg-gradient-to-b from-[#C9D8F2] via-[#E6EDF9] to-[#F4F7FB] p-4 sm:p-6">
       <h1 className="text-3xl font-bold text-[#003087] mb-2">Admin Panel</h1>
       <p className="text-gray-500 mb-6">Manage all room bookings across campus</p>
 
