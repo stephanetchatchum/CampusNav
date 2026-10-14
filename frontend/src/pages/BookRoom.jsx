@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { authFetch, BASE_URL, getUserTier } from "../api"
+import { authFetch, BASE_URL, canBook, canSeeAvailability } from "../api"
 import { NOT_STUDENT_BOOKABLE } from "../data/nonBookableRooms"
+import DayTimeline from "../components/DayTimeline"
 
 function pad(n) {
   return n.toString().padStart(2, "0")
@@ -20,7 +21,10 @@ function formatTime12(t) {
   return `${hour12}:${pad(m)} ${ampm}`
 }
 
-function TimePicker({ value, onChange }) {
+const selectClass =
+  "min-h-11 rounded-lg border border-slate-300 bg-white px-2 focus:border-[#003087] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#003087]/30"
+
+function TimePicker({ value, onChange, label }) {
   const parse = (v) => {
     if (!v) return { hour12: "", minute: "", ampm: "AM" }
     const [h, m] = v.split(":").map(Number)
@@ -43,16 +47,16 @@ function TimePicker({ value, onChange }) {
   const minuteOptions = Array.from({ length: 60 }, (_, i) => pad(i))
 
   return (
-    <div className="flex gap-2">
-      <select value={hour12} onChange={e => emit(e.target.value, minute || "00", ampm)} className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-[#003087]">
+    <div className="flex gap-1.5">
+      <select aria-label={`${label} hour`} value={hour12} onChange={e => emit(e.target.value, minute || "00", ampm)} className={selectClass}>
         <option value="">HH</option>
         {hourOptions.map(h => <option key={h} value={h}>{h}</option>)}
       </select>
-      <select value={minute} onChange={e => emit(hour12 || "12", e.target.value, ampm)} className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-[#003087]">
+      <select aria-label={`${label} minute`} value={minute} onChange={e => emit(hour12 || "12", e.target.value, ampm)} className={selectClass}>
         <option value="">MM</option>
         {minuteOptions.map(m => <option key={m} value={m}>{m}</option>)}
       </select>
-      <select value={ampm} onChange={e => emit(hour12 || "12", minute || "00", e.target.value)} className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-[#003087]">
+      <select aria-label={`${label} AM or PM`} value={ampm} onChange={e => emit(hour12 || "12", minute || "00", e.target.value)} className={selectClass}>
         <option value="AM">AM</option>
         <option value="PM">PM</option>
       </select>
@@ -60,13 +64,28 @@ function TimePicker({ value, onChange }) {
   )
 }
 
+function Notice({ children, action, onAction }) {
+  return (
+    <div className="mx-auto max-w-lg px-5 py-10">
+      <p className="text-slate-700">{children}</p>
+      <button
+        onClick={onAction}
+        className="mt-5 min-h-12 rounded-lg bg-[#003087] px-6 font-semibold text-white hover:bg-[#002060] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F5821F]"
+      >
+        {action}
+      </button>
+    </div>
+  )
+}
+
 function BookRoom() {
   const { code } = useParams()
   const navigate = useNavigate()
+  const today = formatDateInput(new Date())
 
   const [room, setRoom] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [date, setDate] = useState(formatDateInput(new Date()))
+  const [date, setDate] = useState(today)
   const [bookedSlots, setBookedSlots] = useState([])
   const [loadingSlots, setLoadingSlots] = useState(true)
   const [startTime, setStartTime] = useState("")
@@ -108,7 +127,9 @@ function BookRoom() {
     const [y, m, d] = date.split("-").map(Number)
     const current = new Date(y, m - 1, d)
     current.setDate(current.getDate() + delta)
-    setDate(formatDateInput(current))
+    const next = formatDateInput(current)
+    if (next < today) return
+    setDate(next)
   }
 
   const overlapsExisting = () => {
@@ -134,7 +155,7 @@ function BookRoom() {
       return
     }
     if (overlapsExisting()) {
-      setErrorMsg("That time overlaps with an existing booking. Check the taken times above.")
+      setErrorMsg("That time overlaps with an existing booking. Check the booked times above.")
       return
     }
 
@@ -149,7 +170,7 @@ function BookRoom() {
     setSubmitting(false)
 
     if (response.ok) {
-      setSuccessMsg(`Booked ${room.name} on ${date}, ${formatTime12(startTime)}–${formatTime12(endTime)}! Status: ${data.status.charAt(0).toUpperCase() + data.status.slice(1)}.`)
+      setSuccessMsg(`Booked ${room.name} on ${date}, ${formatTime12(startTime)} to ${formatTime12(endTime)}. Status: ${data.status.charAt(0).toUpperCase() + data.status.slice(1)}.`)
       setStartTime("")
       setEndTime("")
       fetchSlots()
@@ -164,105 +185,160 @@ function BookRoom() {
       method: "PATCH",
       body: JSON.stringify({ status: "cancelled" })
     })
-    
+
     if (response.ok) {
-      setSuccessMsg("Booking cancelled — this time slot is now free.")
+      setSuccessMsg("Booking cancelled. This time is free again.")
       fetchSlots()
     }
     setCancellingId(null)
   }
 
-  if (loading) return <div className="p-8 text-gray-500">Loading room...</div>
+  if (loading) return <div className="p-8 text-slate-500">Loading room...</div>
 
   if (!room) {
     return (
-      <div className="p-8">
-        <p className="text-red-500">Room not found.</p>
-        <button onClick={() => navigate("/book")} className="text-[#003087] font-semibold hover:underline mt-2">← Back to all rooms</button>
-      </div>
+      <Notice action="Back to rooms" onAction={() => navigate("/book")}>
+        We couldn't find that room. It may have been removed or the link is wrong.
+      </Notice>
     )
   }
 
-  if (getUserTier() === "guest") {
+  if (!canSeeAvailability()) {
     return (
-      <div className="p-8">
-        <p className="text-red-500">Guest accounts can't book rooms. Please sign in with your ALU email.</p>
-        <button onClick={() => navigate("/book")} className="text-[#003087] font-semibold hover:underline mt-2">← Back to all rooms</button>
-      </div>
+      <Notice action="Sign in" onAction={() => navigate("/login")}>
+        Availability is for the ALU community. Sign in with your ALU email to see it.
+      </Notice>
     )
   }
 
   if (NOT_STUDENT_BOOKABLE.has(room.name)) {
     return (
-      <div className="p-8">
-        <p className="text-red-500">This room is not available for student booking.</p>
-        <button onClick={() => navigate("/book")} className="text-[#003087] font-semibold hover:underline mt-2">← Back to all rooms</button>
-      </div>
+      <Notice action="Back to rooms" onAction={() => navigate("/book")}>
+        This room can't be booked by students.
+      </Notice>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#EFF4FA] p-6">
-      <button onClick={() => navigate("/book")} className="text-[#003087] font-semibold hover:underline mb-4">← Back to all rooms</button>
+    <div className="mx-auto min-h-screen max-w-2xl bg-gradient-to-b from-[#C9D8F2] via-[#E6EDF9] to-[#F4F7FB] px-4 pb-6 pt-5">
+      <button
+        onClick={() => navigate("/book")}
+        className="min-h-11 text-[#003087] font-semibold focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F5821F]"
+      >
+        Back to rooms
+      </button>
 
-      <h1 className="text-3xl font-bold text-[#003087] mb-1">{room.name}</h1>
-      <p className="text-gray-400 mb-1">{room.code} · {room.building}, Floor {room.floor}</p>
-      <p className="text-gray-500 mb-6">Capacity: {room.capacity}</p>
+      <h1 className="mt-1 text-3xl font-semibold text-[#0F1B33]">{room.name}</h1>
+      <p className="mt-1 text-slate-600">
+        {room.building}, floor {room.floor}. Seats {room.capacity}. Room code {room.code}.
+      </p>
 
-      {successMsg && <div className="bg-green-50 border border-green-200 text-green-700 rounded-lg p-4 mb-6">{successMsg}</div>}
+      {successMsg && (
+        <div role="status" className="mt-5 rounded-lg bg-emerald-50 p-4 text-emerald-800 ring-1 ring-emerald-200">
+          {successMsg}
+        </div>
+      )}
 
-      <div className="bg-white rounded-xl shadow p-6 max-w-lg">
-        <div className="flex items-center justify-between mb-6">
-          <button onClick={() => changeDay(-1)} className="px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 text-sm">← Previous day</button>
-          <input type="date" value={date} onChange={e => setDate(e.target.value)} className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-[#003087]" />
-          <button onClick={() => changeDay(1)} className="px-3 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 text-sm">Next day →</button>
+      <section className="mt-5 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+        <div className="flex items-center justify-between gap-2">
+          <button
+            onClick={() => changeDay(-1)}
+            disabled={date <= today}
+            className="min-h-11 rounded-lg border border-slate-300 px-3 text-sm font-medium hover:bg-slate-50 disabled:opacity-40"
+          >
+            Previous day
+          </button>
+          <input
+            type="date"
+            aria-label="Choose a date"
+            value={date}
+            min={today}
+            onChange={e => e.target.value >= today && setDate(e.target.value)}
+            className="min-h-11 rounded-lg border border-slate-300 px-2 focus:border-[#003087] focus:outline-none"
+          />
+          <button
+            onClick={() => changeDay(1)}
+            className="min-h-11 rounded-lg border border-slate-300 px-3 text-sm font-medium hover:bg-slate-50"
+          >
+            Next day
+          </button>
         </div>
 
-        <p className="text-sm font-semibold text-gray-700 mb-2">Already booked on this date</p>
+        <h2 className="mb-2 mt-6 font-semibold text-[#0F1B33]">
+          {date === today ? "Today" : date}
+        </h2>
+
         {loadingSlots ? (
-          <p className="text-gray-500 text-sm mb-6">Loading...</p>
-        ) : bookedSlots.length === 0 ? (
-          <p className="text-green-700 text-sm bg-green-50 border border-green-200 rounded-lg p-3 mb-6">Nothing booked yet — the whole day is open.</p>
+          <p className="text-sm text-slate-500">Loading...</p>
         ) : (
-          <div className="flex flex-col gap-2 mb-6">
-            {bookedSlots.map((slot, i) => (
-              <div key={i} className="bg-red-50 border border-red-200 text-red-600 rounded-lg p-2 text-sm font-medium flex justify-between items-center">
-                <span>
-                  {formatTime12(slot.start_time.slice(0, 5))} – {formatTime12(slot.end_time.slice(0, 5))}
-                  {slot.is_mine && <span className="ml-2 text-xs font-semibold text-[#003087]">(You)</span>}
-                </span>
-                {slot.is_mine && (
-                  <button
-                    onClick={() => handleCancelSlot(slot.booking_id)}
-                    disabled={cancellingId === slot.booking_id}
-                    className="text-xs font-semibold text-red-700 hover:text-red-900 disabled:opacity-50"
+          <>
+            <DayTimeline slots={bookedSlots} isToday={date === today} />
+            {bookedSlots.length === 0 ? (
+              <p className="mt-4 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800 ring-1 ring-emerald-200">
+                Nothing booked. The room is free all day.
+              </p>
+            ) : (
+              <ul className="mt-4 flex flex-col gap-2">
+                {bookedSlots.map((slot, i) => (
+                  <li
+                    key={i}
+                    className="flex items-center justify-between rounded-lg bg-red-50 p-2.5 text-sm font-medium text-red-700 ring-1 ring-red-200"
                   >
-                    {cancellingId === slot.booking_id ? "Cancelling..." : "Cancel"}
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
+                    <span>
+                      {formatTime12(slot.start_time.slice(0, 5))} to {formatTime12(slot.end_time.slice(0, 5))}
+                      {slot.is_mine && <span className="ml-2 text-xs font-semibold text-[#003087]">Your booking</span>}
+                    </span>
+                    {slot.is_mine && canBook() && (
+                      <button
+                        onClick={() => handleCancelSlot(slot.booking_id)}
+                        disabled={cancellingId === slot.booking_id}
+                        className="min-h-9 px-2 text-xs font-semibold text-red-800 hover:text-red-950 disabled:opacity-50"
+                      >
+                        {cancellingId === slot.booking_id ? "Cancelling..." : "Cancel booking"}
+                      </button>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
         )}
+      </section>
 
-        {errorMsg && <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg p-3 mb-4 text-sm">{errorMsg}</div>}
+      {canBook() ? (
+        <section className="mt-5 rounded-xl bg-white p-4 shadow-sm ring-1 ring-slate-200">
+          <h2 className="font-semibold text-[#0F1B33]">Book this room</h2>
 
-        <p className="text-sm font-semibold text-gray-700 mb-2">Choose your own time</p>
-        <div className="flex gap-4 mb-6">
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
-            <TimePicker value={startTime} onChange={setStartTime} />
+          {errorMsg && (
+            <div role="alert" className="mt-3 rounded-lg bg-red-50 p-3 text-sm text-red-700 ring-1 ring-red-200">
+              {errorMsg}
+            </div>
+          )}
+
+          <div className="mt-4 flex flex-col gap-4 sm:flex-row">
+            <div className="flex-1">
+              <span className="mb-1 block text-sm font-medium text-slate-700">Start time</span>
+              <TimePicker label="Start" value={startTime} onChange={setStartTime} />
+            </div>
+            <div className="flex-1">
+              <span className="mb-1 block text-sm font-medium text-slate-700">End time</span>
+              <TimePicker label="End" value={endTime} onChange={setEndTime} />
+            </div>
           </div>
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 mb-1">End Time</label>
-            <TimePicker value={endTime} onChange={setEndTime} />
-          </div>
-        </div>
 
-        <button onClick={handleBooking} disabled={submitting} className="w-full bg-[#003087] text-white rounded-lg p-3 font-semibold hover:bg-[#002060] transition disabled:opacity-50">
-          {submitting ? "Booking..." : "Confirm Booking"}
-        </button>
-      </div>
+          <button
+            onClick={handleBooking}
+            disabled={submitting}
+            className="mt-5 min-h-12 w-full rounded-lg bg-[#003087] font-semibold text-white transition hover:bg-[#002060] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#F5821F] disabled:opacity-50"
+          >
+            {submitting ? "Booking..." : "Confirm booking"}
+          </button>
+        </section>
+      ) : (
+        <p className="mt-5 rounded-lg bg-slate-100 p-3 text-sm text-slate-600">
+          You can check availability here. Booking is for current students and staff.
+        </p>
+      )}
     </div>
   )
 }

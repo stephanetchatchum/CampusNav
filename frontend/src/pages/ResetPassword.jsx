@@ -42,8 +42,8 @@ function ResetPassword() {
   }
 
   return (
-    <div className="min-h-screen bg-[#EFF4FA] flex items-center justify-center px-4">
-      <div className="bg-white rounded-xl shadow-md p-8 w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-b from-[#C9D8F2] via-[#E6EDF9] to-[#F4F7FB] flex items-center justify-center px-4">
+      <div className="bg-white rounded-3xl shadow-lg p-6 sm:p-8 w-full max-w-md">
         <h1 className="text-3xl font-bold text-[#003087] mb-1">CampusNav</h1>
         <p className="text-gray-500 mb-8">Choose a new password</p>
 

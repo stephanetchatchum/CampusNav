@@ -12,6 +12,11 @@ import VerifyEmail from './pages/VerifyEmail'
 import MyBookings from './pages/MyBookings'
 import Nav from './components/Nav'
 import ProtectedRoute from './components/ProtectedRoute'
+import Events from "./pages/Events"
+import Settings from "./pages/Settings"
+
+
+
 
 function App() {
   return (
@@ -31,6 +36,8 @@ function App() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/my-bookings" element={<ProtectedRoute tier="student"><MyBookings /></ProtectedRoute>} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/settings" element={<Settings />} />
       </Routes>
     </BrowserRouter>
   )
