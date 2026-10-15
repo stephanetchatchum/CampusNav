@@ -1,4 +1,4 @@
-const BASE_URL = "http://127.0.0.1:8000/api"
+export const BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api"
 
 export const getToken = () => localStorage.getItem("token")
 export const isLoggedIn = () => !!localStorage.getItem("token")
@@ -14,20 +14,25 @@ export const getUserRole = () => localStorage.getItem("userRole")
 
 export const getUserTier = () => {
   const role = getUserRole()
-  const email = getUserEmail() || ""
+  const email = (getUserEmail() || "").toLowerCase()
   if (role === "admin") return "admin"
   if (email.endsWith("@alustudent.com") || email.endsWith("@alueducation.com")) return "student"
+  if (email.endsWith("@alualumni.com")) return "alumni"
   return "guest"
 }
 
 export const getAccountLabel = () => {
   const role = getUserRole()
-  const email = getUserEmail() || ""
-  if (role === "admin") return "Admin"
+  const email = (getUserEmail() || "").toLowerCase()
+  if (role === "admin") return "Admin / Staff Engineer"
   if (email.endsWith("@alustudent.com")) return "Student"
   if (email.endsWith("@alueducation.com")) return "Staff"
+  if (email.endsWith("@alualumni.com")) return "Alumni"
   return "Guest"
 }
+
+export const canBook = () => ["student", "admin"].includes(getUserTier())
+export const canSeeAvailability = () => isLoggedIn() && getUserTier() !== "guest"
 
 export const saveRefreshToken = (refresh) => localStorage.setItem("refreshToken", refresh)
 export const getRefreshToken = () => localStorage.getItem("refreshToken")

@@ -182,6 +182,9 @@ def all_bookings(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def room_availability(request, code):
+    email = (request.user.email or '').lower()
+    if not (request.user.role == 'admin' or email.endswith(('@alustudent.com', '@alueducation.com', '@alualumni.com'))):
+        return Response({'error': 'Availability is for the ALU community'}, status=status.HTTP_403_FORBIDDEN)
     date = request.query_params.get('date')
     if not date:
         return Response({'error': 'date query parameter is required'}, status=status.HTTP_400_BAD_REQUEST)

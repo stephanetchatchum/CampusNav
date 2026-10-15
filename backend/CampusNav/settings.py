@@ -45,6 +45,8 @@ _allowed_hosts_env = os.environ.get('ALLOWED_HOSTS')
 ALLOWED_HOSTS = _allowed_hosts_env.split(',') if _allowed_hosts_env else ['*']
 
 
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -184,4 +186,25 @@ SIMPLE_JWT = {
     # 24 hours for development -- change to 1 hour when we deploy
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=24),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
 }

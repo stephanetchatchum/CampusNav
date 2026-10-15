@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { authFetch } from "../api"
+import { authFetch, BASE_URL } from "../api"
 
 function Admin() {
   const [bookings, setBookings] = useState([])
@@ -10,7 +10,7 @@ function Admin() {
   // Fetch all bookings when the page loads
   useEffect(() => {
     const fetchBookings = async () => {
-      const response = await authFetch("http://127.0.0.1:8000/api/bookings/all/")
+      const response = await authFetch(`${BASE_URL}/bookings/all/`)
       if (response.ok) {
         const data = await response.json()
         setBookings(data)
@@ -25,7 +25,7 @@ function Admin() {
   // Approve or cancel a booking and update the list immediately
   const updateStatus = async (id, newStatus) => {
     setActionError("")
-    const response = await authFetch(`http://127.0.0.1:8000/api/bookings/${id}/status/`, {
+    const response = await authFetch(`${BASE_URL}/bookings/${id}/status/`, {
       method: "PATCH",
       body: JSON.stringify({ status: newStatus })
     })
@@ -46,7 +46,7 @@ function Admin() {
   }
 
   return (
-    <div className="min-h-screen bg-[#EFF4FA] p-6">
+    <div className="min-h-screen bg-gradient-to-b from-[#C9D8F2] via-[#E6EDF9] to-[#F4F7FB] p-4 sm:p-6">
       <h1 className="text-3xl font-bold text-[#003087] mb-2">Admin Panel</h1>
       <p className="text-gray-500 mb-6">Manage all room bookings across campus</p>
 

@@ -1,0 +1,47 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import Home from './pages/Home'
+import Book from './pages/Book'
+import BookRoom from './pages/BookRoom'
+import Admin from './pages/Admin'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
+import VerifyEmail from './pages/VerifyEmail'
+import MyBookings from './pages/MyBookings'
+import Nav from './components/Nav'
+import ProtectedRoute from './components/ProtectedRoute'
+import Events from "./pages/Events"
+import Settings from "./pages/Settings"
+
+
+
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Nav />
+      <div className="pb-24">
+      <Routes>
+        {/* Stephane owns this route - map and navigation */}
+        <Route path="/" element={<Home />} />
+        {/* Dorcase owns these routes */}
+        <Route path="/book" element={<ProtectedRoute tier="viewer"><Book /></ProtectedRoute>} />
+        <Route path="/book/:code" element={<ProtectedRoute tier="viewer"><BookRoom /></ProtectedRoute>} />
+        <Route path="/admin" element={<ProtectedRoute tier="admin"><Admin /></ProtectedRoute>} />
+        <Route path="/profile" element={<Navigate to="/settings" replace />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="/my-bookings" element={<ProtectedRoute tier="student"><MyBookings /></ProtectedRoute>} />
+        <Route path="/events" element={<Events />} />
+        <Route path="/settings" element={<Settings />} />
+      </Routes>
+      </div>
+    </BrowserRouter>
+  )
+}
+
+export default App

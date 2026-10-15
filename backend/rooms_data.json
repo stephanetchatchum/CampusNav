@@ -631,31 +631,9 @@
     "room_type": "lecture",
     "is_available": true
   }
+
 },
-{
-  "model": "rooms.room",
-  "pk": 46,
-  "fields": {
-    "floor": 8,
-    "name": "Gambia & Liberia",
-    "code": "LC-F1-GL",
-    "capacity": 40,
-    "room_type": "lecture",
-    "is_available": true
-  }
-},
-{
-  "model": "rooms.room",
-  "pk": 47,
-  "fields": {
-    "floor": 8,
-    "name": "Mozambique & Malawi",
-    "code": "LC-F1-MM",
-    "capacity": 40,
-    "room_type": "lecture",
-    "is_available": true
-  }
-},
+
 {
   "model": "rooms.room",
   "pk": 48,
